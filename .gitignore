@@ -32,6 +32,8 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+/config/*.json
+!/config/*.example.json
 
 # Symbolication related
 app.*.symbols
@@ -46,3 +48,6 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Temporary
+MVP_ISSUES.md

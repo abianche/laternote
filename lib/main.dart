@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'app_environment.dart';
 
 void main() {
+  AppEnvironment.validate();
   runApp(const MyApp());
 }
 

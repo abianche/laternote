@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Laternote (development)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--flavor",
+        "development",
+        "--dart-define-from-file=config/dev.json"
+      ]
+    },
+    {
+      "name": "Laternote (production)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "production",
+        "--dart-define-from-file=config/prod.json"
+      ]
+    }
+  ]
+}
