@@ -23,6 +23,7 @@ class _AccountScreenState extends State<AccountScreen> {
     setState(() => _isSigningOut = true);
     try {
       await Supabase.instance.client.auth.signOut();
+      if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
