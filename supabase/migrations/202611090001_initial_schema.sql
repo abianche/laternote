@@ -99,9 +99,25 @@ revoke all on public.messages from anon, authenticated;
 grant select (id, user_id, scheduled_for, timezone, status, released_at, created_at, updated_at)
   on public.messages to authenticated;
 grant insert (user_id, body, scheduled_for, timezone) on public.messages to authenticated;
-grant update (body, scheduled_for, timezone, updated_at) on public.messages to authenticated;
+grant update (body, scheduled_for, timezone) on public.messages to authenticated;
 grant delete on public.messages to authenticated;
 grant select, insert, update, delete on public.device_tokens to authenticated;
+
+create function public.set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger messages_set_updated_at
+  before update on public.messages
+  for each row
+  execute function public.set_updated_at();
 
 -- Scheduled-list metadata only; this view deliberately omits message content.
 create view public.scheduled_message_metadata
