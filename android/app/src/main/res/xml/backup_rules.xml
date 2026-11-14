@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Used only pre-API 31, where allowBackup="false" already disables Auto
+  Backup; this is a belt-and-suspenders exclusion so a future
+  allowBackup flip can't silently back up session/refresh tokens.
+-->
+<full-backup-content>
+    <exclude domain="root" path="." />
+</full-backup-content>

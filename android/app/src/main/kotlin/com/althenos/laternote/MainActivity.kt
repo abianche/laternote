@@ -1,4 +1,4 @@
-package com.althenos.laternote.laternote
+package com.althenos.laternote
 
 import io.flutter.embedding.android.FlutterActivity
 

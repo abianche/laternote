@@ -1,11 +1,13 @@
-create extension if not exists pgcrypto;
-
-create type public.message_status as enum ('scheduled', 'available', 'deleted');
+create type public.message_status as enum ('scheduled', 'available');
 
 create table public.messages (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
-  body text not null check (length(trim(body)) > 0),
+  -- 20,000 characters is the composer's hard cap; keep validation and the
+  -- UI limit in sync.
+  body text not null check (
+    length(trim(body)) > 0 and char_length(body) <= 20000
+  ),
   scheduled_for timestamptz not null,
   timezone text not null,
   status public.message_status not null default 'scheduled',
@@ -19,6 +21,30 @@ create index messages_due_idx on public.messages (scheduled_for)
   where status = 'scheduled';
 create index messages_owner_schedule_idx on public.messages (user_id, scheduled_for desc);
 
+-- pg_timezone_names can't be queried from a check constraint, so timezone
+-- validity is enforced here instead, on both insert and update.
+create function public.validate_message_timezone()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if not exists (
+    select 1 from pg_catalog.pg_timezone_names where name = new.timezone
+  ) then
+    raise exception using
+      errcode = 'invalid_parameter_value',
+      message = 'messages.timezone must be a valid IANA time zone name';
+  end if;
+  return new;
+end;
+$$;
+
+create trigger messages_validate_timezone
+  before insert or update on public.messages
+  for each row
+  execute function public.validate_message_timezone();
+
 create table public.device_tokens (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -26,6 +52,8 @@ create table public.device_tokens (
   platform text not null check (platform in ('ios', 'android')),
   updated_at timestamptz not null default now()
 );
+
+create index device_tokens_user_id_idx on public.device_tokens (user_id);
 
 create table public.notification_outbox (
   id uuid primary key default gen_random_uuid(),
@@ -73,18 +101,29 @@ revoke all on public.messages from anon, authenticated;
 grant select (id, user_id, scheduled_for, timezone, status, released_at, created_at, updated_at)
   on public.messages to authenticated;
 grant insert (user_id, body, scheduled_for, timezone) on public.messages to authenticated;
-grant update (body, scheduled_for, timezone, updated_at) on public.messages to authenticated;
+grant update (body, scheduled_for, timezone) on public.messages to authenticated;
 grant delete on public.messages to authenticated;
-grant select, insert, update, delete on public.device_tokens to authenticated;
 
--- Scheduled-list metadata only; this view deliberately omits message content.
-create view public.scheduled_message_metadata
-  with (security_invoker = true) as
-  select id, user_id, scheduled_for, timezone, created_at
-  from public.messages
-  where status = 'scheduled' and scheduled_for > now();
+-- Writes go through register_device_token below, never direct insert/update:
+-- a shared device must be reassignable to whichever user is signed in now,
+-- which a plain per-row RLS check can't arbitrate between two owners.
+grant select, delete on public.device_tokens to authenticated;
 
-grant select on public.scheduled_message_metadata to authenticated;
+create function public.set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger messages_set_updated_at
+  before update on public.messages
+  for each row
+  execute function public.set_updated_at();
 
 create function public.get_available_message(p_message_id uuid)
 returns table (id uuid, body text, scheduled_for timestamptz, timezone text, released_at timestamptz)
@@ -103,3 +142,42 @@ $$;
 
 revoke all on function public.get_available_message(uuid) from public, anon;
 grant execute on function public.get_available_message(uuid) to authenticated;
+
+-- The client calls this on every launch and on each push-provider token
+-- refresh (MVP-7), never writing device_tokens directly. token stays
+-- globally unique; reassigning a shared device away from its previous
+-- owner only takes effect the next time the new owner registers. Always
+-- returns void so a caller can't tell whether the token already existed.
+create function public.register_device_token(p_token text, p_platform text)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if p_platform not in ('ios', 'android') then
+    raise exception using
+      errcode = 'invalid_parameter_value',
+      message = 'register_device_token: platform must be ios or android';
+  end if;
+
+  if p_token is null or char_length(p_token) < 1 or char_length(p_token) > 4096 then
+    raise exception using
+      errcode = 'invalid_parameter_value',
+      message = 'register_device_token: token length must be 1-4096';
+  end if;
+
+  delete from public.device_tokens
+  where token = p_token and user_id <> (select auth.uid());
+
+  insert into public.device_tokens (user_id, token, platform, updated_at)
+  values ((select auth.uid()), p_token, p_platform, now())
+  on conflict (token) do update
+    set user_id = excluded.user_id,
+        platform = excluded.platform,
+        updated_at = excluded.updated_at;
+end;
+$$;
+
+revoke all on function public.register_device_token(text, text) from public, anon;
+grant execute on function public.register_device_token(text, text) to authenticated;
