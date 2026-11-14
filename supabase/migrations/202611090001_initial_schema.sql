@@ -53,6 +53,8 @@ create table public.device_tokens (
   updated_at timestamptz not null default now()
 );
 
+create index device_tokens_user_id_idx on public.device_tokens (user_id);
+
 create table public.notification_outbox (
   id uuid primary key default gen_random_uuid(),
   message_id uuid not null references public.messages(id) on delete cascade,
@@ -101,7 +103,11 @@ grant select (id, user_id, scheduled_for, timezone, status, released_at, created
 grant insert (user_id, body, scheduled_for, timezone) on public.messages to authenticated;
 grant update (body, scheduled_for, timezone) on public.messages to authenticated;
 grant delete on public.messages to authenticated;
-grant select, insert, update, delete on public.device_tokens to authenticated;
+
+-- Writes go through register_device_token below, never direct insert/update:
+-- a shared device must be reassignable to whichever user is signed in now,
+-- which a plain per-row RLS check can't arbitrate between two owners.
+grant select, delete on public.device_tokens to authenticated;
 
 create function public.set_updated_at()
 returns trigger
@@ -145,3 +151,40 @@ $$;
 
 revoke all on function public.get_available_message(uuid) from public, anon;
 grant execute on function public.get_available_message(uuid) to authenticated;
+
+-- The client calls this on every launch and on each push-provider token
+-- refresh (MVP-7), never writing device_tokens directly. token stays
+-- globally unique; reassigning a shared device away from its previous
+-- owner only takes effect the next time the new owner registers. Always
+-- returns void so a caller can't tell whether the token already existed.
+create function public.register_device_token(p_token text, p_platform text)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if p_platform not in ('ios', 'android') then
+    raise exception using
+      errcode = 'invalid_parameter_value',
+      message = 'register_device_token: platform must be ios or android';
+  end if;
+
+  if p_token is null or char_length(p_token) < 1 or char_length(p_token) > 4096 then
+    raise exception using
+      errcode = 'invalid_parameter_value',
+      message = 'register_device_token: token length must be 1-4096';
+  end if;
+
+  delete from public.device_tokens
+  where token = p_token and user_id <> (select auth.uid());
+
+  insert into public.device_tokens (user_id, token, platform, updated_at)
+  values ((select auth.uid()), p_token, p_platform, now())
+  on conflict (token) do update
+    set platform = excluded.platform, updated_at = excluded.updated_at;
+end;
+$$;
+
+revoke all on function public.register_device_token(text, text) from public, anon;
+grant execute on function public.register_device_token(text, text) to authenticated;
