@@ -49,5 +49,9 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
+# Firebase configuration (project-specific, keep out of source control)
+android/app/src/*/google-services.json
+ios/**/GoogleService-Info.plist
+
 # Temporary
 MVP_ISSUES.md
