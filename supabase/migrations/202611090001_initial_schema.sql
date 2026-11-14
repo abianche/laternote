@@ -1,6 +1,4 @@
-create extension if not exists pgcrypto;
-
-create type public.message_status as enum ('scheduled', 'available', 'deleted');
+create type public.message_status as enum ('scheduled', 'available');
 
 create table public.messages (
   id uuid primary key default gen_random_uuid(),
