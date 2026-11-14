@@ -173,7 +173,9 @@ begin
   insert into public.device_tokens (user_id, token, platform, updated_at)
   values ((select auth.uid()), p_token, p_platform, now())
   on conflict (token) do update
-    set platform = excluded.platform, updated_at = excluded.updated_at;
+    set user_id = excluded.user_id,
+        platform = excluded.platform,
+        updated_at = excluded.updated_at;
 end;
 $$;
 
