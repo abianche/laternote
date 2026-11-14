@@ -125,15 +125,6 @@ create trigger messages_set_updated_at
   for each row
   execute function public.set_updated_at();
 
--- Scheduled-list metadata only; this view deliberately omits message content.
-create view public.scheduled_message_metadata
-  with (security_invoker = true) as
-  select id, user_id, scheduled_for, timezone, created_at
-  from public.messages
-  where status = 'scheduled' and scheduled_for > now();
-
-grant select on public.scheduled_message_metadata to authenticated;
-
 create function public.get_available_message(p_message_id uuid)
 returns table (id uuid, body text, scheduled_for timestamptz, timezone text, released_at timestamptz)
 language sql
