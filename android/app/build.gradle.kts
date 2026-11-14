@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.althenos.laternote.laternote"
+    namespace = "com.althenos.laternote"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
