@@ -45,13 +45,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (!mounted) return;
       // When email confirmation is required, signUp returns a user without
       // an active session; when disabled (e.g. local dev), the user is
-      // signed in immediately and AuthGate will navigate away on its own.
+      // signed in immediately, so this pushed screen must get out of the
+      // way for AuthGate's rebuilt HomeShell to become visible.
       if (response.session == null) {
         setState(() => _confirmationSent = true);
+      } else {
+        Navigator.of(context).popUntil((route) => route.isFirst);
       }
     } catch (error) {
       if (!mounted) return;
-      setState(() => _errorMessage = describeAuthError(error));
+      // Show the same "check your email" state for a duplicate account as
+      // for a new one, so the form doesn't reveal whether an email is
+      // already registered.
+      if (error is AuthException && error.code == 'user_already_exists') {
+        setState(() => _confirmationSent = true);
+      } else {
+        setState(() => _errorMessage = describeAuthError(error));
+      }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }

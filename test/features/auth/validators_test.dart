@@ -21,12 +21,12 @@ void main() {
       expect(validatePassword(''), isNotNull);
     });
 
-    test('rejects a password shorter than 6 characters', () {
-      expect(validatePassword('abc12'), isNotNull);
+    test('rejects a password shorter than 8 characters', () {
+      expect(validatePassword('abc1234'), isNotNull);
     });
 
-    test('accepts a 6+ character password', () {
-      expect(validatePassword('abc123'), isNull);
+    test('accepts an 8+ character password', () {
+      expect(validatePassword('abc12345'), isNull);
     });
   });
 

@@ -12,11 +12,11 @@ String? validateEmail(String? value) {
 
 /// Returns an error message for an invalid password, or null when it is valid.
 ///
-/// Matches Supabase Auth's default minimum password length (6 characters).
+/// Matches the minimum_password_length configured for Supabase Auth.
 String? validatePassword(String? value) {
   final password = value ?? '';
   if (password.isEmpty) return 'Enter a password.';
-  if (password.length < 6) return 'Password must be at least 6 characters.';
+  if (password.length < 8) return 'Password must be at least 8 characters.';
   return null;
 }
 
