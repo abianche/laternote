@@ -3,7 +3,11 @@ create type public.message_status as enum ('scheduled', 'available');
 create table public.messages (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
-  body text not null check (length(trim(body)) > 0),
+  -- 20,000 characters is the composer's hard cap; keep validation and the
+  -- UI limit in sync.
+  body text not null check (
+    length(trim(body)) > 0 and char_length(body) <= 20000
+  ),
   scheduled_for timestamptz not null,
   timezone text not null,
   status public.message_status not null default 'scheduled',
@@ -16,6 +20,30 @@ create table public.messages (
 create index messages_due_idx on public.messages (scheduled_for)
   where status = 'scheduled';
 create index messages_owner_schedule_idx on public.messages (user_id, scheduled_for desc);
+
+-- pg_timezone_names can't be queried from a check constraint, so timezone
+-- validity is enforced here instead, on both insert and update.
+create function public.validate_message_timezone()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if not exists (
+    select 1 from pg_catalog.pg_timezone_names where name = new.timezone
+  ) then
+    raise exception using
+      errcode = 'invalid_parameter_value',
+      message = 'messages.timezone must be a valid IANA time zone name';
+  end if;
+  return new;
+end;
+$$;
+
+create trigger messages_validate_timezone
+  before insert or update on public.messages
+  for each row
+  execute function public.validate_message_timezone();
 
 create table public.device_tokens (
   id uuid primary key default gen_random_uuid(),
