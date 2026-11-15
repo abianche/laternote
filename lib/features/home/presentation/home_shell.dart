@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../account/account_screen.dart';
+import '../../../app/routes.dart';
 
 /// Minimal signed-in landing page. The inbox/compose features land in
 /// later MVP issues; this screen exists so sign-in has somewhere to go.
@@ -16,9 +17,7 @@ class HomeShell extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.account_circle_outlined),
             tooltip: 'Account',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const AccountScreen()),
-            ),
+            onPressed: () => context.go(Routes.account),
           ),
         ],
       ),

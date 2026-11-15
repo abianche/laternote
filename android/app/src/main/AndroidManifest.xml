@@ -27,6 +27,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- supabase_flutter handles the auth deep link; keep it away from go_router. -->
+            <meta-data
+              android:name="flutter_deeplinking_enabled"
+              android:value="false"
+              />
             <!-- Password-recovery deep link from Supabase Auth emails. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
