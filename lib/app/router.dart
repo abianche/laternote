@@ -12,6 +12,8 @@ import '../features/auth/presentation/reset_password_screen.dart';
 import '../features/auth/presentation/sign_in_screen.dart';
 import '../features/auth/presentation/sign_up_screen.dart';
 import '../features/home/presentation/home_shell.dart';
+import '../features/messages/presentation/compose_screen.dart';
+import '../features/messages/presentation/review_screen.dart';
 import 'routes.dart';
 
 part 'router.g.dart';
@@ -49,6 +51,16 @@ GoRouter router(Ref ref) {
         path: Routes.home,
         builder: (_, _) => const HomeShell(),
         routes: [
+          GoRoute(
+            path: 'compose',
+            builder: (_, _) => const ComposeScreen(),
+            routes: [
+              GoRoute(
+                path: 'review',
+                builder: (_, _) => const ReviewScreen(),
+              ),
+            ],
+          ),
           GoRoute(
             path: 'account',
             builder: (_, _) => const AccountScreen(),
