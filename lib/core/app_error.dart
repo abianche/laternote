@@ -31,6 +31,11 @@ final class AccountAlreadyExistsError extends AppError {
   const AccountAlreadyExistsError() : super('An account already exists.');
 }
 
+/// Input the backend (or a last client-side check) rejected.
+final class ValidationError extends AppError {
+  const ValidationError(super.message);
+}
+
 /// Anything not covered above.
 final class UnexpectedError extends AppError {
   const UnexpectedError() : super('Something went wrong. Please try again.');
