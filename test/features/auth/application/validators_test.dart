@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:laternote/features/auth/validators.dart';
+import 'package:laternote/features/auth/application/validators.dart';
 
 void main() {
   group('validateEmail', () {

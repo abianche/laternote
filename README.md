@@ -61,7 +61,7 @@ Initial language support:
 
 ## Architecture and environments
 
-The MVP architecture, data access rules, delivery behavior, and development/production setup are documented in [docs/architecture.md](docs/architecture.md) and [docs/environments.md](docs/environments.md). Local backend configuration belongs in ignored `config/dev.json` and `config/prod.json`; start from the example files.
+The MVP architecture, data access rules, delivery behavior, and development/production setup are documented in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/environments.md](docs/environments.md). Local backend configuration belongs in ignored `config/dev.json` and `config/prod.json`; start from the example files.
 
 ## Vision
 

@@ -1,5 +1,42 @@
 # Laternote architecture (MVP)
 
+Living document. Change it only through a PR linked to an issue labelled `decision`.
+
+## Stack
+
+- **Flutter** (stable channel), Dart 3
+- **State management:** Riverpod 3 with code generation (`riverpod_annotation` + `riverpod_generator` + `build_runner`)
+- **Navigation:** go_router
+- **Backend:** Supabase via `supabase_flutter` (Auth, Postgres, Storage, Edge Functions)
+- **Models:** plain Dart classes, `sealed` classes for states/results, records where handy
+
+## Folder structure (feature-first)
+
+```
+lib/
+  main.dart
+  app/                 # app widget, router, theme
+  core/                # shared utils, errors, Supabase client provider
+  features/
+    <feature>/
+      data/            # repositories: the ONLY place that talks to Supabase
+      application/     # Riverpod providers / notifiers (business logic)
+      presentation/    # screens & widgets (UI only)
+test/                  # mirrors lib/
+supabase/
+  migrations/          # SQL migrations (source of truth for the schema)
+  functions/           # Edge Functions
+```
+
+## App rules
+
+- Widgets never call Supabase directly. Flow: widget → provider/notifier → repository → Supabase.
+- Repositories are exposed through providers so tests can override them with fakes.
+- Use `@riverpod` code generation, not hand-written providers.
+- Async UI uses `AsyncValue` (`.when` / pattern matching); always handle loading and error.
+- Errors from Supabase are caught in the repository and mapped to app-level errors in `core/`.
+- Generated types/constants for table names live in `core/`.
+
 ## Selected services
 
 - **Backend:** Supabase: separate development and production projects, each with Auth, Postgres, Row Level Security (RLS), and Edge Functions. Do not point a development build at production.
@@ -15,6 +52,8 @@ The initial schema is in `supabase/migrations/`. `messages` rows belong to one `
 
 RLS is enabled on every user-data table. Policies compare `auth.uid()` to the row's `user_id` for select/insert/update/delete. Client inserts must set their own `user_id`; updates cannot change ownership or server-controlled delivery fields. A client may read message content only when `status = 'available'` and `scheduled_for <= now()`. Scheduled rows can be listed without content through the client's restricted column grant; do not grant clients direct `SELECT` of sealed content. Secret keys bypass RLS and are confined to Edge Functions, which validate the user or process due rows. Never ship a secret key.
 
+Never trust a user ID sent from the client. Storage buckets are private by default and covered by policies. Edge Functions invoked by users verify the caller's JWT.
+
 The migration establishes owner policies on every table. Client table grants exclude `body`; the `get_available_message` RPC returns it only after checking owner, release state, and server time. Device token writes go through the `register_device_token` RPC rather than a direct grant, since reassigning a token from a shared device's previous owner needs to bypass that owner's RLS row. Before opening beta, verify sealed-content isolation and cross-account isolation with two test users and the production-equivalent policies.
 
 ## Environments and credentials
@@ -28,3 +67,11 @@ Required hosted configuration: Supabase URL and publishable key in the app; Supa
 The scheduled function claims due rows safely, releases them in a transaction, and retries transient failures with backoff. A unique outbox key prevents duplicate logical notifications. Permanent provider errors are recorded for operations review; notification failure never rolls back message release. A periodic catch-up run processes overdue rows after outages. Monitor oldest due-but-unreleased row, function errors, and notification failures; alert on sustained backlog. Do not include content or tokens in routine logs.
 
 Account deletion is an authenticated request that first disables sign-in, then deletes the Auth user; `ON DELETE CASCADE` removes messages, device tokens, and outbox rows. Define a short operational backup expiry (target 30 days) and disclose that encrypted backups age out on that schedule; restore procedures must reapply deletion requests recorded since the backup. Keep only non-identifying aggregate operational metrics. Product/legal owners must confirm the retention window and privacy policy before public launch.
+
+## Decisions log
+
+| Date | Decision | Why |
+|------|----------|-----|
+| 2026-11-15 | Riverpod 3 + codegen, go_router | Low boilerplate, testable without BuildContext, community default |
+| 2026-11-15 | Supabase as backend | — |
+| 2026-11-15 | Flutter deep linking off; `supabase_flutter` alone handles the auth deep link | Keeps auth callback URLs out of go_router; routing follows auth state instead |

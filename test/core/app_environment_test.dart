@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:laternote/app_environment.dart';
+import 'package:laternote/core/app_environment.dart';
 
 void main() {
   const validKey = 'sb_publishable_abc123';
