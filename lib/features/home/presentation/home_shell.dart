@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../messages/presentation/upcoming_messages_list.dart';
 
-/// Minimal signed-in landing page. The inbox feature lands in
-/// later MVP issues; this screen exists so sign-in has somewhere to go.
+/// Signed-in landing page: the user's sealed messages.
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key});
 
@@ -21,7 +21,7 @@ class HomeShell extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(child: Text("You're signed in.")),
+      body: const UpcomingMessagesList(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.go(Routes.compose),
         icon: const Icon(Icons.edit_outlined),
