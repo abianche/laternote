@@ -4,6 +4,7 @@ import 'package:laternote/core/app_error.dart';
 import 'package:laternote/core/clock.dart';
 import 'package:laternote/features/messages/application/compose_controllers.dart';
 import 'package:laternote/features/messages/application/message_draft.dart';
+import 'package:laternote/features/messages/application/upcoming_messages.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 
 import '../fake_messages_repository.dart';
@@ -53,6 +54,18 @@ void main() {
       scheduledFor: at,
       timezone: 'Europe/Rome',
     ));
+  });
+
+  test('sealing refreshes the upcoming list', () async {
+    container.listen(upcomingMessagesProvider, (_, _) {});
+    expect(await container.read(upcomingMessagesProvider.future), isEmpty);
+
+    await seal(
+      MessageDraft(body: 'Hi', deliverAt: now.add(const Duration(hours: 1))),
+    );
+
+    final upcoming = await container.read(upcomingMessagesProvider.future);
+    expect(upcoming.single.scheduledFor, now.add(const Duration(hours: 1)));
   });
 
   test('rejects empty content without saving', () async {
