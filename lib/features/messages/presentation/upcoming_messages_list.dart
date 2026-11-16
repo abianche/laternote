@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
+import '../application/compose_controllers.dart';
 import '../application/upcoming_messages.dart';
 import '../data/scheduled_message.dart';
 import 'delivery_format.dart';
@@ -70,6 +71,9 @@ class _MessageTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider)();
+    // `scheduledFor` is device-local, so label it with the device's current
+    // zone, not the one saved at composition. Omitted while loading or failed.
+    final zone = ref.watch(deviceTimezoneProvider).value;
     final sealed = MaterialLocalizations.of(
       context,
     ).formatShortDate(message.createdAt);
@@ -79,7 +83,7 @@ class _MessageTile extends ConsumerWidget {
       title: Text(
         openingSoon
             ? 'Opening soon'
-            : 'Opens ${formatDelivery(context, message.scheduledFor, message.timezone)}',
+            : 'Opens ${formatDelivery(context, message.scheduledFor, zone)}',
       ),
       subtitle: Text('Sealed on $sealed'),
     );
