@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/clock.dart';
-import '../../auth/application/auth_controllers.dart' show errorMessage;
+import '../../../core/error_message.dart';
 import '../application/upcoming_messages.dart';
 import '../data/scheduled_message.dart';
 import 'delivery_format.dart';

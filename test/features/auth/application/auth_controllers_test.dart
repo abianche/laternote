@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/core/app_error.dart';
+import 'package:laternote/core/error_message.dart';
 import 'package:laternote/features/auth/application/auth_controllers.dart';
 import 'package:laternote/features/auth/data/auth_repository.dart';
 import 'package:laternote/features/auth/data/auth_status.dart';
@@ -75,13 +76,5 @@ void main() {
 
     expect(repository.calls, ['sendPasswordReset:a@b.co']);
     expect(container.read(forgotPasswordControllerProvider).value, isTrue);
-  });
-
-  test('errorMessage hides non-app errors behind a generic message', () {
-    expect(
-      errorMessage(AsyncError<void>(StateError('boom'), StackTrace.empty)),
-      const UnexpectedError().message,
-    );
-    expect(errorMessage(const AsyncData<void>(null)), isNull);
   });
 }

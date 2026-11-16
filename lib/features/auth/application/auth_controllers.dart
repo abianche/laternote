@@ -103,12 +103,3 @@ class SignOutController extends _$SignOutController {
     if (result != null) state = result;
   }
 }
-
-/// Message to show for a failed [AsyncValue], or null.
-String? errorMessage(AsyncValue<Object?> value) => switch (value) {
-  AsyncError(:final error) => switch (error) {
-    AppError(:final message) => message,
-    _ => const UnexpectedError().message,
-  },
-  _ => null,
-};

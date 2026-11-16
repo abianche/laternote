@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
-import '../../auth/application/auth_controllers.dart' show errorMessage;
+import '../../../core/error_message.dart';
 import '../../auth/presentation/auth_form_widgets.dart';
 import '../application/compose_controllers.dart';
 import 'delivery_format.dart';
