@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
+import 'package:laternote/features/messages/data/scheduled_message.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
@@ -13,13 +14,18 @@ void main() {
   MessagesRepository repository({
     int status = 201,
     Map<String, Object?>? error,
+    Object? rows,
     String? userId = 'user-1',
   }) {
     sent = null;
     final client = MockClient((request) async {
       sent = request;
       return http.Response(
-        error == null ? '' : jsonEncode(error),
+        error != null
+            ? jsonEncode(error)
+            : rows != null
+            ? jsonEncode(rows)
+            : '',
         status,
         headers: {'content-type': 'application/json'},
         request: request,
@@ -102,5 +108,51 @@ void main() {
       error: {'code': 'XX000', 'message': 'boom'},
     );
     await expectLater(create(repo), throwsA(isA<UnexpectedError>()));
+  });
+
+  group('listUpcoming', () {
+    test('selects metadata of scheduled rows only, soonest first', () async {
+      await repository(status: 200, rows: []).listUpcoming();
+
+      final query = sent!.url.queryParameters;
+      expect(sent!.method, 'GET');
+      expect(sent!.url.path, '/rest/v1/messages');
+      expect(query['select'], 'id,scheduled_for,timezone,created_at');
+      expect(query['select'], isNot(contains('body')));
+      expect(query['status'], 'eq.scheduled');
+      expect(query['order'], 'scheduled_for.asc.nullslast');
+    });
+
+    test('maps rows to local-time messages', () async {
+      final messages = await repository(
+        status: 200,
+        rows: [
+          {
+            'id': 'm1',
+            'scheduled_for': '2030-01-02T08:30:00+00:00',
+            'timezone': 'Europe/Rome',
+            'created_at': '2029-12-01T10:00:00+00:00',
+          },
+        ],
+      ).listUpcoming();
+
+      expect(messages, [
+        ScheduledMessage(
+          id: 'm1',
+          scheduledFor: DateTime.utc(2030, 1, 2, 8, 30).toLocal(),
+          timezone: 'Europe/Rome',
+          createdAt: DateTime.utc(2029, 12, 1, 10).toLocal(),
+        ),
+      ]);
+      expect(messages.single.scheduledFor.isUtc, isFalse);
+    });
+
+    test('database errors map to an AppError', () async {
+      final repo = repository(
+        status: 500,
+        error: {'code': 'XX000', 'message': 'boom'},
+      );
+      await expectLater(repo.listUpcoming(), throwsA(isA<UnexpectedError>()));
+    });
   });
 }
