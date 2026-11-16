@@ -9,6 +9,7 @@ import 'package:laternote/features/messages/application/compose_controllers.dart
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/presentation/compose_screen.dart';
 import 'package:laternote/features/messages/presentation/review_screen.dart';
+import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
 
 import '../fake_messages_repository.dart';
 
@@ -24,7 +25,7 @@ void main() {
       routes: [
         GoRoute(
           path: Routes.home,
-          builder: (_, _) => const Scaffold(body: Text('Home')),
+          builder: (_, _) => const Scaffold(body: UpcomingMessagesList()),
           routes: [
             GoRoute(
               path: 'compose',
@@ -87,7 +88,7 @@ void main() {
     expect(find.textContaining('(Europe/Rome)'), findsOneWidget);
   });
 
-  testWidgets('review then seal saves and returns home', (tester) async {
+  testWidgets('review then seal saves and lists it at home', (tester) async {
     await pumpApp(tester);
     await tester.enterText(find.byType(TextFormField), 'Dear me');
     container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
@@ -104,8 +105,10 @@ void main() {
       scheduledFor: deliverAt,
       timezone: 'Europe/Rome',
     ));
-    expect(find.text('Home'), findsOneWidget);
+    expect(find.byType(UpcomingMessagesList), findsOneWidget);
     expect(find.textContaining('Sealed until'), findsOneWidget);
+    expect(find.textContaining('Opens '), findsOneWidget);
+    expect(find.text('Dear me'), findsNothing);
   });
 
   testWidgets('a failed save shows the error and keeps the draft', (

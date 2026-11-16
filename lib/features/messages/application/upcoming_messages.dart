@@ -1,0 +1,12 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../data/messages_repository.dart';
+import '../data/scheduled_message.dart';
+
+part 'upcoming_messages.g.dart';
+
+/// The signed-in user's sealed messages, soonest first. Invalidate after
+/// creating, editing or deleting a message.
+@riverpod
+Future<List<ScheduledMessage>> upcomingMessages(Ref ref) =>
+    ref.watch(messagesRepositoryProvider).listUpcoming();

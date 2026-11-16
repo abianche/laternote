@@ -136,7 +136,7 @@ final class SealMessageControllerProvider
 }
 
 String _$sealMessageControllerHash() =>
-    r'c6996dc0435fbb932a0637bfb9a42473684aada6';
+    r'48cae5fd02ce3537a76f9c03bc325247b7aee256';
 
 /// Saves the draft. Holds true once sealed.
 

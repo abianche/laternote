@@ -5,6 +5,7 @@ import '../../../core/app_error.dart';
 import '../../../core/clock.dart';
 import '../data/messages_repository.dart';
 import 'message_draft.dart';
+import 'upcoming_messages.dart';
 
 part 'compose_controllers.g.dart';
 
@@ -48,6 +49,7 @@ class SealMessageController extends _$SealMessageController {
             scheduledFor: draft.deliverAt!,
             timezone: await ref.read(deviceTimezoneProvider.future),
           );
+      ref.invalidate(upcomingMessagesProvider);
       return true;
     });
     if (ref.mounted) state = result;

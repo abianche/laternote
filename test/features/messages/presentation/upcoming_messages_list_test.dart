@@ -1,0 +1,152 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:laternote/core/app_error.dart';
+import 'package:laternote/core/clock.dart';
+import 'package:laternote/features/messages/application/compose_controllers.dart';
+import 'package:laternote/features/messages/application/upcoming_messages.dart';
+import 'package:laternote/features/messages/data/messages_repository.dart';
+import 'package:laternote/features/messages/data/scheduled_message.dart';
+import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
+
+import '../fake_messages_repository.dart';
+
+void main() {
+  final now = DateTime(2030, 1, 1, 12);
+  late FakeMessagesRepository repository;
+
+  Future<void> pump(
+    WidgetTester tester, {
+    AsyncValue<String> deviceZone = const AsyncData('Europe/Rome'),
+    List<Override> extra = const [],
+  }) => tester.pumpWidget(
+    ProviderScope(
+      retry: (_, _) => null,
+      overrides: [
+        messagesRepositoryProvider.overrideWithValue(repository),
+        clockProvider.overrideWithValue(() => now),
+        deviceTimezoneProvider.overrideWithValue(deviceZone),
+        ...extra,
+      ],
+      child: const MaterialApp(
+        home: Scaffold(body: UpcomingMessagesList()),
+      ),
+    ),
+  );
+
+  setUp(() => repository = FakeMessagesRepository());
+
+  testWidgets('loading explains what to do meanwhile', (tester) async {
+    await pump(
+      tester,
+      extra: [
+        upcomingMessagesProvider.overrideWith(
+          (_) => Completer<List<ScheduledMessage>>().future,
+        ),
+      ],
+    );
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.textContaining('start a new one'), findsOneWidget);
+  });
+
+  testWidgets('empty list points to New message', (tester) async {
+    await pump(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Tap New message'), findsOneWidget);
+  });
+
+  testWidgets('shows delivery and sealed dates, never content', (
+    tester,
+  ) async {
+    repository.upcoming.addAll([
+      ScheduledMessage(
+        id: 'future',
+        scheduledFor: DateTime(2030, 6, 1, 9),
+        timezone: 'Europe/Rome',
+        createdAt: DateTime(2029, 12, 24),
+      ),
+      ScheduledMessage(
+        id: 'overdue',
+        scheduledFor: now.subtract(const Duration(minutes: 1)),
+        timezone: 'Europe/Rome',
+        createdAt: DateTime(2029, 11, 2),
+      ),
+    ]);
+    await pump(tester);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Opens Saturday, June 1, 2030 at 9:00 AM (Europe/Rome)'),
+      findsOneWidget,
+    );
+    expect(find.text('Sealed on Dec 24, 2029'), findsOneWidget);
+    expect(find.text('Opening soon'), findsOneWidget);
+    expect(find.text('Sealed on Nov 2, 2029'), findsOneWidget);
+  });
+
+  testWidgets('labels the opening time with the current device zone', (
+    tester,
+  ) async {
+    repository.upcoming.add(
+      ScheduledMessage(
+        id: 'moved',
+        scheduledFor: DateTime(2030, 6, 1, 9),
+        timezone: 'Europe/Rome',
+        createdAt: DateTime(2029, 12, 24),
+      ),
+    );
+    await pump(
+      tester,
+      deviceZone: const AsyncData('America/New_York'),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Opens Saturday, June 1, 2030 at 9:00 AM (America/New_York)'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Europe/Rome'), findsNothing);
+  });
+
+  testWidgets('omits the zone while the device zone is unknown', (
+    tester,
+  ) async {
+    repository.upcoming.add(
+      ScheduledMessage(
+        id: 'unknown',
+        scheduledFor: DateTime(2030, 6, 1, 9),
+        timezone: 'Europe/Rome',
+        createdAt: DateTime(2029, 12, 24),
+      ),
+    );
+    await pump(
+      tester,
+      deviceZone: AsyncError(StateError('no zone'), StackTrace.empty),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Opens Saturday, June 1, 2030 at 9:00 AM'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('an error offers retry', (tester) async {
+    repository.error = const NetworkError();
+    await pump(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.text(const NetworkError().message), findsOneWidget);
+
+    repository.error = null;
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Tap New message'), findsOneWidget);
+  });
+}

@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/app_error.dart';
 import '../../../core/supabase_client.dart';
 import '../../../core/tables.dart';
+import 'scheduled_message.dart';
 
 part 'messages_repository.g.dart';
 
@@ -45,6 +46,21 @@ class MessagesRepository {
         ),
         _ => mapSupabaseError(error),
       };
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
+  }
+
+  /// The user's sealed, not-yet-released messages, soonest first. Selects
+  /// metadata only; `body` is not granted to clients anyway.
+  Future<List<ScheduledMessage>> listUpcoming() async {
+    try {
+      final rows = await _db
+          .from(Tables.messages)
+          .select('id, scheduled_for, timezone, created_at')
+          .eq('status', 'scheduled')
+          .order('scheduled_for', ascending: true);
+      return rows.map(ScheduledMessage.fromRow).toList();
     } catch (error) {
       throw mapSupabaseError(error);
     }
