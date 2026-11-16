@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
 
-/// Minimal signed-in landing page. The inbox/compose features land in
+/// Minimal signed-in landing page. The inbox feature lands in
 /// later MVP issues; this screen exists so sign-in has somewhere to go.
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key});
@@ -22,6 +22,11 @@ class HomeShell extends StatelessWidget {
         ],
       ),
       body: const Center(child: Text("You're signed in.")),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.go(Routes.compose),
+        icon: const Icon(Icons.edit_outlined),
+        label: const Text('New message'),
+      ),
     );
   }
 }

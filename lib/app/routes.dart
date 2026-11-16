@@ -2,6 +2,8 @@
 /// its parent.
 abstract final class Routes {
   static const home = '/';
+  static const compose = '/compose';
+  static const composeReview = '/compose/review';
   static const account = '/account';
   static const privacy = '/account/privacy';
   static const signIn = '/sign-in';
