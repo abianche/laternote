@@ -6,17 +6,20 @@ import 'package:laternote/app/routes.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/core/clock.dart';
 import 'package:laternote/features/messages/application/compose_controllers.dart';
+import 'package:laternote/features/messages/data/draft_repository.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/presentation/compose_screen.dart';
 import 'package:laternote/features/messages/presentation/review_screen.dart';
 import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
 
+import '../fake_draft_repository.dart';
 import '../fake_messages_repository.dart';
 
 void main() {
   final now = DateTime(2030, 1, 1, 12);
   final deliverAt = DateTime(2030, 6, 1, 9);
   late FakeMessagesRepository repository;
+  late FakeDraftRepository drafts;
   late ProviderContainer container;
 
   Future<void> pumpApp(WidgetTester tester) async {
@@ -53,9 +56,11 @@ void main() {
 
   setUp(() {
     repository = FakeMessagesRepository();
+    drafts = FakeDraftRepository();
     container = ProviderContainer.test(
       overrides: [
         messagesRepositoryProvider.overrideWithValue(repository),
+        draftRepositoryProvider.overrideWithValue(drafts),
         clockProvider.overrideWithValue(() => now),
         deviceTimezoneProvider.overrideWithValue(
           const AsyncData('Europe/Rome'),
@@ -70,10 +75,10 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('empty content and missing time block review', (tester) async {
+  testWidgets('empty content and missing time block sealing', (tester) async {
     await pumpApp(tester);
 
-    await tapButton(tester, 'Review');
+    await tapButton(tester, 'Seal…');
 
     expect(find.text('Write something to your future self.'), findsOneWidget);
     expect(find.text('Pick a delivery date and time.'), findsOneWidget);
@@ -92,7 +97,7 @@ void main() {
     await pumpApp(tester);
     await tester.enterText(find.byType(TextFormField), 'Dear me');
     container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
-    await tapButton(tester, 'Review');
+    await tapButton(tester, 'Seal…');
 
     expect(find.byType(ReviewScreen), findsOneWidget);
     expect(find.text('Dear me'), findsOneWidget);
@@ -109,6 +114,49 @@ void main() {
     expect(find.textContaining('Sealed until'), findsOneWidget);
     expect(find.textContaining('Opens '), findsOneWidget);
     expect(find.text('Dear me'), findsNothing);
+    expect(drafts.stored, isNull);
+  });
+
+  testWidgets('reopening compose restores the saved draft', (tester) async {
+    drafts.stored = (body: 'Half written', deliverAt: deliverAt);
+    await pumpApp(tester);
+
+    expect(find.text('Half written'), findsOneWidget);
+    expect(find.textContaining('(Europe/Rome)'), findsOneWidget);
+  });
+
+  testWidgets('edits are saved locally, not sealed', (tester) async {
+    await pumpApp(tester);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    await tester.pump(draftSaveDelay);
+
+    expect(drafts.stored?.body, 'Dear me');
+    expect(repository.calls, isEmpty);
+  });
+
+  testWidgets('discarding deletes the draft and goes home', (tester) async {
+    drafts.stored = (body: 'Never mind', deliverAt: null);
+    await pumpApp(tester);
+
+    await tester.tap(find.byTooltip('Discard draft'));
+    await tester.pumpAndSettle();
+    await tapButton(tester, 'Discard');
+
+    expect(drafts.stored, isNull);
+    expect(repository.calls, isEmpty);
+    expect(find.byType(UpcomingMessagesList), findsOneWidget);
+  });
+
+  testWidgets('cancelling discard keeps the draft', (tester) async {
+    drafts.stored = (body: 'Keep me', deliverAt: null);
+    await pumpApp(tester);
+
+    await tester.tap(find.byTooltip('Discard draft'));
+    await tester.pumpAndSettle();
+    await tapButton(tester, 'Keep');
+
+    expect(drafts.stored?.body, 'Keep me');
+    expect(find.text('Keep me'), findsOneWidget);
   });
 
   testWidgets('a failed save shows the error and keeps the draft', (
@@ -118,7 +166,7 @@ void main() {
     await pumpApp(tester);
     await tester.enterText(find.byType(TextFormField), 'Dear me');
     container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
-    await tapButton(tester, 'Review');
+    await tapButton(tester, 'Seal…');
     await tapButton(tester, 'Seal message');
 
     expect(find.text(const NetworkError().message), findsOneWidget);
@@ -126,5 +174,6 @@ void main() {
 
     await tapButton(tester, 'Edit');
     expect(find.text('Dear me'), findsOneWidget);
+    expect(drafts.stored?.body, 'Dear me');
   });
 }

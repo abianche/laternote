@@ -13,17 +13,17 @@ class ReviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final draft = ref.watch(composeDraftProvider);
+    final draft = ref.watch(composeDraftProvider).requireValue;
     final timezone = ref.watch(deviceTimezoneProvider).value;
     final state = ref.watch(sealMessageControllerProvider);
     final deliverAt = draft.deliverAt;
 
     ref.listen(sealMessageControllerProvider, (_, next) {
-      if (next case AsyncData(value: true)) {
+      if (next case AsyncData(value: final sealedFor?)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Sealed until ${formatDelivery(context, deliverAt!, timezone)}.',
+              'Sealed until ${formatDelivery(context, sealedFor, timezone)}.',
             ),
           ),
         );
@@ -47,7 +47,9 @@ class ReviewScreen extends ConsumerWidget {
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.lock_clock),
             title: Text(
-              deliverAt == null ? 'No delivery time' : formatDelivery(context, deliverAt, timezone),
+              deliverAt == null
+                  ? 'No delivery time'
+                  : formatDelivery(context, deliverAt, timezone),
             ),
             subtitle: const Text(
               "Once sealed, you can't read it until then.",
@@ -58,7 +60,8 @@ class ReviewScreen extends ConsumerWidget {
           SubmitButton(
             label: 'Seal message',
             isLoading: state.isLoading,
-            onPressed: () => ref.read(sealMessageControllerProvider.notifier).seal(draft),
+            onPressed: () =>
+                ref.read(sealMessageControllerProvider.notifier).seal(draft),
           ),
           const SizedBox(height: 8),
           OutlinedButton(
