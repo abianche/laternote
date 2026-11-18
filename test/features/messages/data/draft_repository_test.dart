@@ -77,4 +77,42 @@ void main() {
       throwsA(isA<AuthError>()),
     );
   });
+
+  test('a draft that storage fails to read is deleted, not thrown', () async {
+    final storage = _UnreadableStorage();
+    final repository = DraftRepository(storage, () => userId);
+
+    expect(await repository.load(), isNull);
+    expect(storage.deleted, isTrue);
+  });
+}
+
+/// Storage whose reads fail, as when the platform can't decrypt them.
+class _UnreadableStorage implements FlutterSecureStorage {
+  bool deleted = false;
+
+  @override
+  Future<String?> read({
+    required String key,
+    Object? iOptions,
+    Object? aOptions,
+    Object? lOptions,
+    Object? webOptions,
+    Object? mOptions,
+    Object? wOptions,
+  }) => Future.error(Exception('decryption failed'));
+
+  @override
+  Future<void> delete({
+    required String key,
+    Object? iOptions,
+    Object? aOptions,
+    Object? lOptions,
+    Object? webOptions,
+    Object? mOptions,
+    Object? wOptions,
+  }) async => deleted = true;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

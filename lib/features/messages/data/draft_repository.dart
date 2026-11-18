@@ -26,22 +26,22 @@ class DraftRepository {
   /// The current user's draft, or null. A draft left by another account, or
   /// one that can't be read, is deleted rather than shown.
   Future<StoredDraft?> load() async {
-    final raw = await _storage.read(key: _key);
-    if (raw == null) return null;
-    final StoredDraft draft;
     try {
+      final raw = await _storage.read(key: _key);
+      if (raw == null) return null;
       final json = jsonDecode(raw) as Map<String, Object?>;
       if (json['user_id'] != _currentUserId()) throw const FormatException();
       final deliverAt = json['deliver_at'] as String?;
-      draft = (
+      return (
         body: json['body'] as String,
         deliverAt: deliverAt == null ? null : DateTime.parse(deliverAt),
       );
     } on Object {
-      await clear();
+      // Includes storage that can no longer be decrypted (e.g. the Android
+      // screen lock was reset). Best effort: the next save overwrites it.
+      await clear().catchError((Object _) {});
       return null;
     }
-    return draft;
   }
 
   Future<void> save(StoredDraft draft) async {
