@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,13 +49,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         // A signed-in outcome needs nothing here: the router moves the user
         // to the home screen.
         child: switch (state) {
-          AsyncData(value: SignUpOutcome.confirmationRequired) =>
-            EmailSentMessage(
-              message:
-                  'Check your email to confirm your account before '
-                  'signing in.',
-              onBack: () => context.go(Routes.signIn),
-            ),
+          AsyncData(value: SignUpOutcome.confirmationRequired) => EmailSentMessage(
+            message:
+                'Check your email to confirm your account before '
+                'signing in.',
+            onBack: () => context.go(Routes.signIn),
+          ),
           _ => Form(
             key: _formKey,
             child: Column(

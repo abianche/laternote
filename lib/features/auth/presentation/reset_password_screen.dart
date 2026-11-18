@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/error_message.dart';
@@ -13,8 +13,7 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() =>
-      _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -31,9 +30,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    ref
-        .read(resetPasswordControllerProvider.notifier)
-        .updatePassword(_passwordController.text);
+    ref.read(resetPasswordControllerProvider.notifier).updatePassword(_passwordController.text);
   }
 
   @override

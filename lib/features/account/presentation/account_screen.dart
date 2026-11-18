@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -76,9 +76,7 @@ class AccountScreen extends ConsumerWidget {
                   )
                 : const Icon(Icons.logout),
             title: const Text('Sign out'),
-            onTap: signOut.isLoading
-                ? null
-                : () => ref.read(signOutControllerProvider.notifier).signOut(),
+            onTap: signOut.isLoading ? null : () => ref.read(signOutControllerProvider.notifier).signOut(),
           ),
         ],
       ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,9 +47,7 @@ class ReviewScreen extends ConsumerWidget {
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.lock_clock),
             title: Text(
-              deliverAt == null
-                  ? 'No delivery time'
-                  : formatDelivery(context, deliverAt, timezone),
+              deliverAt == null ? 'No delivery time' : formatDelivery(context, deliverAt, timezone),
             ),
             subtitle: const Text(
               "Once sealed, you can't read it until then.",
@@ -60,8 +58,7 @@ class ReviewScreen extends ConsumerWidget {
           SubmitButton(
             label: 'Seal message',
             isLoading: state.isLoading,
-            onPressed: () =>
-                ref.read(sealMessageControllerProvider.notifier).seal(draft),
+            onPressed: () => ref.read(sealMessageControllerProvider.notifier).seal(draft),
           ),
           const SizedBox(height: 8),
           OutlinedButton(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Centered, width-capped, scrollable body shared by the auth screens.
 class AuthFormBody extends StatelessWidget {

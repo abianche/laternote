@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -54,8 +54,7 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
   void _review() {
     final bodyValid = _formKey.currentState!.validate();
     final draft = ref.read(composeDraftProvider);
-    final deliveryValid =
-        validateDeliverAt(draft.deliverAt, ref.read(clockProvider)()) == null;
+    final deliveryValid = validateDeliverAt(draft.deliverAt, ref.read(clockProvider)()) == null;
     setState(() => _showDeliveryError = true);
     if (bodyValid && deliveryValid) context.go(Routes.composeReview);
   }
@@ -65,9 +64,7 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
     final draft = ref.watch(composeDraftProvider);
     final timezone = ref.watch(deviceTimezoneProvider).value;
     final deliverAt = draft.deliverAt;
-    final deliveryError = _showDeliveryError
-        ? validateDeliverAt(deliverAt, ref.read(clockProvider)())
-        : null;
+    final deliveryError = _showDeliveryError ? validateDeliverAt(deliverAt, ref.read(clockProvider)()) : null;
 
     return Scaffold(
       appBar: AppBar(title: const Text('New message')),
@@ -97,9 +94,7 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
               leading: const Icon(Icons.schedule),
               title: const Text('Deliver on'),
               subtitle: Text(
-                deliverAt == null
-                    ? 'Pick a date and time'
-                    : formatDelivery(context, deliverAt, timezone),
+                deliverAt == null ? 'Pick a date and time' : formatDelivery(context, deliverAt, timezone),
               ),
               onTap: _pickDelivery,
             ),

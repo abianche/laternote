@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -79,15 +79,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               ),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: state.isLoading
-                    ? null
-                    : () => context.go(Routes.forgotPassword),
+                onPressed: state.isLoading ? null : () => context.go(Routes.forgotPassword),
                 child: const Text('Forgot password?'),
               ),
               TextButton(
-                onPressed: state.isLoading
-                    ? null
-                    : () => context.go(Routes.signUp),
+                onPressed: state.isLoading ? null : () => context.go(Routes.signUp),
                 child: const Text("Don't have an account? Sign up"),
               ),
             ],

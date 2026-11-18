@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/clock.dart';
@@ -81,9 +81,7 @@ class _MessageTile extends ConsumerWidget {
     return ListTile(
       leading: Icon(openingSoon ? Icons.hourglass_top : Icons.lock_clock),
       title: Text(
-        openingSoon
-            ? 'Opening soon'
-            : 'Opens ${formatDelivery(context, message.scheduledFor, zone)}',
+        openingSoon ? 'Opening soon' : 'Opens ${formatDelivery(context, message.scheduledFor, zone)}',
       ),
       subtitle: Text('Sealed on $sealed'),
     );
