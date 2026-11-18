@@ -4,18 +4,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
 import '../application/compose_controllers.dart';
+import '../application/delete_message_controller.dart';
 import '../application/upcoming_messages.dart';
 import '../data/scheduled_message.dart';
 import 'delivery_format.dart';
 
 /// The user's sealed messages, showing only when each opens and when it
-/// was sealed. Pull down to refresh.
+/// was sealed. Pull down to refresh. A message can be deleted until it
+/// starts opening.
 class UpcomingMessagesList extends ConsumerWidget {
   const UpcomingMessagesList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = ref.watch(upcomingMessagesProvider);
+    // Also keeps the controller alive while a deletion runs.
+    ref.listen(deleteMessageControllerProvider, (previous, next) {
+      if (!(previous?.isLoading ?? false) || next.isLoading) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(errorMessage(next) ?? 'Message deleted.')),
+        );
+    });
     Future<void> refresh() => ref.refresh(upcomingMessagesProvider.future);
 
     const loading = _Notice(
@@ -78,13 +89,51 @@ class _MessageTile extends ConsumerWidget {
       context,
     ).formatShortDate(message.createdAt);
     final openingSoon = message.isOpeningSoon(now);
+    final deleting = ref.watch(deleteMessageControllerProvider).isLoading;
     return ListTile(
       leading: Icon(openingSoon ? Icons.hourglass_top : Icons.lock_clock),
       title: Text(
-        openingSoon ? 'Opening soon' : 'Opens ${formatDelivery(context, message.scheduledFor, zone)}',
+        openingSoon
+            ? 'Opening soon'
+            : 'Opens ${formatDelivery(context, message.scheduledFor, zone)}',
       ),
       subtitle: Text('Sealed on $sealed'),
+      // Past its time the server refuses deletion, so don't offer it.
+      trailing: openingSoon
+          ? null
+          : IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: 'Delete',
+              onPressed: deleting ? null : () => _confirmDelete(context, ref),
+            ),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    // Read before awaiting: this tile may be gone once the dialog closes.
+    final controller = ref.read(deleteMessageControllerProvider.notifier);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete this sealed message?'),
+        content: const Text(
+          'It will never open. This can\'t be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed ?? false) {
+      await controller.delete(message.id);
+    }
   }
 }
 

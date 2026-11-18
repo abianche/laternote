@@ -54,7 +54,7 @@ A message starts as a draft that exists only on the device: `DraftRepository` st
 
 ## Access control
 
-RLS is enabled on every user-data table. Policies compare `auth.uid()` to the row's `user_id` for select/insert/update/delete. Client inserts must set their own `user_id`; updates cannot change ownership or server-controlled delivery fields. A client may read message content only when `status = 'available'` and `scheduled_for <= now()`. Owners can list metadata for all of their own rows through the client's restricted column grant; do not grant clients direct `SELECT` of sealed content. Secret keys bypass RLS and are confined to Edge Functions, which validate the user or process due rows. Never ship a secret key.
+RLS is enabled on every user-data table. Policies compare `auth.uid()` to the row's `user_id`. Client inserts must set their own `user_id`. Sealed messages are delete-only: clients have no update grant or policy on `messages`, and an owner may delete a row only while it is `scheduled` and `scheduled_for > now()`; release fields are changed only by trusted server code. A client may read message content only when `status = 'available'` and `scheduled_for <= now()`. Owners can list metadata for all of their own rows through the client's restricted column grant; do not grant clients direct `SELECT` of sealed content. Secret keys bypass RLS and are confined to Edge Functions, which validate the user or process due rows. Never ship a secret key.
 
 Never trust a user ID sent from the client. Storage buckets are private by default and covered by policies. Edge Functions invoked by users verify the caller's JWT.
 

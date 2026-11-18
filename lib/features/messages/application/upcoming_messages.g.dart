@@ -9,13 +9,13 @@ part of 'upcoming_messages.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// The signed-in user's sealed messages, soonest first. Invalidate after
-/// creating, editing or deleting a message.
+/// creating or deleting a message.
 
 @ProviderFor(upcomingMessages)
 final upcomingMessagesProvider = UpcomingMessagesProvider._();
 
 /// The signed-in user's sealed messages, soonest first. Invalidate after
-/// creating, editing or deleting a message.
+/// creating or deleting a message.
 
 final class UpcomingMessagesProvider
     extends
@@ -28,7 +28,7 @@ final class UpcomingMessagesProvider
         $FutureModifier<List<ScheduledMessage>>,
         $FutureProvider<List<ScheduledMessage>> {
   /// The signed-in user's sealed messages, soonest first. Invalidate after
-  /// creating, editing or deleting a message.
+  /// creating or deleting a message.
   UpcomingMessagesProvider._()
     : super(
         from: null,

@@ -149,4 +149,81 @@ void main() {
 
     expect(find.textContaining('Tap New message'), findsOneWidget);
   });
+
+  group('delete', () {
+    ScheduledMessage message(String id, DateTime at) => ScheduledMessage(
+      id: id,
+      scheduledFor: at,
+      timezone: 'Europe/Rome',
+      createdAt: DateTime(2029, 12, 24),
+    );
+
+    testWidgets('is offered only before a message starts opening', (
+      tester,
+    ) async {
+      repository.upcoming.addAll([
+        message('future', DateTime(2030, 6, 1, 9)),
+        message('overdue', now.subtract(const Duration(minutes: 1))),
+      ]);
+      await pump(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.byTooltip('Delete'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.widgetWithText(ListTile, 'Opening soon'),
+          matching: find.byTooltip('Delete'),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('cancel keeps the message', (tester) async {
+      repository.upcoming.add(message('m1', DateTime(2030, 6, 1, 9)));
+      await pump(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Delete'));
+      await tester.pumpAndSettle();
+      expect(find.text('Delete this sealed message?'), findsOneWidget);
+
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+
+      expect(repository.deleted, isEmpty);
+      expect(find.textContaining('Opens'), findsOneWidget);
+    });
+
+    testWidgets('confirming removes it from the list', (tester) async {
+      repository.upcoming.add(message('m1', DateTime(2030, 6, 1, 9)));
+      await pump(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Delete'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(TextButton, 'Delete'));
+      await tester.pumpAndSettle();
+
+      expect(repository.deleted, ['m1']);
+      expect(find.text('Message deleted.'), findsOneWidget);
+      expect(find.textContaining('Tap New message'), findsOneWidget);
+    });
+
+    testWidgets('a failed delete is explained', (tester) async {
+      repository.upcoming.add(message('m1', DateTime(2030, 6, 1, 9)));
+      await pump(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Delete'));
+      await tester.pumpAndSettle();
+
+      repository.deleteGate = Completer<void>();
+      await tester.tap(find.widgetWithText(TextButton, 'Delete'));
+      await tester.pump();
+      repository.error = const NetworkError();
+      repository.deleteGate!.complete();
+      await tester.pumpAndSettle();
+
+      expect(find.text(const NetworkError().message), findsWidgets);
+    });
+  });
 }
