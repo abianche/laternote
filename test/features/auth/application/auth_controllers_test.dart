@@ -5,18 +5,45 @@ import 'package:laternote/core/error_message.dart';
 import 'package:laternote/features/auth/application/auth_controllers.dart';
 import 'package:laternote/features/auth/data/auth_repository.dart';
 import 'package:laternote/features/auth/data/auth_status.dart';
+import 'package:laternote/features/messages/data/draft_repository.dart';
 
+import '../../messages/fake_draft_repository.dart';
 import '../fake_auth_repository.dart';
 
 void main() {
   late FakeAuthRepository repository;
+  late FakeDraftRepository drafts;
   late ProviderContainer container;
 
   setUp(() {
     repository = FakeAuthRepository();
+    drafts = FakeDraftRepository()..stored = (body: 'Secret', deliverAt: null);
     container = ProviderContainer.test(
-      overrides: [authRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        authRepositoryProvider.overrideWithValue(repository),
+        draftRepositoryProvider.overrideWithValue(drafts),
+      ],
     );
+  });
+
+  test('sign-out deletes the local draft', () async {
+    container.listen(signOutControllerProvider, (_, _) {});
+    await container.read(signOutControllerProvider.notifier).signOut();
+
+    expect(repository.calls, ['signOut']);
+    expect(drafts.stored, isNull);
+  });
+
+  test('a failed sign-out keeps the local draft', () async {
+    repository.error = const NetworkError();
+    container.listen(signOutControllerProvider, (_, _) {});
+    await container.read(signOutControllerProvider.notifier).signOut();
+
+    expect(
+      container.read(signOutControllerProvider).error,
+      isA<NetworkError>(),
+    );
+    expect(drafts.stored, isNotNull);
   });
 
   test('sign-in trims the email and succeeds', () async {
