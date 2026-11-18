@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/app_error.dart';
-import '../../messages/data/draft_repository.dart';
 import '../data/auth_repository.dart';
 import '../data/auth_status.dart';
 
@@ -89,8 +88,8 @@ class ResetPasswordController extends _$ResetPasswordController {
   }
 }
 
-/// Sign-out action. Deletes the unsealed draft so nothing private stays on
-/// the device. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 @riverpod
 class SignOutController extends _$SignOutController {
   @override
@@ -98,10 +97,10 @@ class SignOutController extends _$SignOutController {
 
   Future<void> signOut() async {
     state = const AsyncLoading();
-    final result = await _run(ref, () async {
-      await ref.read(authRepositoryProvider).signOut();
-      await ref.read(draftRepositoryProvider).clear();
-    });
+    final result = await _run(
+      ref,
+      () => ref.read(authRepositoryProvider).signOut(),
+    );
     if (result != null) state = result;
   }
 }

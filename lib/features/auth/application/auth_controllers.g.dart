@@ -218,18 +218,18 @@ abstract class _$ResetPasswordController extends $AsyncNotifier<void> {
   }
 }
 
-/// Sign-out action. Deletes the unsealed draft so nothing private stays on
-/// the device. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 
 @ProviderFor(SignOutController)
 final signOutControllerProvider = SignOutControllerProvider._();
 
-/// Sign-out action. Deletes the unsealed draft so nothing private stays on
-/// the device. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 final class SignOutControllerProvider
     extends $AsyncNotifierProvider<SignOutController, void> {
-  /// Sign-out action. Deletes the unsealed draft so nothing private stays on
-  /// the device. Success needs no state: the router reacts.
+  /// Sign-out action. Success needs no state: the router reacts, and
+  /// `draftCleanup` deletes the local draft.
   SignOutControllerProvider._()
     : super(
         from: null,
@@ -249,10 +249,10 @@ final class SignOutControllerProvider
   SignOutController create() => SignOutController();
 }
 
-String _$signOutControllerHash() => r'3a05c276ef12975bc3ff8ad8df1f8e18ab24633e';
+String _$signOutControllerHash() => r'd134bff4faf3c597c7fb1bed663b108b6726d0ff';
 
-/// Sign-out action. Deletes the unsealed draft so nothing private stays on
-/// the device. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 
 abstract class _$SignOutController extends $AsyncNotifier<void> {
   FutureOr<void> build();

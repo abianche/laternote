@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../features/messages/application/draft_cleanup.dart';
 import 'router.dart';
 import 'theme.dart';
 
@@ -9,6 +10,7 @@ class LaternoteApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(draftCleanupProvider);
     return MaterialApp.router(
       title: 'Laternote',
       theme: appTheme,
