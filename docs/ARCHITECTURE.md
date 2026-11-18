@@ -50,7 +50,7 @@ The schema is in `supabase/migrations/`. `messages` rows belong to one `auth.use
 
 ### Drafts (pre-seal, local only)
 
-A message starts as a draft that exists only on the device: `DraftRepository` stores one draft per device (body, device-local delivery time, owner's user ID) with `shared_preferences`, and the compose screen autosaves every edit to it. Drafts are never sent to Supabase and have no schedule. Sealing is an explicit action; it validates the signed-in owner and a future time, inserts the `messages` row (status `scheduled`), then deletes the local draft. After that the message is sealed and follows the delete-only rules. Discarding, signing out, or loading a draft that belongs to another account deletes it from the device.
+A message starts as a draft that exists only on the device: `DraftRepository` stores one draft per device (body, device-local delivery time, owner's user ID) with `flutter_secure_storage` (encrypted at rest; on iOS Keychain `first_unlock_this_device`, so never in backups or moved to another device), and the compose screen autosaves every edit to it, saves pending edits when the app is backgrounded, and says so when a save fails. Drafts are never sent to Supabase and have no schedule. Sealing is an explicit action; it validates the signed-in owner and a future time, inserts the `messages` row (status `scheduled`), then deletes the local draft. After that the message is sealed and follows the delete-only rules. Discarding, the session ending for any reason (sign-out, expiry, revocation), or loading a draft that belongs to another account or can't be read deletes it from the device. Once the server insert succeeds the message counts as sealed even if deleting the local draft fails, so it is never sealed twice.
 
 ## Access control
 
@@ -79,4 +79,4 @@ Account deletion is an authenticated request that first disables sign-in, then d
 | 2026-11-15 | Riverpod 3 + codegen, go_router | Low boilerplate, testable without BuildContext, community default |
 | 2026-11-15 | Supabase as backend | — |
 | 2026-11-15 | Flutter deep linking off; `supabase_flutter` alone handles the auth deep link | Keeps auth callback URLs out of go_router; routing follows auth state instead |
-| 2026-11-18 | Unsealed drafts live only on the device (`shared_preferences`), deleted on seal, discard and sign-out; sealing is a separate explicit step | Lets people take their time writing while sealed messages stay final; nothing private reaches the server or outlives the session before sealing |
+| 2026-11-18 | Unsealed drafts live only on the device (`flutter_secure_storage`), deleted on seal, discard and session end; sealing is a separate explicit step | Lets people take their time writing while sealed messages stay final; nothing private reaches the server or outlives the session before sealing |
