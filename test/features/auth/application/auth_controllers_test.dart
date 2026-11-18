@@ -15,8 +15,18 @@ void main() {
   setUp(() {
     repository = FakeAuthRepository();
     container = ProviderContainer.test(
-      overrides: [authRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        authRepositoryProvider.overrideWithValue(repository),
+      ],
     );
+  });
+
+  test('sign-out signs out', () async {
+    container.listen(signOutControllerProvider, (_, _) {});
+    await container.read(signOutControllerProvider.notifier).signOut();
+
+    expect(repository.calls, ['signOut']);
+    expect(container.read(signOutControllerProvider), isA<AsyncData<void>>());
   });
 
   test('sign-in trims the email and succeeds', () async {

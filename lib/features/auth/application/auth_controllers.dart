@@ -88,7 +88,8 @@ class ResetPasswordController extends _$ResetPasswordController {
   }
 }
 
-/// Sign-out action. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 @riverpod
 class SignOutController extends _$SignOutController {
   @override

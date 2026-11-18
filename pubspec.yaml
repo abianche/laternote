@@ -19,6 +19,7 @@ dependencies:
   flutter_timezone: ^5.1.1
 
   material_ui: ^1.11.1
+  flutter_secure_storage: ^11.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -26,8 +27,6 @@ dev_dependencies:
   riverpod_generator: ^4.0.10
   build_runner: ^2.17.1
   http: ^1.6.0
-
-# The following section is specific to Flutter packages.
 flutter:
 
   # The following line ensures that the Material Icons font is

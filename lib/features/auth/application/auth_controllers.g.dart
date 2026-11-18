@@ -218,15 +218,18 @@ abstract class _$ResetPasswordController extends $AsyncNotifier<void> {
   }
 }
 
-/// Sign-out action. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 
 @ProviderFor(SignOutController)
 final signOutControllerProvider = SignOutControllerProvider._();
 
-/// Sign-out action. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 final class SignOutControllerProvider
     extends $AsyncNotifierProvider<SignOutController, void> {
-  /// Sign-out action. Success needs no state: the router reacts.
+  /// Sign-out action. Success needs no state: the router reacts, and
+  /// `draftCleanup` deletes the local draft.
   SignOutControllerProvider._()
     : super(
         from: null,
@@ -248,7 +251,8 @@ final class SignOutControllerProvider
 
 String _$signOutControllerHash() => r'd134bff4faf3c597c7fb1bed663b108b6726d0ff';
 
-/// Sign-out action. Success needs no state: the router reacts.
+/// Sign-out action. Success needs no state: the router reacts, and
+/// `draftCleanup` deletes the local draft.
 
 abstract class _$SignOutController extends $AsyncNotifier<void> {
   FutureOr<void> build();
