@@ -74,3 +74,18 @@ A simple way to make a moment today meaningful again tomorrow, next year, or ten
 ---
 
 **Laternote — Write now. Meet yourself later.**
+
+## License
+
+Laternote is **source-available** under the [PolyForm Shield License 1.0.0](LICENSE.md).
+
+In plain terms:
+
+- ✅ You can read, run, modify, and share the code.
+- ✅ You can use it for personal projects, learning, and research, and inside your business, as long as you aren't competing with Laternote.
+- ❌ You can't use it to build or sell a product that competes with Laternote. That includes re-publishing it, or a reskinned copy, on an app store, even for free.
+
+This summary is for convenience only. The [LICENSE](LICENSE.md) is the binding text.
+
+Not sure whether your use is allowed, or want a commercial license? Open an issue or contact abianche@protonmail.com.
+
