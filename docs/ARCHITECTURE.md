@@ -48,6 +48,10 @@ supabase/
 
 The schema is in `supabase/migrations/`. `messages` rows belong to one `auth.users` UUID. `body` is capped at 20,000 characters. `scheduled_for` is a UTC `timestamptz`; `timezone` records the IANA zone at composition and is validated against `pg_timezone_names`. The app shows opening times in the device's current zone, not the stored one. Owners can read metadata for all of their own rows, including scheduled rows past due but not yet released (shown as "Opening soon"); `body` is not in the client column grant and is reachable only through `get_available_message`. Status is `scheduled` or `available`; `released_at` and `updated_at` are set by trusted server code (messages are hard-deleted, not soft-deleted). Device tokens live in a separate owner-scoped table, written only through the `register_device_token` RPC so a token can be reassigned when a shared device changes user, and are removed on sign-out/token rotation. The notification outbox records attempts and provider outcome without storing message body.
 
+### Drafts (pre-seal, local only)
+
+A message starts as a draft that exists only on the device: `DraftRepository` stores one draft per device (body, device-local delivery time, owner's user ID) with `shared_preferences`, and the compose screen autosaves every edit to it. Drafts are never sent to Supabase and have no schedule. Sealing is an explicit action; it validates the signed-in owner and a future time, inserts the `messages` row (status `scheduled`), then deletes the local draft. After that the message is sealed and follows the delete-only rules. Discarding, signing out, or loading a draft that belongs to another account deletes it from the device.
+
 ## Access control
 
 RLS is enabled on every user-data table. Policies compare `auth.uid()` to the row's `user_id` for select/insert/update/delete. Client inserts must set their own `user_id`; updates cannot change ownership or server-controlled delivery fields. A client may read message content only when `status = 'available'` and `scheduled_for <= now()`. Owners can list metadata for all of their own rows through the client's restricted column grant; do not grant clients direct `SELECT` of sealed content. Secret keys bypass RLS and are confined to Edge Functions, which validate the user or process due rows. Never ship a secret key.
@@ -75,3 +79,4 @@ Account deletion is an authenticated request that first disables sign-in, then d
 | 2026-11-15 | Riverpod 3 + codegen, go_router | Low boilerplate, testable without BuildContext, community default |
 | 2026-11-15 | Supabase as backend | — |
 | 2026-11-15 | Flutter deep linking off; `supabase_flutter` alone handles the auth deep link | Keeps auth callback URLs out of go_router; routing follows auth state instead |
+| 2026-11-18 | Unsealed drafts live only on the device (`shared_preferences`), deleted on seal, discard and sign-out; sealing is a separate explicit step | Lets people take their time writing while sealed messages stay final; nothing private reaches the server or outlives the session before sealing |
