@@ -110,6 +110,8 @@ class _MessageTile extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    // Read before awaiting: this tile may be gone once the dialog closes.
+    final controller = ref.read(deleteMessageControllerProvider.notifier);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -130,9 +132,7 @@ class _MessageTile extends ConsumerWidget {
       ),
     );
     if (confirmed ?? false) {
-      await ref
-          .read(deleteMessageControllerProvider.notifier)
-          .delete(message.id);
+      await controller.delete(message.id);
     }
   }
 }
