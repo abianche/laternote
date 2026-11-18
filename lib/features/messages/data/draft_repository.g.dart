@@ -49,4 +49,4 @@ final class DraftRepositoryProvider
   }
 }
 
-String _$draftRepositoryHash() => r'7fd2c656546fa5d3cd164808a43e273c57557dfb';
+String _$draftRepositoryHash() => r'12f42f572d714525864197427ecabcce1b2e57d7';
