@@ -72,10 +72,21 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
   late final _bodyController = TextEditingController(
     text: ref.read(composeDraftProvider).requireValue.body,
   );
+  late final AppLifecycleListener _lifecycle;
   bool _showDeliveryError = false;
 
   @override
+  void initState() {
+    super.initState();
+    // The OS may kill a backgrounded app before a delayed save runs.
+    _lifecycle = AppLifecycleListener(
+      onHide: () => ref.read(composeDraftProvider.notifier).flush(),
+    );
+  }
+
+  @override
   void dispose() {
+    _lifecycle.dispose();
     _bodyController.dispose();
     super.dispose();
   }
@@ -115,6 +126,7 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
   @override
   Widget build(BuildContext context) {
     final draft = ref.watch(composeDraftProvider).requireValue;
+    final saveFailed = ref.watch(draftSaveFailedProvider);
     final timezone = ref.watch(deviceTimezoneProvider).value;
     final deliverAt = draft.deliverAt;
     final deliveryError = _showDeliveryError
@@ -162,8 +174,14 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
           FilledButton(onPressed: _review, child: const Text('Seal…')),
           const SizedBox(height: 8),
           Text(
-            'Your draft is saved on this device only. Nothing is sent until you seal it.',
-            style: Theme.of(context).textTheme.bodySmall,
+            saveFailed
+                ? 'Not saved on this device. Keep the app open or try again.'
+                : 'Your draft is saved on this device only. Nothing is sent until you seal it.',
+            style: saveFailed
+                ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  )
+                : Theme.of(context).textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
         ],

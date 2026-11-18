@@ -176,4 +176,33 @@ void main() {
     expect(find.text('Dear me'), findsOneWidget);
     expect(drafts.stored?.body, 'Dear me');
   });
+
+  testWidgets('a failed local save says the draft is not saved', (
+    tester,
+  ) async {
+    drafts.saveError = Exception('disk full');
+    await pumpApp(tester);
+    expect(find.textContaining('saved on this device only'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    await tester.pump(draftSaveDelay);
+    expect(find.textContaining('Not saved on this device'), findsOneWidget);
+
+    drafts.saveError = null;
+    await tester.enterText(find.byType(TextFormField), 'Dear me!');
+    await tester.pump(draftSaveDelay);
+    expect(find.textContaining('saved on this device only'), findsOneWidget);
+  });
+
+  testWidgets('backgrounding the app saves a pending edit', (tester) async {
+    await pumpApp(tester);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    expect(drafts.stored, isNull);
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    await tester.pump();
+
+    expect(drafts.stored?.body, 'Dear me');
+  });
 }

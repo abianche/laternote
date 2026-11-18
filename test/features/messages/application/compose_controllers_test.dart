@@ -166,4 +166,45 @@ void main() {
     expect(state.error, isA<NetworkError>());
     expect(drafts.stored, isNotNull);
   });
+
+  test('ComposeDraft reports a failed save until one succeeds', () async {
+    container.listen(draftSaveFailedProvider, (_, _) {});
+    final notifier = await loadDraft();
+    drafts.saveError = Exception('disk full');
+
+    notifier.setDeliverAt(now.add(const Duration(days: 1)));
+    await Future<void>.delayed(Duration.zero);
+    expect(container.read(draftSaveFailedProvider), isTrue);
+
+    drafts.saveError = null;
+    notifier.setBody('Hi');
+    await Future<void>.delayed(draftSaveDelay * 2);
+    expect(container.read(draftSaveFailedProvider), isFalse);
+  });
+
+  test('ComposeDraft.flush saves a pending edit now', () async {
+    final notifier = await loadDraft();
+    notifier
+      ..setBody('Hi')
+      ..flush();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(drafts.stored?.body, 'Hi');
+    expect(drafts.saves, 1);
+  });
+
+  test('a seal whose local clear fails still succeeds, once', () async {
+    final at = now.add(const Duration(hours: 1));
+    drafts.stored = (body: 'Hi', deliverAt: at);
+    drafts.clearError = Exception('keychain locked');
+    await loadDraft();
+
+    expect(
+      await seal(MessageDraft(body: 'Hi', deliverAt: at)),
+      AsyncData<DateTime?>(at),
+    );
+    await seal(MessageDraft(body: 'Hi', deliverAt: at));
+
+    expect(repository.calls, hasLength(1));
+  });
 }
