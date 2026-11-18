@@ -155,4 +155,44 @@ void main() {
       await expectLater(repo.listUpcoming(), throwsA(isA<UnexpectedError>()));
     });
   });
+
+  group('deleteScheduledMessage', () {
+    test('deletes the row by id and asks for it back', () async {
+      await repository(
+        status: 200,
+        rows: [
+          {'id': 'm1'},
+        ],
+      ).deleteScheduledMessage('m1');
+
+      expect(sent!.method, 'DELETE');
+      expect(sent!.url.path, '/rest/v1/messages');
+      expect(sent!.url.queryParameters['id'], 'eq.m1');
+      expect(sent!.url.queryParameters['select'], 'id');
+    });
+
+    test('no deleted row means it is already opening', () async {
+      await expectLater(
+        repository(status: 200, rows: []).deleteScheduledMessage('m1'),
+        throwsA(
+          isA<ValidationError>().having(
+            (e) => e.message,
+            'message',
+            contains('already opening'),
+          ),
+        ),
+      );
+    });
+
+    test('database errors map to an AppError', () async {
+      final repo = repository(
+        status: 500,
+        error: {'code': 'XX000', 'message': 'boom'},
+      );
+      await expectLater(
+        repo.deleteScheduledMessage('m1'),
+        throwsA(isA<UnexpectedError>()),
+      );
+    });
+  });
 }

@@ -51,6 +51,26 @@ class MessagesRepository {
     }
   }
 
+  /// Deletes the user's sealed message [id]. RLS only allows it while the
+  /// message is still scheduled for the future; otherwise no row is deleted
+  /// and this throws a [ValidationError].
+  Future<void> deleteScheduledMessage(String id) async {
+    try {
+      final deleted = await _db
+          .from(Tables.messages)
+          .delete()
+          .eq('id', id)
+          .select('id');
+      if (deleted.isEmpty) {
+        throw const ValidationError(
+          'This message is already opening, so it can\'t be deleted.',
+        );
+      }
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
+  }
+
   /// The user's sealed, not-yet-released messages, soonest first. Selects
   /// metadata only; `body` is not granted to clients anyway.
   Future<List<ScheduledMessage>> listUpcoming() async {
