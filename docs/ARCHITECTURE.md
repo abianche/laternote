@@ -1,6 +1,6 @@
 # Laternote architecture (MVP)
 
-Living document. Change it only through a PR linked to an issue labelled `decision`.
+Living document. Update it in the same PR as the change it describes.
 
 ## Stack
 
