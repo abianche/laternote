@@ -79,11 +79,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               ),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: state.isLoading ? null : () => context.go(Routes.forgotPassword),
+                onPressed: state.isLoading
+                    ? null
+                    : () => context.go(Routes.forgotPassword),
                 child: const Text('Forgot password?'),
               ),
               TextButton(
-                onPressed: state.isLoading ? null : () => context.go(Routes.signUp),
+                onPressed: state.isLoading
+                    ? null
+                    : () => context.go(Routes.signUp),
                 child: const Text("Don't have an account? Sign up"),
               ),
             ],

@@ -49,12 +49,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         // A signed-in outcome needs nothing here: the router moves the user
         // to the home screen.
         child: switch (state) {
-          AsyncData(value: SignUpOutcome.confirmationRequired) => EmailSentMessage(
-            message:
-                'Check your email to confirm your account before '
-                'signing in.',
-            onBack: () => context.go(Routes.signIn),
-          ),
+          AsyncData(value: SignUpOutcome.confirmationRequired) =>
+            EmailSentMessage(
+              message:
+                  'Check your email to confirm your account before '
+                  'signing in.',
+              onBack: () => context.go(Routes.signIn),
+            ),
           _ => Form(
             key: _formKey,
             child: Column(

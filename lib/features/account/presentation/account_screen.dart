@@ -76,7 +76,9 @@ class AccountScreen extends ConsumerWidget {
                   )
                 : const Icon(Icons.logout),
             title: const Text('Sign out'),
-            onTap: signOut.isLoading ? null : () => ref.read(signOutControllerProvider.notifier).signOut(),
+            onTap: signOut.isLoading
+                ? null
+                : () => ref.read(signOutControllerProvider.notifier).signOut(),
           ),
         ],
       ),
