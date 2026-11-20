@@ -13,6 +13,7 @@ import '../features/auth/presentation/sign_in_screen.dart';
 import '../features/auth/presentation/sign_up_screen.dart';
 import '../features/home/presentation/home_shell.dart';
 import '../features/messages/presentation/compose_screen.dart';
+import '../features/messages/presentation/message_screen.dart';
 import '../features/messages/presentation/review_screen.dart';
 import 'routes.dart';
 
@@ -49,7 +50,13 @@ GoRouter router(Ref ref) {
     routes: [
       GoRoute(
         path: Routes.home,
-        builder: (_, _) => const HomeShell(),
+        builder: (_, state) {
+          final tab = state.uri.queryParameters['tab'] == 'sealed'
+              ? HomeTab.sealed
+              : HomeTab.inbox;
+          // Keyed so going to the other tab rebuilds with it selected.
+          return HomeShell(key: ValueKey(tab), initialTab: tab);
+        },
         routes: [
           GoRoute(
             path: 'compose',
@@ -60,6 +67,11 @@ GoRouter router(Ref ref) {
                 builder: (_, _) => const ReviewScreen(),
               ),
             ],
+          ),
+          GoRoute(
+            path: 'messages/:id',
+            builder: (_, state) =>
+                MessageScreen(id: state.pathParameters['id']!),
           ),
           GoRoute(
             path: 'account',

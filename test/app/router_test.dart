@@ -11,6 +11,10 @@ void main() {
       expect(authRedirect(const SignedOut(), Routes.home), Routes.signIn);
       expect(authRedirect(const SignedOut(), Routes.account), Routes.signIn);
       expect(
+        authRedirect(const SignedOut(), Routes.message('m1')),
+        Routes.signIn,
+      );
+      expect(
         authRedirect(const SignedOut(), Routes.resetPassword),
         Routes.signIn,
       );
@@ -33,6 +37,7 @@ void main() {
     test('stays on app screens', () {
       expect(authRedirect(signedIn, Routes.home), isNull);
       expect(authRedirect(signedIn, Routes.privacy), isNull);
+      expect(authRedirect(signedIn, Routes.message('m1')), isNull);
     });
   });
 

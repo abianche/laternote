@@ -27,7 +27,7 @@ class ReviewScreen extends ConsumerWidget {
             ),
           ),
         );
-        context.go(Routes.home);
+        context.go(Routes.sealed);
       }
     });
 

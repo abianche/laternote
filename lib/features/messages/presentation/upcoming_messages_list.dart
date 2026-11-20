@@ -8,6 +8,7 @@ import '../application/delete_message_controller.dart';
 import '../application/upcoming_messages.dart';
 import '../data/scheduled_message.dart';
 import 'delivery_format.dart';
+import 'list_notice.dart';
 
 /// The user's sealed messages, showing only when each opens and when it
 /// was sealed. Pull down to refresh. A message can be deleted until it
@@ -29,7 +30,7 @@ class UpcomingMessagesList extends ConsumerWidget {
     });
     Future<void> refresh() => ref.refresh(upcomingMessagesProvider.future);
 
-    const loading = _Notice(
+    const loading = ListNotice(
       progress: true,
       text: 'Loading your sealed messages… You can start a new one meanwhile.',
     );
@@ -38,8 +39,8 @@ class UpcomingMessagesList extends ConsumerWidget {
       data: (list) => RefreshIndicator(
         onRefresh: refresh,
         child: list.isEmpty
-            ? const _FillScroll(
-                child: _Notice(
+            ? const FillScroll(
+                child: ListNotice(
                   icon: Icons.mark_email_unread_outlined,
                   text:
                       'Nothing sealed yet. Tap New message to write to your '
@@ -58,8 +59,8 @@ class UpcomingMessagesList extends ConsumerWidget {
           ? loading
           : RefreshIndicator(
               onRefresh: refresh,
-              child: _FillScroll(
-                child: _Notice(
+              child: FillScroll(
+                child: ListNotice(
                   icon: Icons.cloud_off_outlined,
                   text: errorMessage(messages)!,
                   action: TextButton(
@@ -134,56 +135,5 @@ class _MessageTile extends ConsumerWidget {
     if (confirmed ?? false) {
       await controller.delete(message.id);
     }
-  }
-}
-
-/// Fills the viewport while staying scrollable, so pull-to-refresh works
-/// without a list.
-class _FillScroll extends StatelessWidget {
-  const _FillScroll({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(height: constraints.maxHeight, child: child),
-      ),
-    );
-  }
-}
-
-class _Notice extends StatelessWidget {
-  const _Notice({
-    required this.text,
-    this.icon,
-    this.progress = false,
-    this.action,
-  });
-
-  final String text;
-  final IconData? icon;
-  final bool progress;
-  final Widget? action;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (progress) const CircularProgressIndicator(),
-            if (icon case final icon?) Icon(icon, size: 48),
-            const SizedBox(height: 16),
-            Text(text, textAlign: TextAlign.center),
-            ?action,
-          ],
-        ),
-      ),
-    );
   }
 }
