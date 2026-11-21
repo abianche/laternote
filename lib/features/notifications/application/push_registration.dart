@@ -108,9 +108,11 @@ class PushRegistration extends _$PushRegistration {
   }
 
   // The error type and Firebase's error code only: never FIDs in logs.
+  // Native failures all arrive as `unknown`, so debug builds add Firebase's
+  // message (a short reason such as SERVICE_NOT_AVAILABLE).
   void _report(Object error) => debugPrint(
     'Push registration skipped: ${switch (error) {
-      FirebaseException(:final plugin, :final code) => '$plugin/$code',
+      FirebaseException(:final plugin, :final code, :final message) => kDebugMode ? '$plugin/$code ($message)' : '$plugin/$code',
       _ => error.runtimeType,
     }}',
   );
