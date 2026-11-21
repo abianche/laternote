@@ -292,6 +292,17 @@ void main() {
       );
     });
 
+    test('a malformed id means not available', () async {
+      final repo = repository(
+        status: 400,
+        error: {
+          'code': '22P02',
+          'message': 'invalid input syntax for type uuid: "not-a-uuid"',
+        },
+      );
+      expect(await repo.getAvailable('not-a-uuid'), isNull);
+    });
+
     test('database errors map to an AppError', () async {
       final repo = repository(
         status: 500,

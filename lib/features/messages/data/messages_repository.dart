@@ -102,7 +102,8 @@ class MessagesRepository {
   }
 
   /// The released message [id] with its content, or null if it doesn't
-  /// exist, isn't the user's, or hasn't been released yet.
+  /// exist, isn't the user's, hasn't been released yet, or [id] isn't a
+  /// valid message ID (e.g. from a bad link).
   Future<AvailableMessage?> getAvailable(String id) async {
     try {
       final rows = await _db.rpc<List<dynamic>>(
@@ -112,6 +113,10 @@ class MessagesRepository {
       return rows.isEmpty
           ? null
           : AvailableMessage.fromRow(rows.first as Map<String, dynamic>);
+    } on PostgrestException catch (error) {
+      // invalid_text_representation: [id] is not a UUID.
+      if (error.code == '22P02') return null;
+      throw mapSupabaseError(error);
     } catch (error) {
       throw mapSupabaseError(error);
     }
