@@ -8,8 +8,11 @@ class FakeAuthRepository implements AuthRepository {
   SignUpOutcome signUpOutcome = SignUpOutcome.confirmationRequired;
   final calls = <String>[];
 
+  /// The stored session at startup.
+  AuthStatus status = const SignedOut();
+
   @override
-  AuthStatus get currentStatus => const SignedOut();
+  AuthStatus get currentStatus => status;
 
   @override
   Stream<AuthStatus> get statusChanges => const Stream.empty();

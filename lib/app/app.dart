@@ -2,6 +2,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/messages/application/draft_cleanup.dart';
+import '../features/notifications/application/push_registration.dart';
+import 'notification_routing.dart';
 import 'router.dart';
 import 'theme.dart';
 
@@ -10,7 +12,10 @@ class LaternoteApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(draftCleanupProvider);
+    ref
+      ..watch(draftCleanupProvider)
+      ..watch(pushRegistrationProvider)
+      ..watch(notificationRoutingProvider);
     return MaterialApp.router(
       title: 'Laternote',
       theme: appTheme,

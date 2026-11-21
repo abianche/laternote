@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/app_error.dart';
+import '../../notifications/application/push_registration.dart';
 import '../data/auth_repository.dart';
 import '../data/auth_status.dart';
 
@@ -88,7 +89,8 @@ class ResetPasswordController extends _$ResetPasswordController {
   }
 }
 
-/// Sign-out action. Success needs no state: the router reacts, and
+/// Sign-out action. Removes this device's push token first, while the
+/// session can still do it. Success needs no state: the router reacts, and
 /// `draftCleanup` deletes the local draft.
 @riverpod
 class SignOutController extends _$SignOutController {
@@ -97,10 +99,10 @@ class SignOutController extends _$SignOutController {
 
   Future<void> signOut() async {
     state = const AsyncLoading();
-    final result = await _run(
-      ref,
-      () => ref.read(authRepositoryProvider).signOut(),
-    );
+    final result = await _run(ref, () async {
+      await ref.read(pushRegistrationProvider.notifier).unregister();
+      await ref.read(authRepositoryProvider).signOut();
+    });
     if (result != null) state = result;
   }
 }
