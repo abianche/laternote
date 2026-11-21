@@ -13,7 +13,7 @@ export type Claim = {
 /** The result of sending to one device token. */
 export type SendResult =
   | { kind: "ok" }
-  /** The token no longer exists for this app; it's deleted. */
+  /** The FID is no longer registered for this app; it's deleted. */
   | { kind: "dead"; code: string }
   /** Worth retrying later (rate limit, provider outage, network). */
   | { kind: "transient"; code: string }
@@ -31,14 +31,15 @@ export const notificationTitle = "A message is ready";
 export const notificationBody = "Open Laternote to read it.";
 
 /**
- * The FCM v1 message for one device. Generic text only: the payload carries
- * the message ID and never anything the user wrote, so nothing private
- * reaches the lock screen.
+ * The FCM v1 message for one device, addressed by its Firebase Installation
+ * ID (the app registers its FID in device_tokens.token). Generic text only:
+ * the payload carries the message ID and never anything the user wrote, so
+ * nothing private reaches the lock screen.
  */
-export function buildFcmMessage(token: string, messageId: string) {
+export function buildFcmMessage(fid: string, messageId: string) {
   return {
     message: {
-      token,
+      fid,
       notification: { title: notificationTitle, body: notificationBody },
       data: { message_id: messageId },
       android: {

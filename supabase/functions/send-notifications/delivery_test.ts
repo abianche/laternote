@@ -24,7 +24,7 @@ const fcmError = (status: string, errorCode?: string) => ({
 
 Deno.test("the message carries the ID and generic text only", () => {
   const { message } = buildFcmMessage("tok", "m1");
-  assertEquals(message.token, "tok");
+  assertEquals(message.fid, "tok");
   assertEquals(message.data, { message_id: "m1" });
   assertEquals(message.notification, {
     title: notificationTitle,

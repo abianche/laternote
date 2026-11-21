@@ -44,7 +44,7 @@ function sender(results: Record<string, SendResult>) {
     sent,
     send(message: unknown) {
       sent.push(message);
-      const token = (message as { message: { token: string } }).message.token;
+      const token = (message as { message: { fid: string } }).message.fid;
       return Promise.resolve(results[token] ?? { kind: "ok" } as SendResult);
     },
   };
