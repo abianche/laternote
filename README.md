@@ -1,5 +1,14 @@
 # Laternote
 
+[![CI](https://github.com/abianche/laternote/actions/workflows/ci.yml/badge.svg)](https://github.com/abianche/laternote/actions/workflows/ci.yml)
+[![License: PolyForm Shield](https://img.shields.io/badge/license-PolyForm%20Shield-blue)](LICENSE.md)
+[![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey)](#platforms)
+
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](https://flutter.dev)
+[![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=fff)](https://supabase.com)
+[![Firebase](https://img.shields.io/badge/Firebase-039BE5?logo=Firebase&logoColor=white)](https://firebase.google.com)
+[![Claude](https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff)](https://claude.ai)
+
 ### A message to the person you'll become.
 
 Laternote is a personal time-capsule app that lets you write messages to your future self.
@@ -32,13 +41,14 @@ The initial version of Laternote aims to provide:
 ## Roadmap
 
 - [ ] Define brand identity and visual direction
-- [ ] Create initial Flutter application
+- [x] Create initial Flutter application ([#1](https://github.com/abianche/laternote/issues/1))
 - [ ] Design the core user experience
-- [ ] Implement message creation and scheduling
-- [ ] Implement sealed messages and delivery
-- [ ] Add notifications
-- [ ] Build personal archive
-- [ ] Prepare for iOS and Android release
+- [x] Register, sign in, and manage an account ([#2](https://github.com/abianche/laternote/issues/2))
+- [x] Implement message creation and scheduling, with local drafts ([#3](https://github.com/abianche/laternote/issues/3), [#18](https://github.com/abianche/laternote/issues/18))
+- [x] Implement sealed messages and delivery ([#5](https://github.com/abianche/laternote/issues/5), [#6](https://github.com/abianche/laternote/issues/6))
+- [ ] Add notifications ([#7](https://github.com/abianche/laternote/issues/7))
+- [ ] Build personal archive ([#8](https://github.com/abianche/laternote/issues/8), in review in [#25](https://github.com/abianche/laternote/pull/25))
+- [ ] Prepare for iOS and Android release ([#10](https://github.com/abianche/laternote/issues/10))
 
 ## Platforms
 
