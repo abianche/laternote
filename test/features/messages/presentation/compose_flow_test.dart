@@ -11,7 +11,9 @@ import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/presentation/compose_screen.dart';
 import 'package:laternote/features/messages/presentation/review_screen.dart';
 import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
+import 'package:laternote/features/notifications/data/push_repository.dart';
 
+import '../../notifications/fake_push_repository.dart';
 import '../fake_draft_repository.dart';
 import '../fake_messages_repository.dart';
 
@@ -20,6 +22,7 @@ void main() {
   final deliverAt = DateTime(2030, 6, 1, 9);
   late FakeMessagesRepository repository;
   late FakeDraftRepository drafts;
+  late FakePushRepository push;
   late ProviderContainer container;
 
   Future<void> pumpApp(WidgetTester tester) async {
@@ -57,8 +60,10 @@ void main() {
   setUp(() {
     repository = FakeMessagesRepository();
     drafts = FakeDraftRepository();
+    push = FakePushRepository();
     container = ProviderContainer.test(
       overrides: [
+        pushRepositoryProvider.overrideWithValue(push),
         messagesRepositoryProvider.overrideWithValue(repository),
         draftRepositoryProvider.overrideWithValue(drafts),
         clockProvider.overrideWithValue(() => now),
@@ -115,6 +120,25 @@ void main() {
     expect(find.textContaining('Opens '), findsOneWidget);
     expect(find.text('Dear me'), findsNothing);
     expect(drafts.stored, isNull);
+  });
+
+  testWidgets('offers notifications after sealing while undecided', (
+    tester,
+  ) async {
+    push.status = PushPermission.notDetermined;
+    await pumpApp(tester);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
+    await tapButton(tester, 'Seal…');
+    await tapButton(tester, 'Seal message');
+
+    expect(repository.calls, hasLength(1));
+    expect(find.text('Know when it opens'), findsOneWidget);
+
+    await tapButton(tester, 'Turn on');
+
+    expect(push.calls, ['requestPermission']);
+    expect(find.byType(UpcomingMessagesList), findsOneWidget);
   });
 
   testWidgets('reopening compose restores the saved draft', (tester) async {

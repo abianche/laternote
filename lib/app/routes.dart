@@ -16,4 +16,15 @@ abstract final class Routes {
 
   /// A released message, opened from the inbox or a notification.
   static String message(String id) => '/messages/$id';
+
+  static final _messagePath = RegExp(r'^/messages/[^/]+$');
+
+  static bool isMessage(String location) => _messagePath.hasMatch(location);
+
+  /// Sign-in that continues to [location] afterwards. Only a message is
+  /// kept, since that's where a notification leads; anything else starts
+  /// at home.
+  static String signInThen(String location) => isMessage(location)
+      ? Uri(path: signIn, queryParameters: {'from': location}).toString()
+      : signIn;
 }

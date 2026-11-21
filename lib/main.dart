@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,5 +13,7 @@ Future<void> main() async {
     url: AppEnvironment.supabaseUrl,
     publishableKey: AppEnvironment.supabasePublishableKey,
   );
+  // Reads the per-flavor native Firebase config (docs/environments.md).
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: LaternoteApp()));
 }

@@ -19,18 +19,24 @@ import 'routes.dart';
 
 part 'router.g.dart';
 
-/// Where to send the user for [location] given their [status], or null to
-/// stay. Password recovery wins over everything; signed-out users are kept
-/// inside the sign-in flow; signed-in users are kept out of it.
-String? authRedirect(AuthStatus status, String location) {
+/// Where to send the user for [uri] given their [status], or null to stay.
+/// Password recovery wins over everything; signed-out users are kept
+/// inside the sign-in flow, remembering a message they were opening (e.g.
+/// from a notification); signed-in users are kept out of it, continuing to
+/// that message.
+String? authRedirect(AuthStatus status, Uri uri) {
+  final location = uri.path;
   final inSignInFlow =
       location == Routes.signIn || location.startsWith('${Routes.signIn}/');
   return switch (status) {
     PasswordRecovery() =>
       location == Routes.resetPassword ? null : Routes.resetPassword,
-    SignedOut() => inSignInFlow ? null : Routes.signIn,
-    SignedIn() =>
-      inSignInFlow || location == Routes.resetPassword ? Routes.home : null,
+    SignedOut() => inSignInFlow ? null : Routes.signInThen(location),
+    SignedIn() when inSignInFlow => switch (uri.queryParameters['from']) {
+      final from? when Routes.isMessage(from) => from,
+      _ => Routes.home,
+    },
+    SignedIn() => location == Routes.resetPassword ? Routes.home : null,
   };
 }
 
@@ -46,7 +52,7 @@ GoRouter router(Ref ref) {
   final router = GoRouter(
     initialLocation: Routes.home,
     refreshListenable: status,
-    redirect: (_, state) => authRedirect(status.value, state.matchedLocation),
+    redirect: (_, state) => authRedirect(status.value, state.uri),
     routes: [
       GoRoute(
         path: Routes.home,

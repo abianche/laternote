@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
 import '../../auth/presentation/auth_form_widgets.dart';
+import '../../notifications/presentation/notification_prompt.dart';
 import '../application/compose_controllers.dart';
 import 'delivery_format.dart';
 
@@ -18,8 +19,10 @@ class ReviewScreen extends ConsumerWidget {
     final state = ref.watch(sealMessageControllerProvider);
     final deliverAt = draft.deliverAt;
 
-    ref.listen(sealMessageControllerProvider, (_, next) {
+    ref.listen(sealMessageControllerProvider, (_, next) async {
       if (next case AsyncData(value: final sealedFor?)) {
+        await offerNotifications(context, ref);
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

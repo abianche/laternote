@@ -56,17 +56,17 @@ final class AvailableMessagesProvider
 String _$availableMessagesHash() => r'6f0d51faee6b17d5ef6fd3d7676e3b2a4aec58a2';
 
 /// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded in
-/// the background so the inbox moves it to Read; showing the message never
-/// waits for or fails on that.
+/// (unknown, someone else's, or still sealed). The first open is recorded
+/// before showing it, so the inbox moves it to Read; a failure to record
+/// never blocks reading.
 
 @ProviderFor(openedMessage)
 final openedMessageProvider = OpenedMessageFamily._();
 
 /// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded in
-/// the background so the inbox moves it to Read; showing the message never
-/// waits for or fails on that.
+/// (unknown, someone else's, or still sealed). The first open is recorded
+/// before showing it, so the inbox moves it to Read; a failure to record
+/// never blocks reading.
 
 final class OpenedMessageProvider
     extends
@@ -79,9 +79,9 @@ final class OpenedMessageProvider
         $FutureModifier<AvailableMessage?>,
         $FutureProvider<AvailableMessage?> {
   /// Released message [id] with its content, or null if it isn't available
-  /// (unknown, someone else's, or still sealed). The first open is recorded in
-  /// the background so the inbox moves it to Read; showing the message never
-  /// waits for or fails on that.
+  /// (unknown, someone else's, or still sealed). The first open is recorded
+  /// before showing it, so the inbox moves it to Read; a failure to record
+  /// never blocks reading.
   OpenedMessageProvider._({
     required OpenedMessageFamily super.from,
     required String super.argument,
@@ -126,12 +126,12 @@ final class OpenedMessageProvider
   }
 }
 
-String _$openedMessageHash() => r'b8c6626402b93841efdfcd942008d551348b5a60';
+String _$openedMessageHash() => r'7d0d92a080a316f62ccc8e1cb379db0b4e79ffe8';
 
 /// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded in
-/// the background so the inbox moves it to Read; showing the message never
-/// waits for or fails on that.
+/// (unknown, someone else's, or still sealed). The first open is recorded
+/// before showing it, so the inbox moves it to Read; a failure to record
+/// never blocks reading.
 
 final class OpenedMessageFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<AvailableMessage?>, String> {
@@ -145,9 +145,9 @@ final class OpenedMessageFamily extends $Family
       );
 
   /// Released message [id] with its content, or null if it isn't available
-  /// (unknown, someone else's, or still sealed). The first open is recorded in
-  /// the background so the inbox moves it to Read; showing the message never
-  /// waits for or fails on that.
+  /// (unknown, someone else's, or still sealed). The first open is recorded
+  /// before showing it, so the inbox moves it to Read; a failure to record
+  /// never blocks reading.
 
   OpenedMessageProvider call(String id) =>
       OpenedMessageProvider._(argument: id, from: this);

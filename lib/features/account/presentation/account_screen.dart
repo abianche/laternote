@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
 import '../../auth/application/auth_controllers.dart';
+import '../../notifications/presentation/notifications_tile.dart';
 import '../application/account_deletion.dart';
 import '../application/current_email_provider.dart';
 
@@ -56,6 +57,7 @@ class AccountScreen extends ConsumerWidget {
             }),
           ),
           const Divider(),
+          const NotificationsTile(),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
             title: const Text('Privacy & data'),
