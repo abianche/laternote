@@ -23,6 +23,8 @@ The app checks at startup that `APP_ENV` matches the build flavor and refuses to
 
 Gradle flavors are `development` (`com.althenos.laternote.dev`) and `production` (`com.althenos.laternote`). Create a Firebase Android app for each ID, download each `google-services.json` into its matching `android/app/src/<flavor>/` directory, and install/configure the Google Services Gradle plugin and FCM only when push implementation is added. Keep Firebase files out of source control if they contain project-specific identifiers. Configure release signing in CI.
 
+On the Android emulator `127.0.0.1` is the emulator itself, so forward local Supabase to your machine with `adb reverse tcp:54321 tcp:54321` after each emulator start. The VS Code "Laternote (development)" launch does this automatically.
+
 ## iOS
 
 Xcode schemes are `development` (`com.althenos.laternote.dev`, 'Laternote Dev') and `production` (`com.althenos.laternote`, 'Laternote'), each with Debug, Release, and Profile configurations (`Debug-development`, `Release-production`, ...). Bundle ID and display name are set per configuration in the Runner target. Select the matching signing team in Xcode/CI and register both IDs in Apple Developer. Enable Push Notifications and configure APNs for each app. Register matching iOS Firebase apps and add their `GoogleService-Info.plist` files locally when FCM integration is implemented. Apple signing certificates, provisioning profiles, APNs keys, and Firebase service-account credentials are managed secrets and are intentionally not committed.
