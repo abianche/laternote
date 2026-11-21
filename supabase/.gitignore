@@ -9,3 +9,6 @@
 
 # Local Edge Function secrets (docs/environments.md)
 functions/.env
+
+# Local Studio saves SQL editor queries here; they can hold secrets.
+snippets/
