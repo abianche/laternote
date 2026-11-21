@@ -1,5 +1,14 @@
 # Laternote
 
+[![CI](https://github.com/abianche/laternote/actions/workflows/ci.yml/badge.svg)](https://github.com/abianche/laternote/actions/workflows/ci.yml)
+[![License: PolyForm Shield](https://img.shields.io/badge/license-PolyForm%20Shield-blue)](LICENSE.md)
+[![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey)](#platforms)
+
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](https://flutter.dev)
+[![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=fff)](https://supabase.com)
+[![Firebase](https://img.shields.io/badge/Firebase-039BE5?logo=Firebase&logoColor=white)](https://firebase.google.com)
+[![Claude](https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff)](https://claude.ai)
+
 ### A message to the person you'll become.
 
 Laternote is a personal time-capsule app that lets you write messages to your future self.
