@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/app_error.dart';
 import '../../../core/supabase_client.dart';
 import '../../../core/tables.dart';
+import 'available_message.dart';
 import 'scheduled_message.dart';
 
 part 'messages_repository.g.dart';
@@ -81,6 +82,54 @@ class MessagesRepository {
           .eq('status', 'scheduled')
           .order('scheduled_for', ascending: true);
       return rows.map(ScheduledMessage.fromRow).toList();
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
+  }
+
+  /// The user's released messages, newest first. Metadata only.
+  Future<List<InboxItem>> listAvailable() async {
+    try {
+      final rows = await _db
+          .from(Tables.messages)
+          .select('id, created_at, released_at, opened_at')
+          .eq('status', 'available')
+          .order('released_at', ascending: false);
+      return rows.map(InboxItem.fromRow).toList();
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
+  }
+
+  /// The released message [id] with its content, or null if it doesn't
+  /// exist, isn't the user's, hasn't been released yet, or [id] isn't a
+  /// valid message ID (e.g. from a bad link).
+  Future<AvailableMessage?> getAvailable(String id) async {
+    try {
+      final rows = await _db.rpc<List<dynamic>>(
+        Rpcs.getAvailableMessage,
+        params: {'p_message_id': id},
+      );
+      return rows.isEmpty
+          ? null
+          : AvailableMessage.fromRow(rows.first as Map<String, dynamic>);
+    } on PostgrestException catch (error) {
+      // invalid_text_representation: [id] is not a UUID.
+      if (error.code == '22P02') return null;
+      throw mapSupabaseError(error);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
+  }
+
+  /// Records the first time the user opened released message [id]. The
+  /// server ignores repeats and messages that aren't released.
+  Future<void> markOpened(String id) async {
+    try {
+      await _db.rpc<void>(
+        Rpcs.markMessageOpened,
+        params: {'p_message_id': id},
+      );
     } catch (error) {
       throw mapSupabaseError(error);
     }

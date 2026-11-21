@@ -13,7 +13,8 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -30,7 +31,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    ref.read(resetPasswordControllerProvider.notifier).updatePassword(_passwordController.text);
+    ref
+        .read(resetPasswordControllerProvider.notifier)
+        .updatePassword(_passwordController.text);
   }
 
   @override

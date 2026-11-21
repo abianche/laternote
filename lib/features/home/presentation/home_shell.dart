@@ -2,30 +2,49 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../messages/presentation/inbox_list.dart';
 import '../../messages/presentation/upcoming_messages_list.dart';
 
-/// Signed-in landing page: the user's sealed messages.
+/// Home's tabs, in order.
+enum HomeTab { inbox, sealed }
+
+/// Signed-in landing page: the inbox of released messages and the list of
+/// sealed ones, in two tabs.
 class HomeShell extends StatelessWidget {
-  const HomeShell({super.key});
+  const HomeShell({super.key, this.initialTab = HomeTab.inbox});
+
+  final HomeTab initialTab;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Laternote'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle_outlined),
-            tooltip: 'Account',
-            onPressed: () => context.go(Routes.account),
+    return DefaultTabController(
+      length: HomeTab.values.length,
+      initialIndex: initialTab.index,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Laternote'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.account_circle_outlined),
+              tooltip: 'Account',
+              onPressed: () => context.go(Routes.account),
+            ),
+          ],
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Inbox'),
+              Tab(text: 'Sealed'),
+            ],
           ),
-        ],
-      ),
-      body: const UpcomingMessagesList(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go(Routes.compose),
-        icon: const Icon(Icons.edit_outlined),
-        label: const Text('New message'),
+        ),
+        body: const TabBarView(
+          children: [InboxList(), UpcomingMessagesList()],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => context.go(Routes.compose),
+          icon: const Icon(Icons.edit_outlined),
+          label: const Text('New message'),
+        ),
       ),
     );
   }
