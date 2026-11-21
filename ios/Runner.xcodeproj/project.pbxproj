@@ -158,6 +158,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+				A7C0F1E2B3D4C5E6F7A8B9C0 /* Copy GoogleService-Info.plist */,
 			);
 			buildRules = (
 			);
@@ -265,6 +266,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+		};
+		A7C0F1E2B3D4C5E6F7A8B9C0 /* Copy GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy GoogleService-Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Firebase config per flavor (gitignored, see docs/environments.md).\n# The flavor is the configuration suffix, e.g. Debug-development.\nset -e\nPLIST=\"${PROJECT_DIR}/config/${CONFIGURATION##*-}/GoogleService-Info.plist\"\nif [ ! -f \"$PLIST\" ]; then\n  echo \"error: Missing $PLIST. See docs/environments.md.\"\n  exit 1\nfi\ncp \"$PLIST\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
