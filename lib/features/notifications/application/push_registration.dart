@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -106,7 +107,11 @@ class PushRegistration extends _$PushRegistration {
     );
   }
 
-  // The error type only: never FIDs in logs.
-  void _report(Object error) =>
-      debugPrint('Push registration skipped: ${error.runtimeType}');
+  // The error type and Firebase's error code only: never FIDs in logs.
+  void _report(Object error) => debugPrint(
+    'Push registration skipped: ${switch (error) {
+      FirebaseException(:final plugin, :final code) => '$plugin/$code',
+      _ => error.runtimeType,
+    }}',
+  );
 }
