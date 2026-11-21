@@ -4,6 +4,7 @@
     {
       "name": "Laternote (development)",
       "request": "launch",
+      "preLaunchTask": "Forward Supabase to Android",
       "type": "dart",
       "program": "lib/main.dart",
       "args": [

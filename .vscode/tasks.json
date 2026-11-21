@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // On the Android emulator 127.0.0.1 is the emulator itself; forward
+      // local Supabase (54321) to this machine on every connected Android
+      // device. No-op without one, so iOS launches are unaffected.
+      "label": "Forward Supabase to Android",
+      "type": "shell",
+      "command": "adb=$(command -v adb || echo \"${ANDROID_HOME:-$HOME/Library/Android/sdk}/platform-tools/adb\"); [ -x \"$adb\" ] || exit 0; for s in $(\"$adb\" devices | awk 'NR>1 && $2==\"device\" {print $1}'); do \"$adb\" -s \"$s\" reverse tcp:54321 tcp:54321; done",
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    }
+  ]
+}
