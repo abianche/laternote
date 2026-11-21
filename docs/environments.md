@@ -21,17 +21,24 @@ The app checks at startup that `APP_ENV` matches the build flavor and refuses to
 
 ## Android
 
-Gradle flavors are `development` (`com.althenos.laternote.dev`) and `production` (`com.althenos.laternote`). Create a Firebase Android app for each ID, download each `google-services.json` into its matching `android/app/src/<flavor>/` directory, and install/configure the Google Services Gradle plugin and FCM only when push implementation is added. Keep Firebase files out of source control if they contain project-specific identifiers. Configure release signing in CI.
+Gradle flavors are `development` (`com.althenos.laternote.dev`) and `production` (`com.althenos.laternote`). Create a Firebase Android app for each ID and download each `google-services.json` into its matching `android/app/src/<flavor>/` directory (gitignored). The Google Services Gradle plugin reads it; a flavor without its file doesn't build. Configure release signing in CI.
 
 On the Android emulator `127.0.0.1` is the emulator itself, so forward local Supabase to your machine with `adb reverse tcp:54321 tcp:54321` after each emulator start. The VS Code "Laternote (development)" launch does this automatically.
 
 ## iOS
 
-Xcode schemes are `development` (`com.althenos.laternote.dev`, 'Laternote Dev') and `production` (`com.althenos.laternote`, 'Laternote'), each with Debug, Release, and Profile configurations (`Debug-development`, `Release-production`, ...). Bundle ID and display name are set per configuration in the Runner target. Select the matching signing team in Xcode/CI and register both IDs in Apple Developer. Enable Push Notifications and configure APNs for each app. Register matching iOS Firebase apps and add their `GoogleService-Info.plist` files locally when FCM integration is implemented. Apple signing certificates, provisioning profiles, APNs keys, and Firebase service-account credentials are managed secrets and are intentionally not committed.
+Xcode schemes are `development` (`com.althenos.laternote.dev`, 'Laternote Dev') and `production` (`com.althenos.laternote`, 'Laternote'), each with Debug, Release, and Profile configurations (`Debug-development`, `Release-production`, ...). Bundle ID and display name are set per configuration in the Runner target. Select the matching signing team in Xcode/CI and register both IDs in Apple Developer. Enable Push Notifications and configure APNs for each app. Register matching iOS Firebase apps and put each `GoogleService-Info.plist` in `ios/config/<flavor>/` (gitignored); a build phase copies the one for the current configuration into the app and fails the build if it's missing. Upload the APNs key to Firebase for iOS pushes. Apple signing certificates, provisioning profiles, APNs keys, and Firebase service-account credentials are managed secrets and are intentionally not committed.
 
 ## Supabase projects
 
 Create isolated development and production Supabase projects. Apply migrations with the Supabase CLI. Deploy the delivery Edge Function and configure its scheduled invocation in both projects. Set function secrets for the Supabase secret key, FCM, and APNs separately per project. Test RLS and due-message retry behavior in development before promoting migrations/functions to production.
+
+Push delivery needs, per project:
+
+- Function secrets for `send-notifications`: `PUSH_CRON_SECRET` (a random string), `SERVER_SECRET_KEY` (the project's `sb_secret_...` key) and `FCM_SERVICE_ACCOUNT` (the Firebase service-account JSON, with the Firebase Cloud Messaging API enabled).
+- Vault secrets read by `dispatch_notifications()`: `send_notifications_url` (`https://<ref>.supabase.co/functions/v1/send-notifications`) and `push_cron_secret` (same value as `PUSH_CRON_SECRET`).
+
+Locally, put the function secrets in `supabase/functions/.env` (gitignored), run `supabase functions serve`, and set `send_notifications_url` to `http://supabase_kong_<project_id>:8000/functions/v1/send-notifications`, since `pg_net` runs inside the database container.
 
 Add the password-recovery deep link `io.laternote.auth://login-callback` to each Supabase project's Auth redirect allow-list (local development already has it in `supabase/config.toml`; add the same URL in the production project's Auth settings before launch). Also enable email confirmations in the production project's Auth settings (local development leaves them disabled for faster iteration).
 
