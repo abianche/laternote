@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // On the Android emulator 127.0.0.1 is the emulator itself; forward
+      // local Supabase (54321) to this machine. `|| true` so launches without
+      // an Android device (iOS) still start. Needs adb on PATH.
+      "label": "Forward Supabase to Android",
+      "type": "shell",
+      "command": "adb reverse tcp:54321 tcp:54321 || true",
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    }
+  ]
+}
