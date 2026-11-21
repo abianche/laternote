@@ -56,7 +56,7 @@ final class PushRegistrationProvider
   }
 }
 
-String _$pushRegistrationHash() => r'cd5ee2502c7dc10e7ad3a8034f0278638090bf6f';
+String _$pushRegistrationHash() => r'933c364252d07c6aa46637a19c77c4ebddcbfe3e';
 
 /// Keeps this device's push address (its Firebase Installation ID, stored
 /// in `device_tokens`) assigned to the signed-in user: after sign-in, once

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../auth/application/auth_status_provider.dart';
@@ -30,7 +28,7 @@ class PushRegistration extends _$PushRegistration {
     final push = ref.watch(pushRepositoryProvider);
     final refreshes = push.registrations.listen(
       _register,
-      onError: _report,
+      onError: _ignore,
     );
     ref.onDispose(refreshes.cancel);
 
@@ -69,7 +67,7 @@ class PushRegistration extends _$PushRegistration {
     } on Object catch (error) {
       // The install is also unregistered from FCM on sign-out, so the server
       // drops it on its next send.
-      _report(error);
+      _ignore(error);
     }
   }
 
@@ -82,7 +80,7 @@ class PushRegistration extends _$PushRegistration {
       if (await push.permission() != PushPermission.granted) return;
       await _register(await push.register());
     } on Object catch (error) {
-      _report(error);
+      _ignore(error);
     }
   }
 
@@ -94,7 +92,7 @@ class PushRegistration extends _$PushRegistration {
           .register(token, ref.read(pushRepositoryProvider).platform);
       _token = token;
     } on Object catch (error) {
-      _report(error);
+      _ignore(error);
     }
   }
 
@@ -103,17 +101,10 @@ class PushRegistration extends _$PushRegistration {
   void _forget() {
     _token = null;
     unawaited(
-      ref.read(pushRepositoryProvider).unregister().catchError(_report),
+      ref.read(pushRepositoryProvider).unregister().catchError(_ignore),
     );
   }
 
-  // The error type and Firebase's error code only: never FIDs in logs.
-  // Native failures all arrive as `unknown`, so debug builds add Firebase's
-  // message (a short reason such as SERVICE_NOT_AVAILABLE).
-  void _report(Object error) => debugPrint(
-    'Push registration skipped: ${switch (error) {
-      FirebaseException(:final plugin, :final code, :final message) => kDebugMode ? '$plugin/$code ($message)' : '$plugin/$code',
-      _ => error.runtimeType,
-    }}',
-  );
+  /// Push is best effort, so failures are dropped (see class doc).
+  void _ignore(Object _) {}
 }
