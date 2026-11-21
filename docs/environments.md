@@ -38,7 +38,7 @@ Push delivery needs, per project:
 - Function secrets for `send-notifications`: `PUSH_CRON_SECRET` (a random string), `SERVER_SECRET_KEY` (the project's `sb_secret_...` key) and `FCM_SERVICE_ACCOUNT` (the Firebase service-account JSON, with the Firebase Cloud Messaging API enabled).
 - Vault secrets read by `dispatch_notifications()`: `send_notifications_url` (`https://<ref>.supabase.co/functions/v1/send-notifications`) and `push_cron_secret` (same value as `PUSH_CRON_SECRET`).
 
-Locally, put the function secrets in `supabase/functions/.env` (gitignored), run `supabase functions serve`, and set `send_notifications_url` to `http://supabase_kong_<project_id>:8000/functions/v1/send-notifications`, since `pg_net` runs inside the database container.
+Locally, copy `supabase/functions/.env.example` to `supabase/functions/.env` (gitignored) and fill it in, run `supabase functions serve`, and set `send_notifications_url` to `http://supabase_kong_<project_id>:8000/functions/v1/send-notifications`, since `pg_net` runs inside the database container.
 
 Add the password-recovery deep link `io.laternote.auth://login-callback` to each Supabase project's Auth redirect allow-list (local development already has it in `supabase/config.toml`; add the same URL in the production project's Auth settings before launch). Also enable email confirmations in the production project's Auth settings (local development leaves them disabled for faster iteration).
 
