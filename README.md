@@ -32,13 +32,14 @@ The initial version of Laternote aims to provide:
 ## Roadmap
 
 - [ ] Define brand identity and visual direction
-- [ ] Create initial Flutter application
+- [x] Create initial Flutter application ([#1](https://github.com/abianche/laternote/issues/1))
 - [ ] Design the core user experience
-- [ ] Implement message creation and scheduling
-- [ ] Implement sealed messages and delivery
-- [ ] Add notifications
-- [ ] Build personal archive
-- [ ] Prepare for iOS and Android release
+- [x] Register, sign in, and manage an account ([#2](https://github.com/abianche/laternote/issues/2))
+- [x] Implement message creation and scheduling, with local drafts ([#3](https://github.com/abianche/laternote/issues/3), [#18](https://github.com/abianche/laternote/issues/18))
+- [x] Implement sealed messages and delivery ([#5](https://github.com/abianche/laternote/issues/5), [#6](https://github.com/abianche/laternote/issues/6))
+- [ ] Add notifications ([#7](https://github.com/abianche/laternote/issues/7))
+- [ ] Build personal archive ([#8](https://github.com/abianche/laternote/issues/8), in review in [#25](https://github.com/abianche/laternote/pull/25))
+- [ ] Prepare for iOS and Android release ([#10](https://github.com/abianche/laternote/issues/10))
 
 ## Platforms
 
