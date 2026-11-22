@@ -58,7 +58,7 @@ RLS is enabled on every user-data table. Policies compare `auth.uid()` to the ro
 
 Never trust a user ID sent from the client. Storage buckets are private by default and covered by policies. Edge Functions invoked by users verify the caller's JWT.
 
-The migration establishes owner policies on every table. Client table grants exclude `body`; the `get_available_message` RPC returns it only after checking owner, release state, and server time. Device token writes go through the `register_device_token` RPC rather than a direct grant, since reassigning a token from a shared device's previous owner needs to bypass that owner's RLS row. Before opening beta, verify sealed-content isolation and cross-account isolation with two test users and the production-equivalent policies.
+The migration establishes owner policies on every table. Client table grants exclude `body`; the `get_available_message` RPC returns it only after checking owner, release state, and server time. Clients have only `select`/`delete` on `device_tokens`; writes go through the `register_device_token` RPC rather than a direct grant, since reassigning a token from a shared device's previous owner needs to bypass that owner's RLS row. `supabase/tests/access_control_test.sql` checks RLS on every table, the exact grants for `anon`/`authenticated`, and access attempts by anonymous users, another account and the owner before release. Before opening beta, also verify sealed-content isolation and cross-account isolation with two test users and the production-equivalent policies.
 
 ## Environments and credentials
 
