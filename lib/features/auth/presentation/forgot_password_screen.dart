@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/auth_controllers.dart';
 import '../application/validators.dart';
 import 'auth_form_widgets.dart';
@@ -36,14 +37,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(forgotPasswordControllerProvider);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Reset password')),
+      appBar: AppBar(title: Text(l10n.authResetPasswordTitle)),
       body: AuthFormBody(
         child: switch (state) {
           AsyncData(value: true) => EmailSentMessage(
-            message:
-                'If an account exists for that email, a reset link '
-                'has been sent.',
+            message: l10n.authResetLinkSent,
             onBack: () => context.go(Routes.signIn),
           ),
           _ => Form(
@@ -52,22 +52,20 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  "Enter your account's email and we'll send a link "
-                  'to reset your password.',
-                ),
+                Text(l10n.authResetPasswordIntro),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.email],
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: validateEmail,
+                  decoration: InputDecoration(labelText: l10n.commonEmail),
+                  validator: (value) =>
+                      authFieldText(context, validateEmail(value)),
                 ),
-                FormErrorText(errorMessage(state)),
+                FormErrorText(errorMessage(context, state)),
                 const SizedBox(height: 24),
                 SubmitButton(
-                  label: 'Send reset link',
+                  label: l10n.authSendResetLink,
                   isLoading: state.isLoading,
                   onPressed: _submit,
                 ),

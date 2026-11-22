@@ -48,7 +48,7 @@ void main() {
   test('reports a failure and still refreshes the list', () async {
     await container.read(upcomingMessagesProvider.future);
     final listsBefore = repository.listCalls;
-    repository.error = const ValidationError('already opening');
+    repository.error = const ValidationError(ValidationProblem.alreadyOpening);
 
     await controller().delete('m1');
 

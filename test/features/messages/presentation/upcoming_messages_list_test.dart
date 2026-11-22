@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:laternote/app/localization.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/core/clock.dart';
 import 'package:laternote/features/messages/application/compose_controllers.dart';
@@ -11,6 +11,8 @@ import 'package:laternote/features/messages/application/upcoming_messages.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/data/scheduled_message.dart';
 import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
+import 'package:laternote/l10n/app_localizations_en.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../fake_messages_repository.dart';
 
@@ -32,6 +34,7 @@ void main() {
         ...extra,
       ],
       child: const MaterialApp(
+        localizationsDelegates: appLocalizationsDelegates,
         home: Scaffold(body: UpcomingMessagesList()),
       ),
     ),
@@ -141,7 +144,7 @@ void main() {
     await pump(tester);
     await tester.pumpAndSettle();
 
-    expect(find.text(const NetworkError().message), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().errorNetwork), findsOneWidget);
 
     repository.error = null;
     await tester.tap(find.text('Retry'));
@@ -223,7 +226,7 @@ void main() {
       repository.deleteGate!.complete();
       await tester.pumpAndSettle();
 
-      expect(find.text(const NetworkError().message), findsWidgets);
+      expect(find.text(AppLocalizationsEn().errorNetwork), findsWidgets);
     });
   });
 }

@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/core/app_error.dart';
-import 'package:laternote/core/error_message.dart';
 import 'package:laternote/features/auth/application/auth_controllers.dart';
 import 'package:laternote/features/auth/data/auth_repository.dart';
 import 'package:laternote/features/auth/data/auth_status.dart';
@@ -75,16 +74,20 @@ void main() {
     expect(container.read(signInControllerProvider), isA<AsyncData<void>>());
   });
 
-  test('sign-in failure surfaces the app error message', () async {
-    repository.error = const AuthError('Invalid login credentials');
+  test('sign-in failure surfaces the app error', () async {
+    repository.error = const AuthError(AuthFailure.invalidCredentials);
     container.listen(signInControllerProvider, (_, _) {});
     await container
         .read(signInControllerProvider.notifier)
         .signIn(email: 'a@b.co', password: 'wrong-pass');
 
     expect(
-      errorMessage(container.read(signInControllerProvider)),
-      'Invalid login credentials',
+      container.read(signInControllerProvider).error,
+      isA<AuthError>().having(
+        (e) => e.failure,
+        'failure',
+        AuthFailure.invalidCredentials,
+      ),
     );
   });
 

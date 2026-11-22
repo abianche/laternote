@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../messages/presentation/inbox_list.dart';
 import '../../messages/presentation/upcoming_messages_list.dart';
 
@@ -17,6 +18,7 @@ class HomeShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return DefaultTabController(
       length: HomeTab.values.length,
       initialIndex: initialTab.index,
@@ -26,14 +28,14 @@ class HomeShell extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(Icons.account_circle_outlined),
-              tooltip: 'Account',
+              tooltip: l10n.homeAccountTooltip,
               onPressed: () => context.go(Routes.account),
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Inbox'),
-              Tab(text: 'Sealed'),
+              Tab(text: l10n.homeInboxTab),
+              Tab(text: l10n.homeSealedTab),
             ],
           ),
         ),
@@ -43,7 +45,7 @@ class HomeShell extends StatelessWidget {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => context.go(Routes.compose),
           icon: const Icon(Icons.edit_outlined),
-          label: const Text('New message'),
+          label: Text(l10n.homeNewMessage),
         ),
       ),
     );

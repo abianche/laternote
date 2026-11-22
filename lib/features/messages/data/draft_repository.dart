@@ -47,7 +47,7 @@ class DraftRepository {
   Future<void> save(StoredDraft draft) async {
     final userId = _currentUserId();
     if (userId == null) {
-      throw const AuthError('You are signed out. Sign in and try again.');
+      throw const SignedOutError();
     }
     await _storage.write(
       key: _key,

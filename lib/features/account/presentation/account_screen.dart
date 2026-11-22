@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/application/auth_controllers.dart';
 import '../../notifications/presentation/notifications_tile.dart';
 import '../application/account_deletion.dart';
@@ -20,10 +21,11 @@ class AccountScreen extends ConsumerWidget {
     final launched = await launchUrl(deletionRequestUri(email));
     if (!launched && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Could not open a mail app. Email $deletionRequestEmail '
-            'directly to request deletion.',
+            AppLocalizations.of(
+              context,
+            ).accountMailAppMissing(deletionRequestEmail),
           ),
         ),
       );
@@ -33,7 +35,7 @@ class AccountScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(signOutControllerProvider, (_, next) {
-      final message = errorMessage(next);
+      final message = errorMessage(context, next);
       if (message != null) {
         ScaffoldMessenger.of(
           context,
@@ -42,30 +44,31 @@ class AccountScreen extends ConsumerWidget {
     });
     final signOut = ref.watch(signOutControllerProvider);
     final email = ref.watch(currentEmailProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Account')),
+      appBar: AppBar(title: Text(l10n.accountTitle)),
       body: ListView(
         children: [
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('Signed in as'),
+            title: Text(l10n.accountSignedInAs),
             subtitle: Text(switch (email) {
               AsyncData(value: final email?) => email,
               AsyncLoading() => '…',
-              _ => 'Unknown',
+              _ => l10n.accountUnknownEmail,
             }),
           ),
           const Divider(),
           const NotificationsTile(),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
-            title: const Text('Privacy & data'),
+            title: Text(l10n.accountPrivacy),
             onTap: () => context.go(Routes.privacy),
           ),
           ListTile(
             leading: const Icon(Icons.delete_outline),
-            title: const Text('Request account deletion'),
+            title: Text(l10n.accountRequestDeletion),
             onTap: () => _requestAccountDeletion(context, email.value),
           ),
           const Divider(),
@@ -77,7 +80,7 @@ class AccountScreen extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.logout),
-            title: const Text('Sign out'),
+            title: Text(l10n.accountSignOut),
             onTap: signOut.isLoading
                 ? null
                 : () => ref.read(signOutControllerProvider.notifier).signOut(),

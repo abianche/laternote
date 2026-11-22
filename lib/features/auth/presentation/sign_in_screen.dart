@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/auth_controllers.dart';
 import '../application/validators.dart';
 import 'auth_form_widgets.dart';
@@ -40,8 +41,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(signInControllerProvider);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign in')),
+      appBar: AppBar(title: Text(l10n.authSignInTitle)),
       body: AuthFormBody(
         child: Form(
           key: _formKey,
@@ -59,21 +61,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 autofillHints: const [AutofillHints.email],
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: validateEmail,
+                decoration: InputDecoration(labelText: l10n.commonEmail),
+                validator: (value) =>
+                    authFieldText(context, validateEmail(value)),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
                 autofillHints: const [AutofillHints.password],
-                decoration: const InputDecoration(labelText: 'Password'),
-                validator: validatePassword,
+                decoration: InputDecoration(labelText: l10n.commonPassword),
+                validator: (value) =>
+                    authFieldText(context, validatePassword(value)),
               ),
-              FormErrorText(errorMessage(state)),
+              FormErrorText(errorMessage(context, state)),
               const SizedBox(height: 24),
               SubmitButton(
-                label: 'Sign in',
+                label: l10n.authSignInButton,
                 isLoading: state.isLoading,
                 onPressed: _submit,
               ),
@@ -82,13 +86,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 onPressed: state.isLoading
                     ? null
                     : () => context.go(Routes.forgotPassword),
-                child: const Text('Forgot password?'),
+                child: Text(l10n.authForgotPasswordLink),
               ),
               TextButton(
                 onPressed: state.isLoading
                     ? null
                     : () => context.go(Routes.signUp),
-                child: const Text("Don't have an account? Sign up"),
+                child: Text(l10n.authSignUpLink),
               ),
             ],
           ),

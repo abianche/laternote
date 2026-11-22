@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_form_widgets.dart';
 import '../../notifications/presentation/notification_prompt.dart';
 import '../application/compose_controllers.dart';
@@ -18,6 +19,7 @@ class ReviewScreen extends ConsumerWidget {
     final timezone = ref.watch(deviceTimezoneProvider).value;
     final state = ref.watch(sealMessageControllerProvider);
     final deliverAt = draft.deliverAt;
+    final l10n = AppLocalizations.of(context);
 
     ref.listen(sealMessageControllerProvider, (_, next) async {
       if (next case AsyncData(value: final sealedFor?)) {
@@ -26,7 +28,9 @@ class ReviewScreen extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Sealed until ${formatDelivery(context, sealedFor, timezone)}.',
+              l10n.reviewSealedUntil(
+                formatDelivery(context, sealedFor, timezone),
+              ),
             ),
           ),
         );
@@ -35,7 +39,7 @@ class ReviewScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Review')),
+      appBar: AppBar(title: Text(l10n.reviewTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -51,17 +55,15 @@ class ReviewScreen extends ConsumerWidget {
             leading: const Icon(Icons.lock_clock),
             title: Text(
               deliverAt == null
-                  ? 'No delivery time'
+                  ? l10n.reviewNoDeliveryTime
                   : formatDelivery(context, deliverAt, timezone),
             ),
-            subtitle: const Text(
-              "Once sealed, you can't read it until then.",
-            ),
+            subtitle: Text(l10n.reviewSealedHint),
           ),
-          FormErrorText(errorMessage(state)),
+          FormErrorText(errorMessage(context, state)),
           const SizedBox(height: 24),
           SubmitButton(
-            label: 'Seal message',
+            label: l10n.reviewSealButton,
             isLoading: state.isLoading,
             onPressed: () =>
                 ref.read(sealMessageControllerProvider.notifier).seal(draft),
@@ -69,7 +71,7 @@ class ReviewScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           OutlinedButton(
             onPressed: state.isLoading ? null : () => context.pop(),
-            child: const Text('Edit'),
+            child: Text(l10n.reviewEdit),
           ),
         ],
       ),

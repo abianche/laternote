@@ -10,3 +10,6 @@ abstract final class Rpcs {
   static const markMessageOpened = 'mark_message_opened';
   static const registerDeviceToken = 'register_device_token';
 }
+
+/// Must match the `messages.body` check constraint.
+const maxMessageLength = 20000;

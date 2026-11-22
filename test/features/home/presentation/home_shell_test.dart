@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:laternote/app/localization.dart';
 import 'package:laternote/features/home/presentation/home_shell.dart';
 import 'package:laternote/features/messages/application/compose_controllers.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
@@ -18,7 +19,10 @@ void main() {
           const AsyncData('Europe/Rome'),
         ),
       ],
-      child: MaterialApp(home: shell),
+      child: MaterialApp(
+        localizationsDelegates: appLocalizationsDelegates,
+        home: shell,
+      ),
     ),
   );
 

@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/inbox.dart';
 import '../data/available_message.dart';
 import 'list_notice.dart';
@@ -16,21 +17,20 @@ class InboxList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = ref.watch(availableMessagesProvider);
+    final l10n = AppLocalizations.of(context);
     Future<void> refresh() => ref.refresh(availableMessagesProvider.future);
 
-    const loading = ListNotice(progress: true, text: 'Loading your inbox…');
+    final loading = ListNotice(progress: true, text: l10n.inboxLoading);
 
     return messages.when(
       data: (list) {
         if (list.isEmpty) {
           return RefreshIndicator(
             onRefresh: refresh,
-            child: const FillScroll(
+            child: FillScroll(
               child: ListNotice(
                 icon: Icons.inbox_outlined,
-                text:
-                    'Nothing has opened yet. Your messages arrive here when '
-                    'their time comes.',
+                text: l10n.inboxEmpty,
               ),
             ),
           );
@@ -44,11 +44,11 @@ class InboxList extends ConsumerWidget {
             padding: const EdgeInsets.only(bottom: 88),
             children: [
               if (fresh.isNotEmpty) ...[
-                const _Header('New'),
+                _Header(l10n.inboxNewHeader),
                 for (final m in fresh) _InboxTile(m),
               ],
               if (read.isNotEmpty) ...[
-                const _Header('Read'),
+                _Header(l10n.inboxReadHeader),
                 for (final m in read) _InboxTile(m),
               ],
             ],
@@ -63,10 +63,10 @@ class InboxList extends ConsumerWidget {
               child: FillScroll(
                 child: ListNotice(
                   icon: Icons.cloud_off_outlined,
-                  text: errorMessage(messages)!,
+                  text: errorMessage(context, messages)!,
                   action: TextButton(
                     onPressed: () => ref.invalidate(availableMessagesProvider),
-                    child: const Text('Retry'),
+                    child: Text(l10n.commonRetry),
                   ),
                 ),
               ),
@@ -103,20 +103,21 @@ class _InboxTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = MaterialLocalizations.of(context);
-    final arrived = l10n.formatShortDate(message.releasedAt);
-    final written = l10n.formatShortDate(message.createdAt);
+    final material = MaterialLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
+    final arrived = material.formatShortDate(message.releasedAt);
+    final written = material.formatShortDate(message.createdAt);
     return ListTile(
       leading: Icon(
         message.isNew ? Icons.mark_email_unread : Icons.drafts_outlined,
       ),
       title: Text(
-        'Arrived $arrived',
+        l10n.inboxArrived(arrived),
         style: message.isNew
             ? const TextStyle(fontWeight: FontWeight.bold)
             : null,
       ),
-      subtitle: Text('Written on $written'),
+      subtitle: Text(l10n.inboxWrittenOn(written)),
       onTap: () => context.go(Routes.message(message.id)),
     );
   }

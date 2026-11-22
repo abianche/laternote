@@ -26,7 +26,7 @@ class MessagesRepository {
   }) async {
     final userId = _currentUserId();
     if (userId == null) {
-      throw const AuthError('You are signed out. Sign in and try again.');
+      throw const SignedOutError();
     }
     try {
       await _db.from(Tables.messages).insert({
@@ -38,13 +38,9 @@ class MessagesRepository {
     } on PostgrestException catch (error) {
       throw switch (error.code) {
         // RLS: the only client-controllable reason is a time already past.
-        '42501' => const ValidationError(
-          'That delivery time has already passed. Pick a later time.',
-        ),
+        '42501' => const ValidationError(ValidationProblem.deliveryPassed),
         // Check constraint on body.
-        '23514' => const ValidationError(
-          'A message needs some text, up to 20,000 characters.',
-        ),
+        '23514' => const ValidationError(ValidationProblem.bodyInvalid),
         _ => mapSupabaseError(error),
       };
     } catch (error) {
@@ -63,9 +59,7 @@ class MessagesRepository {
           .eq('id', id)
           .select('id');
       if (deleted.isEmpty) {
-        throw const ValidationError(
-          'This message is already opening, so it can\'t be deleted.',
-        );
+        throw const ValidationError(ValidationProblem.alreadyOpening);
       }
     } catch (error) {
       throw mapSupabaseError(error);

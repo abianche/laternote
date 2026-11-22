@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../application/notification_permission.dart';
 import '../data/push_repository.dart';
 
@@ -13,18 +14,17 @@ class NotificationsTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final permission = ref.watch(notificationPermissionProvider);
     final undecided = permission.value == PushPermission.notDetermined;
+    final l10n = AppLocalizations.of(context);
 
     return ListTile(
       leading: const Icon(Icons.notifications_outlined),
-      title: const Text('Notifications'),
+      title: Text(l10n.notificationsTitle),
       subtitle: Text(switch (permission) {
-        AsyncData(value: PushPermission.granted) =>
-          "On. You'll hear when a message opens.",
-        AsyncData(value: PushPermission.denied) =>
-          'Off. Turn them on in your device settings.',
+        AsyncData(value: PushPermission.granted) => l10n.notificationsOn,
+        AsyncData(value: PushPermission.denied) => l10n.notificationsDenied,
         AsyncData(value: PushPermission.notDetermined) =>
-          'Off. Tap to turn on.',
-        AsyncError() => 'Not available on this device.',
+          l10n.notificationsUndecided,
+        AsyncError() => l10n.notificationsUnavailable,
         _ => '…',
       }),
       onTap: undecided
