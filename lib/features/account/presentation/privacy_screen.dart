@@ -13,8 +13,7 @@ const privacySections = <(String, String)>[
     'When you seal a message we store it with its opening time, time '
         'zone and status. Access is enforced by the database itself, not '
         'just the app: only your account can see your messages, and nobody, '
-        'not even you, can read one before it opens. Messages are not '
-        'end-to-end encrypted.',
+        'not even you, can read one before it opens.',
   ),
   (
     'Notifications',
