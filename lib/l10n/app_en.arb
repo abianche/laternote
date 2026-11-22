@@ -174,5 +174,14 @@
   "notificationsPromptTitle": "Know when it opens",
   "notificationsPromptContent": "We'll send a notification when a message is ready to read. It never shows what you wrote.",
   "notificationsNotNow": "Not now",
-  "notificationsTurnOn": "Turn on"
+  "notificationsTurnOn": "Turn on",
+
+  "linkContinue": "Continue",
+  "linkEmailConfirmedTitle": "Email confirmed",
+  "linkEmailConfirmedBody": "Your email is confirmed and you're signed in.",
+  "linkProblemTitle": "Link not usable",
+  "linkProblemExpired": "This link has expired or was already used. Request a new one.",
+  "linkProblemInvalid": "This link can't be used. Open it on the device where you requested it, or request a new one.",
+  "linkProblemUnrecognized": "Laternote doesn't recognize this link.",
+  "linkProblemNetwork": "No connection. Check your network and open the link again."
 }

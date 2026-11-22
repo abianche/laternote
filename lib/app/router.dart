@@ -7,7 +7,10 @@ import '../features/account/presentation/privacy_screen.dart';
 import '../features/auth/application/auth_status_provider.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/auth/data/auth_status.dart';
+import '../core/deep_link.dart';
+import '../features/auth/presentation/email_confirmed_screen.dart';
 import '../features/auth/presentation/forgot_password_screen.dart';
+import '../features/auth/presentation/link_problem_screen.dart';
 import '../features/auth/presentation/reset_password_screen.dart';
 import '../features/auth/presentation/sign_in_screen.dart';
 import '../features/auth/presentation/sign_up_screen.dart';
@@ -20,12 +23,17 @@ import 'routes.dart';
 part 'router.g.dart';
 
 /// Where to send the user for [uri] given their [status], or null to stay.
-/// Password recovery wins over everything; signed-out users are kept
+/// Screens explaining an incoming link are shown in any state, since the
+/// session may still be catching up with the link. Otherwise password
+/// recovery wins over everything; signed-out users are kept
 /// inside the sign-in flow, remembering a message they were opening (e.g.
 /// from a notification); signed-in users are kept out of it, continuing to
 /// that message.
 String? authRedirect(AuthStatus status, Uri uri) {
   final location = uri.path;
+  if (location == Routes.emailConfirmed || location == Routes.linkProblem) {
+    return null;
+  }
   final inSignInFlow =
       location == Routes.signIn || location.startsWith('${Routes.signIn}/');
   return switch (status) {
@@ -105,6 +113,19 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: Routes.resetPassword,
         builder: (_, _) => const ResetPasswordScreen(),
+      ),
+      GoRoute(
+        path: Routes.emailConfirmed,
+        builder: (_, _) => const EmailConfirmedScreen(),
+      ),
+      GoRoute(
+        path: Routes.linkProblem,
+        builder: (_, state) => LinkProblemScreen(
+          problem:
+              LinkProblem.values
+                  .asNameMap()[state.uri.queryParameters['reason']] ??
+              LinkProblem.unrecognized,
+        ),
       ),
     ],
   );

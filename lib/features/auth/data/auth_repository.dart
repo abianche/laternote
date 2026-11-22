@@ -2,14 +2,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/app_error.dart';
+import '../../../core/deep_link.dart';
 import '../../../core/supabase_client.dart';
 import 'auth_status.dart';
 
 part 'auth_repository.g.dart';
-
-/// Must match the scheme registered in the Android manifest and iOS
-/// Info.plist, and listed in supabase/config.toml's additional_redirect_urls.
-const passwordRecoveryRedirect = 'io.laternote.auth://login-callback';
 
 /// Maps a Supabase auth event and session to an [AuthStatus].
 AuthStatus authStatusFrom(AuthChangeEvent event, Session? session) {
@@ -41,7 +38,11 @@ class AuthRepository {
     required String email,
     required String password,
   }) => _guard(() async {
-    final response = await _auth.signUp(email: email, password: password);
+    final response = await _auth.signUp(
+      email: email,
+      password: password,
+      emailRedirectTo: authLinkUrl(AuthLinkKind.emailConfirmation),
+    );
     return response.session == null
         ? SignUpOutcome.confirmationRequired
         : SignUpOutcome.signedIn;
@@ -50,9 +51,14 @@ class AuthRepository {
   Future<void> sendPasswordReset(String email) => _guard(
     () => _auth.resetPasswordForEmail(
       email,
-      redirectTo: passwordRecoveryRedirect,
+      redirectTo: authLinkUrl(AuthLinkKind.passwordReset),
     ),
   );
+
+  /// Exchanges the code in an auth email link for a session. A recovery
+  /// link starts [PasswordRecovery]; the others sign in.
+  Future<void> completeSignInFromLink(Uri uri) =>
+      _guard(() => _auth.getSessionFromUrl(uri));
 
   Future<void> updatePassword(String password) =>
       _guard(() => _auth.updateUser(UserAttributes(password: password)));

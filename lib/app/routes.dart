@@ -1,3 +1,5 @@
+import '../core/deep_link.dart';
+
 /// Route locations. Nested paths give each child screen a back button to
 /// its parent.
 abstract final class Routes {
@@ -13,6 +15,17 @@ abstract final class Routes {
   static const signUp = '/sign-in/sign-up';
   static const forgotPassword = '/sign-in/forgot-password';
   static const resetPassword = '/reset-password';
+
+  /// After an email-confirmation link. Open in any auth state.
+  static const emailConfirmed = '/email-confirmed';
+
+  /// A link that couldn't be followed. Open in any auth state.
+  static const linkProblem = '/link-problem';
+
+  static String linkProblemFor(LinkProblem problem) => Uri(
+    path: linkProblem,
+    queryParameters: {'reason': problem.name},
+  ).toString();
 
   /// A released message, opened from the inbox or a notification.
   static String message(String id) => '/messages/$id';

@@ -12,6 +12,8 @@ Future<void> main() async {
   await Supabase.initialize(
     url: AppEnvironment.supabaseUrl,
     publishableKey: AppEnvironment.supabasePublishableKey,
+    // The app handles auth links itself (app/deep_link_routing.dart).
+    authOptions: const FlutterAuthClientOptions(detectSessionInUri: false),
   );
   // Reads the per-flavor native Firebase config (docs/environments.md).
   await Firebase.initializeApp();
