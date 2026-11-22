@@ -37,6 +37,14 @@ supabase/
 - Errors from Supabase are caught in the repository and mapped to app-level errors in `core/`.
 - Generated types/constants for table names live in `core/`.
 
+## Localization
+
+- Flutter `gen-l10n` with ARB files in `lib/l10n/` (`app_en.arb` is the template, `app_it.arb` the Italian translation); the generated `AppLocalizations` is committed. Every user-facing string is an ARB key, and both files have the same keys.
+- Supported locales: English and Italian. The app follows the device locale; any other locale gets English.
+- `MaterialApp` uses `appLocalizationsDelegates` (`lib/app/localization.dart`): `AppLocalizations` plus `material_ui`'s Material/Cupertino/Widgets delegates, not the generated list, which points at `flutter_localizations`' Material delegate.
+- Only presentation code produces text. Repositories and notifiers throw typed `AppError`s and validators return enums; widgets turn them into text (`core/error_message.dart`). Dates and times are formatted with `MaterialLocalizations`.
+- Push text is sent by the server in English for now (#44).
+
 ## Selected services
 
 - **Backend:** Supabase: separate development and production projects, each with Auth, Postgres, Row Level Security (RLS), and Edge Functions. Do not point a development build at production.
@@ -82,3 +90,4 @@ Account deletion is an authenticated request that first disables sign-in, then d
 | 2026-11-18 | Unsealed drafts live only on the device (`flutter_secure_storage`), deleted on seal, discard and session end; sealing is a separate explicit step | Lets people take their time writing while sealed messages stay final; nothing private reaches the server or outlives the session before sealing |
 | 2026-11-20 | Release due messages with a SQL function run by Supabase Cron every 30 seconds, not an Edge Function | One transaction in one place, no HTTP hop or secret key, nothing metered; a missed run is caught up by the next |
 | 2026-11-21 | Push through FCM HTTP v1 to the Firebase Installation ID (`fid`), from an Edge Function called by cron via `pg_net` | `token`/`getToken` are deprecated; one path for Android and iOS; the function holds the FCM credentials and the database keeps scheduling |
+| 2026-11-22 | Localize with `gen-l10n` ARB files (English, Italian), following the device locale | Flutter's standard approach; typed errors keep strings out of data and application code |
