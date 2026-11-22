@@ -1,0 +1,178 @@
+{
+  "@@locale": "en",
+
+  "errorNetwork": "No connection. Check your network and try again.",
+  "errorUnexpected": "Something went wrong. Please try again.",
+  "errorSignedOut": "You are signed out. Sign in and try again.",
+  "errorInvalidCredentials": "Wrong email or password.",
+  "errorEmailNotConfirmed": "Confirm your email address before signing in.",
+  "errorWeakPassword": "Choose a stronger password.",
+  "errorSamePassword": "Choose a password different from your current one.",
+  "errorRateLimited": "Too many attempts. Wait a moment and try again.",
+  "errorLinkExpired": "This link has expired. Request a new one.",
+  "errorAuthFailed": "That didn't work. Check your details and try again.",
+  "errorAccountExists": "An account already exists.",
+
+  "validationEmailEmpty": "Enter your email address.",
+  "validationEmailInvalid": "Enter a valid email address.",
+  "validationPasswordEmpty": "Enter a password.",
+  "validationPasswordTooShort": "Password must be at least {min} characters.",
+  "@validationPasswordTooShort": {
+    "placeholders": { "min": { "type": "int" } }
+  },
+  "validationConfirmationEmpty": "Confirm your password.",
+  "validationPasswordsDiffer": "Passwords do not match.",
+  "validationBodyEmpty": "Write something to your future self.",
+  "validationBodyTooLong": "Keep it under {max} characters.",
+  "@validationBodyTooLong": {
+    "placeholders": { "max": { "type": "int", "format": "decimalPattern" } }
+  },
+  "validationBodyInvalid": "A message needs some text, up to {max} characters.",
+  "@validationBodyInvalid": {
+    "placeholders": { "max": { "type": "int", "format": "decimalPattern" } }
+  },
+  "validationDeliveryMissing": "Pick a delivery date and time.",
+  "validationDeliveryInPast": "Pick a time in the future.",
+  "validationDeliveryPassed": "That delivery time has already passed. Pick a later time.",
+  "validationAlreadyOpening": "This message is already opening, so it can't be deleted.",
+
+  "commonRetry": "Retry",
+  "commonCancel": "Cancel",
+  "commonDelete": "Delete",
+  "commonEmail": "Email",
+  "commonPassword": "Password",
+
+  "authSignInTitle": "Sign in",
+  "authSignInButton": "Sign in",
+  "authForgotPasswordLink": "Forgot password?",
+  "authSignUpLink": "Don't have an account? Sign up",
+  "authCreateAccountTitle": "Create account",
+  "authCreateAccountButton": "Create account",
+  "authConfirmPassword": "Confirm password",
+  "authConfirmEmailSent": "Check your email to confirm your account before signing in.",
+  "authBackToSignIn": "Back to sign in",
+  "authResetPasswordTitle": "Reset password",
+  "authResetPasswordIntro": "Enter your account's email and we'll send a link to reset your password.",
+  "authSendResetLink": "Send reset link",
+  "authResetLinkSent": "If an account exists for that email, a reset link has been sent.",
+  "authNewPasswordTitle": "Set a new password",
+  "authNewPassword": "New password",
+  "authConfirmNewPassword": "Confirm new password",
+  "authUpdatePassword": "Update password",
+
+  "homeAccountTooltip": "Account",
+  "homeInboxTab": "Inbox",
+  "homeSealedTab": "Sealed",
+  "homeNewMessage": "New message",
+
+  "inboxLoading": "Loading your inbox…",
+  "inboxEmpty": "Nothing has opened yet. Your messages arrive here when their time comes.",
+  "inboxNewHeader": "New",
+  "inboxReadHeader": "Read",
+  "inboxArrived": "Arrived {date}",
+  "@inboxArrived": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "inboxWrittenOn": "Written on {date}",
+  "@inboxWrittenOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "sealedLoading": "Loading your sealed messages… You can start a new one meanwhile.",
+  "sealedEmpty": "Nothing sealed yet. Tap New message to write to your future self.",
+  "sealedOpeningSoon": "Opening soon",
+  "sealedOpens": "Opens {delivery}",
+  "@sealedOpens": {
+    "placeholders": { "delivery": { "type": "String" } }
+  },
+  "sealedOn": "Sealed on {date}",
+  "@sealedOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "sealedDeleted": "Message deleted.",
+  "sealedDeleteTitle": "Delete this sealed message?",
+  "sealedDeleteContent": "It will never open. This can't be undone.",
+
+  "messageTitle": "Message",
+  "messageUnavailable": "This message isn't available. It may not have opened yet, or it was deleted.",
+  "messageOpening": "Opening your message…",
+  "messageWrittenOn": "Written on {date}",
+  "@messageWrittenOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
+  "messageSetToOpen": "Set to open {delivery}",
+  "@messageSetToOpen": {
+    "placeholders": { "delivery": { "type": "String" } }
+  },
+  "messageArrived": "Arrived {delivery}",
+  "@messageArrived": {
+    "placeholders": { "delivery": { "type": "String" } }
+  },
+
+  "deliveryDateTime": "{date} at {time}",
+  "@deliveryDateTime": {
+    "description": "Full date and time a message opens, e.g. 'Saturday, December 20, 2027 at 9:00 AM'.",
+    "placeholders": {
+      "date": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+
+  "composeTitle": "New message",
+  "composeDiscardTooltip": "Discard draft",
+  "composeDiscardTitle": "Discard draft?",
+  "composeDiscardContent": "It will be deleted from this device.",
+  "composeKeep": "Keep",
+  "composeDiscard": "Discard",
+  "composeBodyLabel": "Your message",
+  "composeDeliverOn": "Deliver on",
+  "composePickDateTime": "Pick a date and time",
+  "composeSeal": "Seal…",
+  "composeSaveFailed": "Not saved on this device. Keep the app open or try again.",
+  "composeSavedLocally": "Your draft is saved on this device only. Nothing is sent until you seal it.",
+
+  "reviewTitle": "Review",
+  "reviewNoDeliveryTime": "No delivery time",
+  "reviewSealedHint": "Once sealed, you can't read it until then.",
+  "reviewSealButton": "Seal message",
+  "reviewEdit": "Edit",
+  "reviewSealedUntil": "Sealed until {delivery}.",
+  "@reviewSealedUntil": {
+    "placeholders": { "delivery": { "type": "String" } }
+  },
+
+  "accountTitle": "Account",
+  "accountSignedInAs": "Signed in as",
+  "accountUnknownEmail": "Unknown",
+  "accountPrivacy": "Privacy & data",
+  "accountRequestDeletion": "Request account deletion",
+  "accountSignOut": "Sign out",
+  "accountMailAppMissing": "Could not open a mail app. Email {email} directly to request deletion.",
+  "@accountMailAppMissing": {
+    "placeholders": { "email": { "type": "String" } }
+  },
+
+  "privacyTitle": "Privacy & data",
+  "privacyDraftsTitle": "Drafts stay on this device",
+  "privacyDraftsBody": "While you write, your draft is saved encrypted on this device only. It is never sent to our servers, and it is deleted when you seal it, discard it, or sign out.",
+  "privacySealedTitle": "Sealed messages",
+  "privacySealedBody": "When you seal a message we store it with its opening time, time zone and status. Access is enforced by the database itself, not just the app: only your account can see your messages, and nobody, not even you, can read one before it opens.",
+  "privacyNotificationsTitle": "Notifications",
+  "privacyNotificationsBody": "A notification only says \"A message is ready\". It never contains what you wrote, so nothing private shows on your lock screen. To send it we keep a notification address for this device from Firebase Cloud Messaging, removed when you sign out.",
+  "privacyTrackingTitle": "No tracking",
+  "privacyTrackingBody": "Laternote has no analytics, ads or crash reporting. Our logs record counts only, never message content.",
+  "privacyDeletionTitle": "Deleting your account",
+  "privacyDeletionBody": "During this early MVP, account deletion is handled manually: use \"Request account deletion\" on the Account screen to send a request. We delete your account, messages and device addresses by hand, normally within a few business days, and confirm by email.",
+  "privacyBackupsTitle": "Backups",
+  "privacyBackupsBody": "Encrypted backups age out after about 30 days. If one is ever restored, deletion requests made since then are applied again.",
+
+  "notificationsTitle": "Notifications",
+  "notificationsOn": "On. You'll hear when a message opens.",
+  "notificationsDenied": "Off. Turn them on in your device settings.",
+  "notificationsUndecided": "Off. Tap to turn on.",
+  "notificationsUnavailable": "Not available on this device.",
+  "notificationsPromptTitle": "Know when it opens",
+  "notificationsPromptContent": "We'll send a notification when a message is ready to read. It never shows what you wrote.",
+  "notificationsNotNow": "Not now",
+  "notificationsTurnOn": "Turn on"
+}
