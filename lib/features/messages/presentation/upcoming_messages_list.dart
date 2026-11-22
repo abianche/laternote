@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/delete_message_controller.dart';
 import '../application/upcoming_messages.dart';
@@ -19,32 +20,30 @@ class UpcomingMessagesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messages = ref.watch(upcomingMessagesProvider);
+    final l10n = AppLocalizations.of(context);
     // Also keeps the controller alive while a deletion runs.
     ref.listen(deleteMessageControllerProvider, (previous, next) {
       if (!(previous?.isLoading ?? false) || next.isLoading) return;
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          SnackBar(content: Text(errorMessage(next) ?? 'Message deleted.')),
+          SnackBar(
+            content: Text(errorMessage(context, next) ?? l10n.sealedDeleted),
+          ),
         );
     });
     Future<void> refresh() => ref.refresh(upcomingMessagesProvider.future);
 
-    const loading = ListNotice(
-      progress: true,
-      text: 'Loading your sealed messages… You can start a new one meanwhile.',
-    );
+    final loading = ListNotice(progress: true, text: l10n.sealedLoading);
 
     return messages.when(
       data: (list) => RefreshIndicator(
         onRefresh: refresh,
         child: list.isEmpty
-            ? const FillScroll(
+            ? FillScroll(
                 child: ListNotice(
                   icon: Icons.mark_email_unread_outlined,
-                  text:
-                      'Nothing sealed yet. Tap New message to write to your '
-                      'future self.',
+                  text: l10n.sealedEmpty,
                 ),
               )
             : ListView.builder(
@@ -62,10 +61,10 @@ class UpcomingMessagesList extends ConsumerWidget {
               child: FillScroll(
                 child: ListNotice(
                   icon: Icons.cloud_off_outlined,
-                  text: errorMessage(messages)!,
+                  text: errorMessage(context, messages)!,
                   action: TextButton(
                     onPressed: () => ref.invalidate(upcomingMessagesProvider),
-                    child: const Text('Retry'),
+                    child: Text(l10n.commonRetry),
                   ),
                 ),
               ),
@@ -91,20 +90,23 @@ class _MessageTile extends ConsumerWidget {
     ).formatShortDate(message.createdAt);
     final openingSoon = message.isOpeningSoon(now);
     final deleting = ref.watch(deleteMessageControllerProvider).isLoading;
+    final l10n = AppLocalizations.of(context);
     return ListTile(
       leading: Icon(openingSoon ? Icons.hourglass_top : Icons.lock_clock),
       title: Text(
         openingSoon
-            ? 'Opening soon'
-            : 'Opens ${formatDelivery(context, message.scheduledFor, zone)}',
+            ? l10n.sealedOpeningSoon
+            : l10n.sealedOpens(
+                formatDelivery(context, message.scheduledFor, zone),
+              ),
       ),
-      subtitle: Text('Sealed on $sealed'),
+      subtitle: Text(l10n.sealedOn(sealed)),
       // Past its time the server refuses deletion, so don't offer it.
       trailing: openingSoon
           ? null
           : IconButton(
               icon: const Icon(Icons.delete_outline),
-              tooltip: 'Delete',
+              tooltip: l10n.commonDelete,
               onPressed: deleting ? null : () => _confirmDelete(context, ref),
             ),
     );
@@ -113,21 +115,20 @@ class _MessageTile extends ConsumerWidget {
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
     // Read before awaiting: this tile may be gone once the dialog closes.
     final controller = ref.read(deleteMessageControllerProvider.notifier);
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete this sealed message?'),
-        content: const Text(
-          'It will never open. This can\'t be undone.',
-        ),
+        title: Text(l10n.sealedDeleteTitle),
+        content: Text(l10n.sealedDeleteContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(l10n.commonDelete),
           ),
         ],
       ),

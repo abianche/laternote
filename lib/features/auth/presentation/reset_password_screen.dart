@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/auth_controllers.dart';
 import '../application/validators.dart';
 import 'auth_form_widgets.dart';
@@ -39,8 +40,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(resetPasswordControllerProvider);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Set a new password')),
+      appBar: AppBar(title: Text(l10n.authNewPasswordTitle)),
       body: AuthFormBody(
         child: Form(
           key: _formKey,
@@ -52,25 +54,29 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 controller: _passwordController,
                 obscureText: true,
                 autofillHints: const [AutofillHints.newPassword],
-                decoration: const InputDecoration(labelText: 'New password'),
-                validator: validatePassword,
+                decoration: InputDecoration(labelText: l10n.authNewPassword),
+                validator: (value) =>
+                    authFieldText(context, validatePassword(value)),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _confirmController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm new password',
+                decoration: InputDecoration(
+                  labelText: l10n.authConfirmNewPassword,
                 ),
-                validator: (value) => validatePasswordConfirmation(
-                  _passwordController.text,
-                  value ?? '',
+                validator: (value) => authFieldText(
+                  context,
+                  validatePasswordConfirmation(
+                    _passwordController.text,
+                    value ?? '',
+                  ),
                 ),
               ),
-              FormErrorText(errorMessage(state)),
+              FormErrorText(errorMessage(context, state)),
               const SizedBox(height: 24),
               SubmitButton(
-                label: 'Update password',
+                label: l10n.authUpdatePassword,
                 isLoading: state.isLoading,
                 onPressed: _submit,
               ),

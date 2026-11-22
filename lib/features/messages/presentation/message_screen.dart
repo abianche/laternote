@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/inbox.dart';
 import '../data/available_message.dart';
@@ -18,25 +19,24 @@ class MessageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final message = ref.watch(openedMessageProvider(id));
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Message')),
+      appBar: AppBar(title: Text(l10n.messageTitle)),
       body: switch (message) {
         AsyncData(value: final message?) => _MessageView(message),
-        AsyncData() => const ListNotice(
+        AsyncData() => ListNotice(
           icon: Icons.lock_clock,
-          text:
-              'This message isn\'t available. It may not have opened yet, '
-              'or it was deleted.',
+          text: l10n.messageUnavailable,
         ),
         AsyncError() when !message.isLoading => ListNotice(
           icon: Icons.cloud_off_outlined,
-          text: errorMessage(message)!,
+          text: errorMessage(context, message)!,
           action: TextButton(
             onPressed: () => ref.invalidate(openedMessageProvider(id)),
-            child: const Text('Retry'),
+            child: Text(l10n.commonRetry),
           ),
         ),
-        _ => const ListNotice(progress: true, text: 'Opening your message…'),
+        _ => ListNotice(progress: true, text: l10n.messageOpening),
       },
     );
   }
@@ -49,7 +49,8 @@ class _MessageView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = MaterialLocalizations.of(context);
+    final material = MaterialLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     // Device-local times, labelled with the device's current zone.
     final zone = ref.watch(deviceTimezoneProvider).value;
@@ -62,15 +63,19 @@ class _MessageView extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Written on ${l10n.formatFullDate(message.createdAt)}',
+            l10n.messageWrittenOn(material.formatFullDate(message.createdAt)),
             style: dates,
           ),
           Text(
-            'Set to open ${formatDelivery(context, message.scheduledFor, zone)}',
+            l10n.messageSetToOpen(
+              formatDelivery(context, message.scheduledFor, zone),
+            ),
             style: dates,
           ),
           Text(
-            'Arrived ${formatDelivery(context, message.releasedAt, zone)}',
+            l10n.messageArrived(
+              formatDelivery(context, message.releasedAt, zone),
+            ),
             style: dates,
           ),
           const Divider(height: 32),

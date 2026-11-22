@@ -1,5 +1,5 @@
-/// Must match the `messages.body` check constraint.
-const maxMessageLength = 20000;
+import '../../../core/app_error.dart';
+import '../../../core/tables.dart';
 
 /// A message being composed. [deliverAt] is a device-local time, null until
 /// picked.
@@ -15,18 +15,16 @@ class MessageDraft {
   );
 }
 
-String? validateBody(String? body) {
+ValidationProblem? validateBody(String? body) {
   final text = body ?? '';
-  if (text.trim().isEmpty) return 'Write something to your future self.';
-  if (text.characters > maxMessageLength) {
-    return 'Keep it under $maxMessageLength characters.';
-  }
+  if (text.trim().isEmpty) return ValidationProblem.bodyEmpty;
+  if (text.characters > maxMessageLength) return ValidationProblem.bodyTooLong;
   return null;
 }
 
-String? validateDeliverAt(DateTime? deliverAt, DateTime now) {
-  if (deliverAt == null) return 'Pick a delivery date and time.';
-  if (!deliverAt.isAfter(now)) return 'Pick a time in the future.';
+ValidationProblem? validateDeliverAt(DateTime? deliverAt, DateTime now) {
+  if (deliverAt == null) return ValidationProblem.deliveryMissing;
+  if (!deliverAt.isAfter(now)) return ValidationProblem.deliveryInPast;
   return null;
 }
 

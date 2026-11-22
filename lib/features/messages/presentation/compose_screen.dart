@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../app/routes.dart';
 import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
+import '../../../core/tables.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/message_draft.dart';
 import 'delivery_format.dart';
@@ -15,19 +17,20 @@ class ComposeScreen extends ConsumerWidget {
   const ComposeScreen({super.key});
 
   Future<void> _discard(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Discard draft?'),
-        content: const Text('It will be deleted from this device.'),
+        title: Text(l10n.composeDiscardTitle),
+        content: Text(l10n.composeDiscardContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Keep'),
+            child: Text(l10n.composeKeep),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Discard'),
+            child: Text(l10n.composeDiscard),
           ),
         ],
       ),
@@ -40,12 +43,13 @@ class ComposeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final draft = ref.watch(composeDraftProvider);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New message'),
+        title: Text(l10n.composeTitle),
         actions: [
           IconButton(
-            tooltip: 'Discard draft',
+            tooltip: l10n.composeDiscardTooltip,
             icon: const Icon(Icons.delete_outline),
             onPressed: draft.hasValue ? () => _discard(context, ref) : null,
           ),
@@ -53,7 +57,7 @@ class ComposeScreen extends ConsumerWidget {
       ),
       body: switch (draft) {
         AsyncData() => const _ComposeForm(),
-        AsyncError() => Center(child: Text(errorMessage(draft)!)),
+        AsyncError() => Center(child: Text(errorMessage(context, draft)!)),
         _ => const Center(child: CircularProgressIndicator()),
       },
     );
@@ -125,6 +129,7 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final draft = ref.watch(composeDraftProvider).requireValue;
     final saveFailed = ref.watch(draftSaveFailedProvider);
     final timezone = ref.watch(deviceTimezoneProvider).value;
@@ -140,43 +145,44 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
         children: [
           TextFormField(
             controller: _bodyController,
-            decoration: const InputDecoration(
-              labelText: 'Your message',
+            decoration: InputDecoration(
+              labelText: l10n.composeBodyLabel,
               alignLabelWithHint: true,
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             minLines: 8,
             maxLines: null,
             maxLength: maxMessageLength,
             keyboardType: TextInputType.multiline,
             textCapitalization: TextCapitalization.sentences,
-            validator: validateBody,
+            validator: (value) {
+              final problem = validateBody(value);
+              return problem == null ? null : validationText(l10n, problem);
+            },
             onChanged: ref.read(composeDraftProvider.notifier).setBody,
           ),
           const SizedBox(height: 8),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.schedule),
-            title: const Text('Deliver on'),
+            title: Text(l10n.composeDeliverOn),
             subtitle: Text(
               deliverAt == null
-                  ? 'Pick a date and time'
+                  ? l10n.composePickDateTime
                   : formatDelivery(context, deliverAt, timezone),
             ),
             onTap: _pickDelivery,
           ),
           if (deliveryError != null)
             Text(
-              deliveryError,
+              validationText(l10n, deliveryError),
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           const SizedBox(height: 24),
-          FilledButton(onPressed: _review, child: const Text('Seal…')),
+          FilledButton(onPressed: _review, child: Text(l10n.composeSeal)),
           const SizedBox(height: 8),
           Text(
-            saveFailed
-                ? 'Not saved on this device. Keep the app open or try again.'
-                : 'Your draft is saved on this device only. Nothing is sent until you seal it.',
+            saveFailed ? l10n.composeSaveFailed : l10n.composeSavedLocally,
             style: saveFailed
                 ? Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.error,

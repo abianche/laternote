@@ -1,44 +1,16 @@
 import 'package:material_ui/material_ui.dart';
 
-/// Plain-language privacy notice. Keep in sync with PRIVACY.md.
-const privacySections = <(String, String)>[
-  (
-    'Drafts stay on this device',
-    'While you write, your draft is saved encrypted on this device only. '
-        'It is never sent to our servers, and it is deleted when you seal '
-        'it, discard it, or sign out.',
-  ),
-  (
-    'Sealed messages',
-    'When you seal a message we store it with its opening time, time '
-        'zone and status. Access is enforced by the database itself, not '
-        'just the app: only your account can see your messages, and nobody, '
-        'not even you, can read one before it opens.',
-  ),
-  (
-    'Notifications',
-    'A notification only says "A message is ready". It never contains '
-        'what you wrote, so nothing private shows on your lock screen. To '
-        'send it we keep a notification address for this device from '
-        'Firebase Cloud Messaging, removed when you sign out.',
-  ),
-  (
-    'No tracking',
-    'Laternote has no analytics, ads or crash reporting. Our logs record '
-        'counts only, never message content.',
-  ),
-  (
-    'Deleting your account',
-    'During this early MVP, account deletion is handled manually: use '
-        '"Request account deletion" on the Account screen to send a '
-        'request. We delete your account, messages and device addresses by '
-        'hand, normally within a few business days, and confirm by email.',
-  ),
-  (
-    'Backups',
-    'Encrypted backups age out after about 30 days. If one is ever '
-        'restored, deletion requests made since then are applied again.',
-  ),
+import '../../../l10n/app_localizations.dart';
+
+/// Plain-language privacy notice as (title, text) pairs. Keep in sync with
+/// PRIVACY.md.
+List<(String, String)> privacySections(AppLocalizations l10n) => [
+  (l10n.privacyDraftsTitle, l10n.privacyDraftsBody),
+  (l10n.privacySealedTitle, l10n.privacySealedBody),
+  (l10n.privacyNotificationsTitle, l10n.privacyNotificationsBody),
+  (l10n.privacyTrackingTitle, l10n.privacyTrackingBody),
+  (l10n.privacyDeletionTitle, l10n.privacyDeletionBody),
+  (l10n.privacyBackupsTitle, l10n.privacyBackupsBody),
 ];
 
 class PrivacyScreen extends StatelessWidget {
@@ -46,13 +18,14 @@ class PrivacyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final titleStyle = Theme.of(context).textTheme.titleMedium;
     return Scaffold(
-      appBar: AppBar(title: const Text('Privacy & data')),
+      appBar: AppBar(title: Text(l10n.privacyTitle)),
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          for (final (title, text) in privacySections) ...[
+          for (final (title, text) in privacySections(l10n)) ...[
             Text(title, style: titleStyle),
             const SizedBox(height: 8),
             Text(text),

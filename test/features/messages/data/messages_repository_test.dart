@@ -70,10 +70,10 @@ void main() {
     expect((body['scheduled_for']! as String).endsWith('Z'), isTrue);
   });
 
-  test('a signed-out user gets an AuthError and nothing is sent', () async {
+  test('a signed-out user gets a SignedOutError and nothing is sent', () async {
     await expectLater(
       create(repository(userId: null)),
-      throwsA(isA<AuthError>()),
+      throwsA(isA<SignedOutError>()),
     );
     expect(sent, isNull);
   });
@@ -87,9 +87,9 @@ void main() {
       create(repo),
       throwsA(
         isA<ValidationError>().having(
-          (e) => e.message,
-          'message',
-          contains('already passed'),
+          (e) => e.problem,
+          'problem',
+          ValidationProblem.deliveryPassed,
         ),
       ),
     );
@@ -177,9 +177,9 @@ void main() {
         repository(status: 200, rows: []).deleteScheduledMessage('m1'),
         throwsA(
           isA<ValidationError>().having(
-            (e) => e.message,
-            'message',
-            contains('already opening'),
+            (e) => e.problem,
+            'problem',
+            ValidationProblem.alreadyOpening,
           ),
         ),
       );

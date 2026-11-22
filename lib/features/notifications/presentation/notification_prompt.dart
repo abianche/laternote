@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../application/notification_permission.dart';
 import '../data/push_repository.dart';
 
@@ -16,23 +17,21 @@ Future<void> offerNotifications(BuildContext context, WidgetRef ref) async {
   }
   if (permission != PushPermission.notDetermined || !context.mounted) return;
 
+  final l10n = AppLocalizations.of(context);
   final turnOn = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
       icon: const Icon(Icons.notifications_outlined),
-      title: const Text('Know when it opens'),
-      content: const Text(
-        "We'll send a notification when a message is ready to read. "
-        'It never shows what you wrote.',
-      ),
+      title: Text(l10n.notificationsPromptTitle),
+      content: Text(l10n.notificationsPromptContent),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Not now'),
+          child: Text(l10n.notificationsNotNow),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('Turn on'),
+          child: Text(l10n.notificationsTurnOn),
         ),
       ],
     ),

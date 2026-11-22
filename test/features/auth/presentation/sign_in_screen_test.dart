@@ -1,9 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:laternote/app/localization.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/features/auth/data/auth_repository.dart';
 import 'package:laternote/features/auth/presentation/sign_in_screen.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../fake_auth_repository.dart';
 
@@ -13,7 +14,10 @@ void main() {
   Future<void> pumpScreen(WidgetTester tester) => tester.pumpWidget(
     ProviderScope(
       overrides: [authRepositoryProvider.overrideWithValue(repository)],
-      child: const MaterialApp(home: SignInScreen()),
+      child: const MaterialApp(
+        localizationsDelegates: appLocalizationsDelegates,
+        home: SignInScreen(),
+      ),
     ),
   );
 
@@ -31,7 +35,7 @@ void main() {
   });
 
   testWidgets('shows the error from a failed sign-in', (tester) async {
-    repository.error = const AuthError('Invalid login credentials');
+    repository.error = const AuthError(AuthFailure.invalidCredentials);
     await pumpScreen(tester);
 
     await tester.enterText(find.byType(TextFormField).at(0), 'a@b.co');
@@ -40,6 +44,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repository.calls, ['signIn:a@b.co:secret123']);
-    expect(find.text('Invalid login credentials'), findsOneWidget);
+    expect(find.text('Wrong email or password.'), findsOneWidget);
   });
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:laternote/app/localization.dart';
 import 'package:laternote/features/notifications/data/push_repository.dart';
 import 'package:laternote/features/notifications/presentation/notification_prompt.dart';
 import 'package:material_ui/material_ui.dart';
@@ -16,6 +17,7 @@ void main() {
       ProviderScope(
         overrides: [pushRepositoryProvider.overrideWithValue(push)],
         child: MaterialApp(
+          localizationsDelegates: appLocalizationsDelegates,
           home: Consumer(
             builder: (context, ref, _) => TextButton(
               onPressed: () async {

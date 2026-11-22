@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/auth_controllers.dart';
 import '../application/validators.dart';
 import '../data/auth_status.dart';
@@ -43,17 +44,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(signUpControllerProvider);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Create account')),
+      appBar: AppBar(title: Text(l10n.authCreateAccountTitle)),
       body: AuthFormBody(
         // A signed-in outcome needs nothing here: the router moves the user
         // to the home screen.
         child: switch (state) {
           AsyncData(value: SignUpOutcome.confirmationRequired) =>
             EmailSentMessage(
-              message:
-                  'Check your email to confirm your account before '
-                  'signing in.',
+              message: l10n.authConfirmEmailSent,
               onBack: () => context.go(Routes.signIn),
             ),
           _ => Form(
@@ -66,33 +66,38 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.email],
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: validateEmail,
+                  decoration: InputDecoration(labelText: l10n.commonEmail),
+                  validator: (value) =>
+                      authFieldText(context, validateEmail(value)),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
                   autofillHints: const [AutofillHints.newPassword],
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  validator: validatePassword,
+                  decoration: InputDecoration(labelText: l10n.commonPassword),
+                  validator: (value) =>
+                      authFieldText(context, validatePassword(value)),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _confirmController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm password',
+                  decoration: InputDecoration(
+                    labelText: l10n.authConfirmPassword,
                   ),
-                  validator: (value) => validatePasswordConfirmation(
-                    _passwordController.text,
-                    value ?? '',
+                  validator: (value) => authFieldText(
+                    context,
+                    validatePasswordConfirmation(
+                      _passwordController.text,
+                      value ?? '',
+                    ),
                   ),
                 ),
-                FormErrorText(errorMessage(state)),
+                FormErrorText(errorMessage(context, state)),
                 const SizedBox(height: 24),
                 SubmitButton(
-                  label: 'Create account',
+                  label: l10n.authCreateAccountButton,
                   isLoading: state.isLoading,
                   onPressed: _submit,
                 ),

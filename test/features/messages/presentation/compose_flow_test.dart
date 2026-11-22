@@ -1,7 +1,7 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:laternote/app/localization.dart';
 import 'package:laternote/app/routes.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/core/clock.dart';
@@ -12,6 +12,8 @@ import 'package:laternote/features/messages/presentation/compose_screen.dart';
 import 'package:laternote/features/messages/presentation/review_screen.dart';
 import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
 import 'package:laternote/features/notifications/data/push_repository.dart';
+import 'package:laternote/l10n/app_localizations_en.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../notifications/fake_push_repository.dart';
 import '../fake_draft_repository.dart';
@@ -51,7 +53,10 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: router),
+        child: MaterialApp.router(
+          localizationsDelegates: appLocalizationsDelegates,
+          routerConfig: router,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -193,7 +198,7 @@ void main() {
     await tapButton(tester, 'Seal…');
     await tapButton(tester, 'Seal message');
 
-    expect(find.text(const NetworkError().message), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().errorNetwork), findsOneWidget);
     expect(find.byType(ReviewScreen), findsOneWidget);
 
     await tapButton(tester, 'Edit');

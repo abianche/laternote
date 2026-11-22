@@ -6,15 +6,27 @@ import 'package:laternote/core/app_error.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
-  test('auth exceptions keep their message', () {
-    expect(
-      mapSupabaseError(const AuthException('Invalid login credentials')),
-      isA<AuthError>().having(
-        (e) => e.message,
-        'message',
-        'Invalid login credentials',
-      ),
-    );
+  AuthFailure? failureOf(String? code) => switch (mapSupabaseError(
+    AuthException('server text', code: code),
+  )) {
+    AuthError(:final failure) => failure,
+    _ => null,
+  };
+
+  test('known auth error codes map to their failure', () {
+    expect(failureOf('invalid_credentials'), AuthFailure.invalidCredentials);
+    expect(failureOf('email_not_confirmed'), AuthFailure.emailNotConfirmed);
+    expect(failureOf('weak_password'), AuthFailure.weakPassword);
+    expect(failureOf('same_password'), AuthFailure.samePassword);
+    expect(failureOf('over_request_rate_limit'), AuthFailure.rateLimited);
+    expect(failureOf('over_email_send_rate_limit'), AuthFailure.rateLimited);
+    expect(failureOf('otp_expired'), AuthFailure.linkExpired);
+    expect(failureOf('flow_state_expired'), AuthFailure.linkExpired);
+  });
+
+  test('other auth errors map to AuthFailure.other', () {
+    expect(failureOf('unexpected_failure'), AuthFailure.other);
+    expect(failureOf(null), AuthFailure.other);
   });
 
   test('an existing account maps to AccountAlreadyExistsError', () {

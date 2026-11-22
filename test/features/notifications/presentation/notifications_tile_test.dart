@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:laternote/app/localization.dart';
 import 'package:laternote/features/notifications/data/push_repository.dart';
 import 'package:laternote/features/notifications/presentation/notifications_tile.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,7 +14,10 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [pushRepositoryProvider.overrideWithValue(push)],
-        child: const MaterialApp(home: Scaffold(body: NotificationsTile())),
+        child: const MaterialApp(
+          localizationsDelegates: appLocalizationsDelegates,
+          home: Scaffold(body: NotificationsTile()),
+        ),
       ),
     );
     await tester.pumpAndSettle();

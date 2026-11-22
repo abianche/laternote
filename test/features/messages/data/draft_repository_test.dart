@@ -74,7 +74,7 @@ void main() {
 
     expect(
       () => repository().save((body: 'Hi', deliverAt: null)),
-      throwsA(isA<AuthError>()),
+      throwsA(isA<SignedOutError>()),
     );
   });
 

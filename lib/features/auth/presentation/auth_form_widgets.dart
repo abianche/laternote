@@ -1,5 +1,24 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../l10n/app_localizations.dart';
+import '../application/validators.dart';
+
+/// Localized text for an auth field [problem], or null when valid.
+String? authFieldText(BuildContext context, AuthFieldProblem? problem) {
+  if (problem == null) return null;
+  final l10n = AppLocalizations.of(context);
+  return switch (problem) {
+    AuthFieldProblem.emailEmpty => l10n.validationEmailEmpty,
+    AuthFieldProblem.emailInvalid => l10n.validationEmailInvalid,
+    AuthFieldProblem.passwordEmpty => l10n.validationPasswordEmpty,
+    AuthFieldProblem.passwordTooShort => l10n.validationPasswordTooShort(
+      minPasswordLength,
+    ),
+    AuthFieldProblem.confirmationEmpty => l10n.validationConfirmationEmpty,
+    AuthFieldProblem.passwordsDiffer => l10n.validationPasswordsDiffer,
+  };
+}
+
 /// Centered, width-capped, scrollable body shared by the auth screens.
 class AuthFormBody extends StatelessWidget {
   const AuthFormBody({required this.child, super.key});
@@ -92,7 +111,10 @@ class EmailSentMessage extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 24),
-        FilledButton(onPressed: onBack, child: const Text('Back to sign in')),
+        FilledButton(
+          onPressed: onBack,
+          child: Text(AppLocalizations.of(context).authBackToSignIn),
+        ),
       ],
     );
   }
