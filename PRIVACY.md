@@ -20,8 +20,8 @@ nobody, not even you, can read one before it opens.
 ## Notifications
 
 A notification only says "A message is ready". It never contains what you
-wrote, and Android lock screens hide it. To send it we keep a notification
-address for your device from Firebase Cloud Messaging, removed when you
+wrote, so nothing private shows on your lock screen. To send it we keep a
+notification address for your device from Firebase Cloud Messaging, removed when you
 sign out.
 
 ## No tracking
