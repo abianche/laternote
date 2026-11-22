@@ -45,6 +45,14 @@ supabase/
 - Only presentation code produces text. Repositories and notifiers throw typed `AppError`s and validators return enums; widgets turn them into text (`core/error_message.dart`). Dates and times are formatted with `MaterialLocalizations`.
 - Push text is sent by the server in English for now (#44).
 
+## Deep links
+
+- The app's URL scheme is `io.laternote`, registered in `AndroidManifest.xml` and `Info.plist`. Flutter deep linking is off, so links never reach go_router directly.
+- Supabase Auth emails redirect to `io.laternote://auth/reset-password`, `auth/confirm-email` and `auth/magic-link` (`authLinkUrl` in `core/deep_link.dart`). Each URL is in the Supabase redirect allow-list (`docs/environments.md`).
+- `DeepLinkRepository` (`app_links`) streams every incoming link, including the one that launched the app. `parseDeepLink` is the only code that interprets links. `deepLinkRouting` (`app/deep_link_routing.dart`) follows each one: an auth link's PKCE code is exchanged through `AuthRepository.completeSignInFromLink`, then reset opens `/reset-password`, confirmation opens `/email-confirmed` and a magic link opens home. Expired, invalid, unrecognized or offline links open `/link-problem`. Both link screens are shown in any auth state.
+- `supabase_flutter`'s own link handling is off (`detectSessionInUri: false`). The PKCE code verifier lives on the device that asked for the email, so links from another device are reported as invalid.
+- No screen sends magic links yet. Magic links are only routed.
+
 ## Selected services
 
 - **Backend:** Supabase: separate development and production projects, each with Auth, Postgres, Row Level Security (RLS), and Edge Functions. Do not point a development build at production.
@@ -91,3 +99,4 @@ Account deletion is an authenticated request that first disables sign-in, then d
 | 2026-11-20 | Release due messages with a SQL function run by Supabase Cron every 30 seconds, not an Edge Function | One transaction in one place, no HTTP hop or secret key, nothing metered; a missed run is caught up by the next |
 | 2026-11-21 | Push through FCM HTTP v1 to the Firebase Installation ID (`fid`), from an Edge Function called by cron via `pg_net` | `token`/`getToken` are deprecated; one path for Android and iOS; the function holds the FCM credentials and the database keeps scheduling |
 | 2026-11-22 | Localize with `gen-l10n` ARB files (English, Italian), following the device locale | Flutter's standard approach; typed errors keep strings out of data and application code |
+| 2026-11-22 | The app handles incoming links itself (`app_links` + one parser), one URL path per link type; `supabase_flutter`'s link detection off | Every link type, including failed and unknown ones, gets its own screen; one place parses and routes links |
