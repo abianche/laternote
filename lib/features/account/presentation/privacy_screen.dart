@@ -19,9 +19,8 @@ const privacySections = <(String, String)>[
     'Notifications',
     'A notification only says "A message is ready". It never contains '
         'what you wrote, so nothing private shows on your lock screen. To '
-        'send it we '
-        'keep a notification address for this device from Firebase Cloud '
-        'Messaging, removed when you sign out.',
+        'send it we keep a notification address for this device from '
+        'Firebase Cloud Messaging, removed when you sign out.',
   ),
   (
     'No tracking',
