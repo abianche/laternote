@@ -77,4 +77,15 @@ void main() {
       isNull,
     );
   });
+
+  test('link screens are shown in every state', () {
+    for (final status in [
+      const SignedOut(),
+      signedIn,
+      const PasswordRecovery(),
+    ]) {
+      expect(redirect(status, Routes.emailConfirmed), isNull);
+      expect(redirect(status, '/link-problem?reason=expired'), isNull);
+    }
+  });
 }

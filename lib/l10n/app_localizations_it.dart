@@ -427,4 +427,32 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationsTurnOn => 'Attiva';
+
+  @override
+  String get linkContinue => 'Continua';
+
+  @override
+  String get linkEmailConfirmedTitle => 'Email confermata';
+
+  @override
+  String get linkEmailConfirmedBody =>
+      'La tua email è confermata e hai effettuato l\'accesso.';
+
+  @override
+  String get linkProblemTitle => 'Link non utilizzabile';
+
+  @override
+  String get linkProblemExpired =>
+      'Questo link è scaduto o è già stato usato. Richiedine uno nuovo.';
+
+  @override
+  String get linkProblemInvalid =>
+      'Questo link non può essere usato. Aprilo sul dispositivo da cui l\'hai richiesto, oppure richiedine uno nuovo.';
+
+  @override
+  String get linkProblemUnrecognized => 'Laternote non riconosce questo link.';
+
+  @override
+  String get linkProblemNetwork =>
+      'Nessuna connessione. Controlla la rete e apri di nuovo il link.';
 }

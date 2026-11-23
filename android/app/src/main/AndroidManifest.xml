@@ -27,17 +27,17 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!-- supabase_flutter handles the auth deep link; keep it away from go_router. -->
+            <!-- The app routes deep links itself (lib/app/deep_link_routing.dart); keep them away from go_router. -->
             <meta-data
               android:name="flutter_deeplinking_enabled"
               android:value="false"
               />
-            <!-- Password-recovery deep link from Supabase Auth emails. -->
+            <!-- Deep links: io.laternote://auth/... from Supabase Auth emails (docs/ARCHITECTURE.md). -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="io.laternote.auth" android:host="login-callback"/>
+                <data android:scheme="io.laternote" android:host="auth"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

@@ -131,5 +131,14 @@
   "notificationsPromptTitle": "Sappi quando si apre",
   "notificationsPromptContent": "Ti invieremo una notifica quando un messaggio è pronto da leggere. Non mostra mai ciò che hai scritto.",
   "notificationsNotNow": "Non ora",
-  "notificationsTurnOn": "Attiva"
+  "notificationsTurnOn": "Attiva",
+
+  "linkContinue": "Continua",
+  "linkEmailConfirmedTitle": "Email confermata",
+  "linkEmailConfirmedBody": "La tua email è confermata e hai effettuato l'accesso.",
+  "linkProblemTitle": "Link non utilizzabile",
+  "linkProblemExpired": "Questo link è scaduto o è già stato usato. Richiedine uno nuovo.",
+  "linkProblemInvalid": "Questo link non può essere usato. Aprilo sul dispositivo da cui l'hai richiesto, oppure richiedine uno nuovo.",
+  "linkProblemUnrecognized": "Laternote non riconosce questo link.",
+  "linkProblemNetwork": "Nessuna connessione. Controlla la rete e apri di nuovo il link."
 }

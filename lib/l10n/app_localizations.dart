@@ -805,6 +805,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn on'**
   String get notificationsTurnOn;
+
+  /// No description provided for @linkContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get linkContinue;
+
+  /// No description provided for @linkEmailConfirmedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Email confirmed'**
+  String get linkEmailConfirmedTitle;
+
+  /// No description provided for @linkEmailConfirmedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email is confirmed and you\'re signed in.'**
+  String get linkEmailConfirmedBody;
+
+  /// No description provided for @linkProblemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Link not usable'**
+  String get linkProblemTitle;
+
+  /// No description provided for @linkProblemExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This link has expired or was already used. Request a new one.'**
+  String get linkProblemExpired;
+
+  /// No description provided for @linkProblemInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This link can\'t be used. Open it on the device where you requested it, or request a new one.'**
+  String get linkProblemInvalid;
+
+  /// No description provided for @linkProblemUnrecognized.
+  ///
+  /// In en, this message translates to:
+  /// **'Laternote doesn\'t recognize this link.'**
+  String get linkProblemUnrecognized;
+
+  /// No description provided for @linkProblemNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. Check your network and open the link again.'**
+  String get linkProblemNetwork;
 }
 
 class _AppLocalizationsDelegate

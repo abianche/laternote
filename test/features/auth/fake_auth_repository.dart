@@ -40,6 +40,10 @@ class FakeAuthRepository implements AuthRepository {
       _record('sendPasswordReset:$email');
 
   @override
+  Future<void> completeSignInFromLink(Uri uri) =>
+      _record('completeSignInFromLink:$uri');
+
+  @override
   Future<void> updatePassword(String password) =>
       _record('updatePassword:$password');
 

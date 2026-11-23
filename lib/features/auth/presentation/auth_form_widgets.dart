@@ -1,5 +1,7 @@
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../app/routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/validators.dart';
 
@@ -116,6 +118,46 @@ class EmailSentMessage extends StatelessWidget {
           child: Text(AppLocalizations.of(context).authBackToSignIn),
         ),
       ],
+    );
+  }
+}
+
+/// What happened with a link the app was opened from, and a way on.
+class LinkOutcome extends StatelessWidget {
+  const LinkOutcome({
+    required this.icon,
+    required this.title,
+    required this.message,
+    super.key,
+  });
+
+  final IconData icon;
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title), automaticallyImplyLeading: false),
+      body: AuthFormBody(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 48),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: () => context.go(Routes.home),
+              child: Text(AppLocalizations.of(context).linkContinue),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

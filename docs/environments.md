@@ -47,7 +47,7 @@ select vault.create_secret('<PUSH_CRON_SECRET value>', 'push_cron_secret');
 
 To change a value later, use `vault.update_secret(id, '<new value>')` with the `id` from `vault.secrets`.
 
-Add the password-recovery deep link `io.laternote.auth://login-callback` to each Supabase project's Auth redirect allow-list (local development already has it in `supabase/config.toml`; add the same URL in the production project's Auth settings before launch). Also enable email confirmations in the production project's Auth settings (local development leaves them disabled for faster iteration).
+Add the deep links `io.laternote://auth/reset-password`, `io.laternote://auth/confirm-email` and `io.laternote://auth/magic-link` to each Supabase project's Auth redirect allow-list (local development already has them in `supabase/config.toml`; add the same URLs in the production project's Auth settings before launch). Also enable email confirmations in the production project's Auth settings (local development leaves them disabled for faster iteration).
 
 ## Current setup status
 
