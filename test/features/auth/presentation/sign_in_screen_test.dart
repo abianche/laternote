@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/app/localization.dart';
+import 'package:laternote/app/theme.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/features/auth/data/auth_repository.dart';
+import 'package:laternote/core/ui/wax_seal.dart';
 import 'package:laternote/features/auth/presentation/sign_in_screen.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -45,5 +47,27 @@ void main() {
 
     expect(repository.calls, ['signIn:a@b.co:secret123']);
     expect(find.text('Wrong email or password.'), findsOneWidget);
+  });
+
+  testWidgets('builds under the app theme with seal, wordmark and tagline', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        child: MaterialApp(
+          theme: appTheme,
+          localizationsDelegates: appLocalizationsDelegates,
+          home: const SignInScreen(),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(WaxSeal), findsOneWidget);
+    expect(find.text('Laternote'), findsOneWidget);
+    expect(find.text("A message to the person you'll become."), findsOneWidget);
+    final button = tester.widget<FilledButton>(find.byType(FilledButton));
+    expect(button.style, isNull, reason: 'styled by the theme');
   });
 }

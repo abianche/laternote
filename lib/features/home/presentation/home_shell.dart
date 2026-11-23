@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../../core/ui/wordmark.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../messages/presentation/inbox_list.dart';
 import '../../messages/presentation/upcoming_messages_list.dart';
@@ -24,7 +25,7 @@ class HomeShell extends StatelessWidget {
       initialIndex: initialTab.index,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Laternote'),
+          title: const Wordmark(),
           actions: [
             IconButton(
               icon: const Icon(Icons.account_circle_outlined),
@@ -44,7 +45,7 @@ class HomeShell extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => context.go(Routes.compose),
-          icon: const Icon(Icons.edit_outlined),
+          icon: const Icon(Icons.history_edu),
           label: Text(l10n.homeNewMessage),
         ),
       ),

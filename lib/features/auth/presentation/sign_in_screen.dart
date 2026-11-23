@@ -51,12 +51,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Laternote',
-                style: Theme.of(context).textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
+              const AuthHeader(),
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
