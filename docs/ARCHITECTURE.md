@@ -17,6 +17,7 @@ lib/
   main.dart
   app/                 # app widget, router, theme
   core/                # shared utils, errors, Supabase client provider
+    ui/                # drawn stationery widgets and their theme extension
   features/
     <feature>/
       data/            # repositories: the ONLY place that talks to Supabase
@@ -44,6 +45,15 @@ supabase/
 - `MaterialApp` uses `appLocalizationsDelegates` (`lib/app/localization.dart`): `AppLocalizations` plus `material_ui`'s Material/Cupertino/Widgets delegates, not the generated list, which points at `flutter_localizations`' Material delegate.
 - Only presentation code produces text. Repositories and notifiers throw typed `AppError`s and validators return enums; widgets turn them into text (`core/error_message.dart`). Dates and times are formatted with `MaterialLocalizations`.
 - Push text is sent by the server in English for now (#44).
+
+## Look and feel
+
+- "Ink & Wax": a message is a letter, written on paper, closed with a wax seal and opened by breaking it. Light mode only for now.
+- `appTheme` (`app/theme.dart`) sets a paper/ink/wax `ColorScheme`, Fraunces for display, headline and title text, and the component themes. Presentation widgets take colors and text styles from the theme, never inline values. A test keeps key text colors at WCAG AA contrast.
+- Fraunces (SIL OFL) is bundled in `assets/fonts/` with its licence; fonts are never fetched at runtime.
+- `Stationery` (`core/ui/stationery.dart`) is a `ThemeExtension` for what Material has no role for: wax and paper colors, the letter text style, the wordmark and small caps.
+- `core/ui/` holds the drawn pieces (`WaxSeal`, `Envelope`, `Postmark`, `LetterPaper`, `Wordmark`), all `CustomPainter`, decorative to screen readers unless given a label.
+- Sealing (review) and the first opening of a message are animated. Animations are skipped when the OS turns them off, a tap skips the opening, and neither changes what is saved or where the app goes.
 
 ## Deep links
 
@@ -99,4 +109,5 @@ Account deletion is an authenticated request that first disables sign-in, then d
 | 2026-11-20 | Release due messages with a SQL function run by Supabase Cron every 30 seconds, not an Edge Function | One transaction in one place, no HTTP hop or secret key, nothing metered; a missed run is caught up by the next |
 | 2026-11-21 | Push through FCM HTTP v1 to the Firebase Installation ID (`fid`), from an Edge Function called by cron via `pg_net` | `token`/`getToken` are deprecated; one path for Android and iOS; the function holds the FCM credentials and the database keeps scheduling |
 | 2026-11-22 | Localize with `gen-l10n` ARB files (English, Italian), following the device locale | Flutter's standard approach; typed errors keep strings out of data and application code |
+| 2026-11-23 | "Ink & Wax" look: theme plus `Stationery` extension, drawn widgets in `core/ui/`, bundled Fraunces | The app is about letters to your future self; drawing in code needs no packages or image assets, and a bundled font keeps the app offline-safe |
 | 2026-11-22 | The app handles incoming links itself (`app_links` + one parser), one URL path per link type; `supabase_flutter`'s link detection off | Every link type, including failed and unknown ones, gets its own screen; one place parses and routes links |
