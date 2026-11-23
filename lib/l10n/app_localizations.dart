@@ -278,6 +278,12 @@ abstract class AppLocalizations {
   /// **'Sign in'**
   String get authSignInTitle;
 
+  /// No description provided for @authTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'A message to the person you\'ll become.'**
+  String get authTagline;
+
   /// No description provided for @authSignInButton.
   ///
   /// In en, this message translates to:
@@ -464,6 +470,48 @@ abstract class AppLocalizations {
   /// **'Sealed on {date}'**
   String sealedOn(String date);
 
+  /// No description provided for @sealedCountdown.
+  ///
+  /// In en, this message translates to:
+  /// **'in {duration}'**
+  String sealedCountdown(String duration);
+
+  /// No description provided for @countdownYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year} other{{count} years}}'**
+  String countdownYears(int count);
+
+  /// No description provided for @countdownMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month} other{{count} months}}'**
+  String countdownMonths(int count);
+
+  /// No description provided for @countdownDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String countdownDays(int count);
+
+  /// No description provided for @countdownHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String countdownHours(int count);
+
+  /// No description provided for @countdownMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute} other{{count} minutes}}'**
+  String countdownMinutes(int count);
+
+  /// No description provided for @countdownUnderMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'less than a minute'**
+  String get countdownUnderMinute;
+
   /// No description provided for @sealedDeleted.
   ///
   /// In en, this message translates to:
@@ -487,6 +535,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Message'**
   String get messageTitle;
+
+  /// No description provided for @messageOpeningEnvelope.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening the envelope. Tap to skip.'**
+  String get messageOpeningEnvelope;
 
   /// No description provided for @messageUnavailable.
   ///
@@ -560,11 +614,11 @@ abstract class AppLocalizations {
   /// **'Discard'**
   String get composeDiscard;
 
-  /// No description provided for @composeBodyLabel.
+  /// No description provided for @composeBodyHint.
   ///
   /// In en, this message translates to:
-  /// **'Your message'**
-  String get composeBodyLabel;
+  /// **'Dear future me,'**
+  String get composeBodyHint;
 
   /// No description provided for @composeDeliverOn.
   ///
@@ -601,6 +655,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Review'**
   String get reviewTitle;
+
+  /// No description provided for @reviewSealing.
+  ///
+  /// In en, this message translates to:
+  /// **'Sealing your message'**
+  String get reviewSealing;
 
   /// No description provided for @reviewNoDeliveryTime.
   ///
