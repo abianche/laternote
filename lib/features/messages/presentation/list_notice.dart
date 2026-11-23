@@ -24,12 +24,16 @@ class ListNotice extends StatelessWidget {
     super.key,
     required this.text,
     this.icon,
+    this.illustration,
     this.progress = false,
     this.action,
   });
 
   final String text;
   final IconData? icon;
+
+  /// A drawing shown instead of [icon].
+  final Widget? illustration;
   final bool progress;
   final Widget? action;
 
@@ -42,9 +46,14 @@ class ListNotice extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (progress) const CircularProgressIndicator(),
+            ?illustration,
             if (icon case final icon?) Icon(icon, size: 48),
             const SizedBox(height: 16),
-            Text(text, textAlign: TextAlign.center),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             ?action,
           ],
         ),

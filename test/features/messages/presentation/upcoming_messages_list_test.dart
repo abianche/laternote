@@ -10,6 +10,7 @@ import 'package:laternote/features/messages/application/compose_controllers.dart
 import 'package:laternote/features/messages/application/upcoming_messages.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/data/scheduled_message.dart';
+import 'package:laternote/features/messages/presentation/envelope_tile.dart';
 import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
 import 'package:laternote/l10n/app_localizations_en.dart';
 import 'package:material_ui/material_ui.dart';
@@ -88,6 +89,9 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Sealed on Dec 24, 2029'), findsOneWidget);
+    // Only the one still waiting counts down.
+    expect(find.text('in 4 months, 30 days'), findsOneWidget);
+    expect(find.textContaining('in '), findsOneWidget);
     expect(find.text('Opening soon'), findsOneWidget);
     expect(find.text('Sealed on Nov 2, 2029'), findsOneWidget);
   });
@@ -174,7 +178,7 @@ void main() {
       expect(find.byTooltip('Delete'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.widgetWithText(ListTile, 'Opening soon'),
+          of: find.widgetWithText(EnvelopeTile, 'Opening soon'),
           matching: find.byTooltip('Delete'),
         ),
         findsNothing,
