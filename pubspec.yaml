@@ -43,9 +43,11 @@ flutter:
   uses-material-design: true
 
   fonts:
-    # Fraunces, SIL Open Font License 1.1 (assets/fonts/OFL.txt).
-    - family: Fraunces
+    # SIL Open Font License 1.1 (assets/fonts/*-OFL.txt). Both are variable
+    # fonts; weights are set with FontVariation.weight.
+    - family: Fredoka
       fonts:
-        - asset: assets/fonts/Fraunces.ttf
-        - asset: assets/fonts/Fraunces-Italic.ttf
-          style: italic
+        - asset: assets/fonts/Fredoka.ttf
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/Caveat.ttf
