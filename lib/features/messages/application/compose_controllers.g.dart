@@ -165,15 +165,18 @@ abstract class _$ComposeDraft extends $AsyncNotifier<MessageDraft> {
   }
 }
 
-/// Seals the draft: saves it as a sealed letter, then deletes the draft. Holds the delivery time once sealed.
+/// Seals the draft: saves it as a sealed letter, schedules its notification,
+/// then deletes the draft. Holds the delivery time once sealed.
 
 @ProviderFor(SealMessageController)
 final sealMessageControllerProvider = SealMessageControllerProvider._();
 
-/// Seals the draft: saves it as a sealed letter, then deletes the draft. Holds the delivery time once sealed.
+/// Seals the draft: saves it as a sealed letter, schedules its notification,
+/// then deletes the draft. Holds the delivery time once sealed.
 final class SealMessageControllerProvider
     extends $AsyncNotifierProvider<SealMessageController, DateTime?> {
-  /// Seals the draft: saves it as a sealed letter, then deletes the draft. Holds the delivery time once sealed.
+  /// Seals the draft: saves it as a sealed letter, schedules its notification,
+  /// then deletes the draft. Holds the delivery time once sealed.
   SealMessageControllerProvider._()
     : super(
         from: null,
@@ -194,9 +197,10 @@ final class SealMessageControllerProvider
 }
 
 String _$sealMessageControllerHash() =>
-    r'5c091e83fc2014abaa059fbcd29a0bbdb0413ad7';
+    r'554ef51643c155cf4285de4e31ffe9ef53067070';
 
-/// Seals the draft: saves it as a sealed letter, then deletes the draft. Holds the delivery time once sealed.
+/// Seals the draft: saves it as a sealed letter, schedules its notification,
+/// then deletes the draft. Holds the delivery time once sealed.
 
 abstract class _$SealMessageController extends $AsyncNotifier<DateTime?> {
   FutureOr<DateTime?> build();

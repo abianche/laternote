@@ -424,7 +424,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyNotificationsBody =>
-      'A notification only says \"A message is ready\". It never contains what you wrote, so nothing private shows on your lock screen. To send it we keep a notification address for this device from Firebase Cloud Messaging, removed when you sign out.';
+      'A notification only says \"A message is ready\". It never contains what you wrote, so nothing private shows on your lock screen. Your phone schedules it itself when you seal a message, so nothing is sent anywhere.';
 
   @override
   String get privacyTrackingTitle => 'No tracking';
@@ -475,6 +475,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsTurnOn => 'Turn on';
+
+  @override
+  String get notificationReadyTitle => 'A message is ready';
+
+  @override
+  String get notificationReadyBody => 'Tap to open it.';
+
+  @override
+  String get notificationChannelName => 'Ready messages';
 
   @override
   String get linkContinue => 'Continue';

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../application/notification_permission.dart';
-import '../data/push_repository.dart';
+import '../data/local_notifications_repository.dart';
 
 /// Account row with the notification status; turns them on while the user
 /// hasn't decided yet.
@@ -13,16 +13,16 @@ class NotificationsTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final permission = ref.watch(notificationPermissionProvider);
-    final undecided = permission.value == PushPermission.notDetermined;
+    final undecided = permission.value == NotificationAccess.notDetermined;
     final l10n = AppLocalizations.of(context);
 
     return ListTile(
       leading: const Icon(Icons.notifications_outlined),
       title: Text(l10n.notificationsTitle),
       subtitle: Text(switch (permission) {
-        AsyncData(value: PushPermission.granted) => l10n.notificationsOn,
-        AsyncData(value: PushPermission.denied) => l10n.notificationsDenied,
-        AsyncData(value: PushPermission.notDetermined) =>
+        AsyncData(value: NotificationAccess.granted) => l10n.notificationsOn,
+        AsyncData(value: NotificationAccess.denied) => l10n.notificationsDenied,
+        AsyncData(value: NotificationAccess.notDetermined) =>
           l10n.notificationsUndecided,
         AsyncError() => l10n.notificationsUnavailable,
         _ => '…',

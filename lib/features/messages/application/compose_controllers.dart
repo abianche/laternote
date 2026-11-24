@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/app_error.dart';
 import '../../../core/clock.dart';
+import '../../notifications/application/ready_notifications.dart';
 import '../data/draft_repository.dart';
 import '../data/messages_repository.dart';
 import 'message_draft.dart';
@@ -98,7 +99,8 @@ class ComposeDraft extends _$ComposeDraft {
   }
 }
 
-/// Seals the draft: saves it as a sealed letter, then deletes the draft. Holds the delivery time once sealed.
+/// Seals the draft: saves it as a sealed letter, schedules its notification,
+/// then deletes the draft. Holds the delivery time once sealed.
 @riverpod
 class SealMessageController extends _$SealMessageController {
   @override
@@ -128,7 +130,10 @@ class SealMessageController extends _$SealMessageController {
       return draft.deliverAt;
     });
     if (result.hasValue) {
-      if (ref.mounted) ref.invalidate(upcomingMessagesProvider);
+      if (ref.mounted) {
+        ref.invalidate(upcomingMessagesProvider);
+        unawaited(ref.read(readyNotificationsProvider.notifier).sync());
+      }
       // The message is sealed whatever happens here, so a failure must not
       // be reported as a failed seal (the user would seal it twice).
       try {

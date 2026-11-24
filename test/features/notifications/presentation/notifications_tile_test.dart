@@ -1,19 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/app/localization.dart';
-import 'package:laternote/features/notifications/data/push_repository.dart';
+import 'package:laternote/features/notifications/data/local_notifications_repository.dart';
 import 'package:laternote/features/notifications/presentation/notifications_tile.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../fake_push_repository.dart';
+import '../fake_local_notifications_repository.dart';
 
 void main() {
-  late FakePushRepository push;
+  late FakeLocalNotificationsRepository notifications;
 
   Future<void> pump(WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [pushRepositoryProvider.overrideWithValue(push)],
+        overrides: [
+          localNotificationsRepositoryProvider.overrideWithValue(notifications),
+        ],
         child: const MaterialApp(
           localizationsDelegates: appLocalizationsDelegates,
           home: Scaffold(body: NotificationsTile()),
@@ -24,31 +26,35 @@ void main() {
   }
 
   testWidgets('shows when they are on', (tester) async {
-    push = FakePushRepository();
+    notifications = FakeLocalNotificationsRepository();
     await pump(tester);
 
     expect(find.textContaining('On.'), findsOneWidget);
   });
 
   testWidgets('points to the device settings when denied', (tester) async {
-    push = FakePushRepository(status: PushPermission.denied);
+    notifications = FakeLocalNotificationsRepository(
+      status: NotificationAccess.denied,
+    );
     await pump(tester);
     await tester.tap(find.byType(ListTile));
     await tester.pumpAndSettle();
 
     expect(find.textContaining('device settings'), findsOneWidget);
-    expect(push.calls, isEmpty);
+    expect(notifications.calls, isEmpty);
   });
 
   testWidgets('turns them on while undecided', (tester) async {
-    push = FakePushRepository(status: PushPermission.notDetermined);
+    notifications = FakeLocalNotificationsRepository(
+      status: NotificationAccess.notDetermined,
+    );
     await pump(tester);
     expect(find.text('Off. Tap to turn on.'), findsOneWidget);
 
     await tester.tap(find.byType(ListTile));
     await tester.pumpAndSettle();
 
-    expect(push.calls, ['requestPermission']);
+    expect(notifications.calls, ['requestPermission']);
     expect(find.textContaining('On.'), findsOneWidget);
   });
 }

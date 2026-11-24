@@ -2,46 +2,50 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/features/notifications/application/notification_permission.dart';
-import 'package:laternote/features/notifications/data/push_repository.dart';
+import 'package:laternote/features/notifications/data/local_notifications_repository.dart';
 
-import '../fake_push_repository.dart';
+import '../fake_local_notifications_repository.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late FakePushRepository push;
+  late FakeLocalNotificationsRepository notifications;
   late ProviderContainer container;
 
   setUp(() {
-    push = FakePushRepository(status: PushPermission.notDetermined);
+    notifications = FakeLocalNotificationsRepository(
+      status: NotificationAccess.notDetermined,
+    );
     container = ProviderContainer.test(
-      overrides: [pushRepositoryProvider.overrideWithValue(push)],
+      overrides: [
+        localNotificationsRepositoryProvider.overrideWithValue(notifications),
+      ],
     );
   });
 
   test('reads the current permission', () async {
     expect(
       await container.read(notificationPermissionProvider.future),
-      PushPermission.notDetermined,
+      NotificationAccess.notDetermined,
     );
   });
 
   test('request shows the prompt and keeps the answer', () async {
-    push.afterRequest = PushPermission.denied;
+    notifications.afterRequest = NotificationAccess.denied;
     await container.read(notificationPermissionProvider.future);
     await container.read(notificationPermissionProvider.notifier).request();
 
-    expect(push.calls, ['requestPermission']);
+    expect(notifications.calls, ['requestPermission']);
     expect(
       container.read(notificationPermissionProvider).value,
-      PushPermission.denied,
+      NotificationAccess.denied,
     );
   });
 
   test('re-reads the permission when the app resumes', () async {
     container.listen(notificationPermissionProvider, (_, _) {});
     await container.read(notificationPermissionProvider.future);
-    push.status = PushPermission.granted;
+    notifications.status = NotificationAccess.granted;
 
     TestWidgetsFlutterBinding.instance
       ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
@@ -49,7 +53,7 @@ void main() {
 
     expect(
       await container.read(notificationPermissionProvider.future),
-      PushPermission.granted,
+      NotificationAccess.granted,
     );
   });
 }

@@ -69,9 +69,10 @@ A letter starts as a draft: `DraftRepository` stores one draft per device (body,
 
 ## Ready notifications
 
-- Sealing schedules one local notification at `scheduled_for` (`zonedSchedule`, keyed by the letter ID); deleting a letter cancels it. On every start the app reschedules notifications for all letters not yet ready, since OS updates, reinstalls and restores can drop them.
-- The notification says only that a letter is ready, in the app's language; the payload is the letter ID. Android notifications are `PRIVATE`. A tap opens the letter, both when it launches the app and while it runs.
-- The app asks for notification permission (and exact alarms on Android where needed) after the first seal, with an explanation first. Without permission, ready letters still show in the inbox.
+- Each letter gets one local notification at `scheduled_for` (`zonedSchedule`, ID derived from the letter ID). iOS keeps only 64 pending per app, so only the 64 nearest letters are scheduled (on both platforms); the list is topped up on every start, after sealing and after deleting, which cancels that letter's notification. Starting also restores notifications that OS updates, reinstalls and restores drop.
+- Android uses inexact alarms (`inexactAllowWhileIdle`), so no exact-alarm permission is asked and a small delay is fine; notifications are rescheduled after a reboot or app update.
+- The notification says only that a letter is ready, in the device's language (resolved like the app's); the payload is the letter ID. Android notifications are `PRIVATE`. A tap opens the letter, or the inbox if it is gone, both when it launches the app and while it runs.
+- The app asks for notification permission after the first seal, with an explanation first. The OS only reports on or off, so the app remembers that it asked to tell "not asked yet" from "denied". Without permission, ready letters still show in the inbox.
 - **A seal is a promise, not a guarantee.** Release follows the device clock and the files are readable by the device owner, so someone who changes the clock or reads the database can open a letter early. That is accepted.
 
 ## Export and import

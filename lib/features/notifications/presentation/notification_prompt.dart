@@ -3,19 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../application/notification_permission.dart';
-import '../data/push_repository.dart';
+import '../data/local_notifications_repository.dart';
 
 /// Explains notifications before the system prompt, as long as the user
 /// hasn't decided. "Not now" asks again after the next seal; the system's
 /// answer is final and changes only in the device settings.
 Future<void> offerNotifications(BuildContext context, WidgetRef ref) async {
-  final PushPermission permission;
+  final NotificationAccess permission;
   try {
     permission = await ref.read(notificationPermissionProvider.future);
   } on Object {
     return;
   }
-  if (permission != PushPermission.notDetermined || !context.mounted) return;
+  if (permission != NotificationAccess.notDetermined || !context.mounted) {
+    return;
+  }
 
   final l10n = AppLocalizations.of(context);
   final turnOn = await showDialog<bool>(
