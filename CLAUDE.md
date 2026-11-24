@@ -1,10 +1,10 @@
 # Laternote
 
-Flutter app with a Supabase backend. Read `docs/ARCHITECTURE.md` before any task.
+Local-only Flutter app (no backend). Read `docs/ARCHITECTURE.md` before any task.
 
 ## Rules
 
-- **No fallbacks or backward compatibility, ever.** Laternote is a new app with no legacy users, data, or APIs to support. Use only the current recommended approach for every library and service (e.g. Supabase publishable/secret keys, never legacy anon/service-role keys). Do not add fallback code paths, legacy aliases, deprecated options, compatibility shims, or migration code for old formats. When something changes, replace it outright.
+- **No fallbacks or backward compatibility, ever.** Laternote is a new app with no legacy users, data, or APIs to support. Use only the current recommended approach for every library and service. Do not add fallback code paths, legacy aliases, deprecated options, compatibility shims, or migration code for old formats. When something changes, replace it outright.
 
 ## Workflow
 
@@ -23,9 +23,8 @@ Flutter app with a Supabase backend. Read `docs/ARCHITECTURE.md` before any task
 
 ## Hard rules
 
-- Never commit secrets. Config comes from `--dart-define-from-file=config/dev.json` or `config/prod.json` (gitignored; see `docs/environments.md`).
-- The Supabase secret key (`sb_secret_...`) never appears in app code. Only the publishable key (`sb_publishable_...`) ships in the app.
-- Schema changes only via `supabase migration new <name>` in `supabase/migrations/`. Never edit the database only in the dashboard.
+- Never commit secrets or signing material.
+- The database schema is defined only in drift tables; no raw SQL outside drift.
 - New pub packages must be justified in the PR description.
 - Don't touch code unrelated to the current issue.
 
