@@ -58,7 +58,6 @@ void main() {
         scheduledFor: DateTime(2030, 6, 1, 9),
         timezone: 'Europe/Rome',
         createdAt: DateTime(2029, 12, 24),
-        releasedAt: DateTime(2030, 6, 1, 9, 1),
         openedAt: null,
       ),
     );
@@ -71,10 +70,7 @@ void main() {
       find.text('Set to open Saturday, June 1, 2030 at 9:00 AM (Europe/Rome)'),
       findsOneWidget,
     );
-    expect(
-      find.text('Arrived Saturday, June 1, 2030 at 9:01 AM (Europe/Rome)'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Arrived'), findsNothing);
     expect(repository.opened, ['m1']);
   });
 
@@ -119,7 +115,6 @@ void main() {
       scheduledFor: DateTime(2030, 6, 1, 9),
       timezone: 'Europe/Rome',
       createdAt: DateTime(2029, 12, 24),
-      releasedAt: DateTime(2030, 6, 1, 9, 1),
       openedAt: openedAt,
     );
     const opening = 'Opening the envelope. Tap to skip.';

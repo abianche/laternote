@@ -14,8 +14,7 @@ import '../data/available_message.dart';
 import 'delivery_format.dart';
 import 'list_notice.dart';
 
-/// A released message: its text and when it was written, set to open and
-/// arrived. Opening it moves it from New to Read in the inbox.
+/// A ready letter: its text and when it was written and set to open. Opening it moves it from New to Read in the inbox.
 class MessageScreen extends ConsumerWidget {
   const MessageScreen({super.key, required this.id});
 
@@ -171,17 +170,11 @@ class _Letter extends ConsumerWidget {
                       ),
                       style: dates,
                     ),
-                    Text(
-                      l10n.messageArrived(
-                        formatDelivery(context, message.releasedAt, zone),
-                      ),
-                      style: dates,
-                    ),
                   ],
                 ),
               ),
               const SizedBox(width: 12),
-              DatePatch(date: message.releasedAt, size: 72),
+              DatePatch(date: message.scheduledFor, size: 72),
             ],
           ),
           const SizedBox(height: 20),

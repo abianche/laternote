@@ -212,12 +212,6 @@ abstract class AppLocalizations {
   /// **'Keep it under {max} characters.'**
   String validationBodyTooLong(int max);
 
-  /// No description provided for @validationBodyInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'A message needs some text, up to {max} characters.'**
-  String validationBodyInvalid(int max);
-
   /// No description provided for @validationDeliveryMissing.
   ///
   /// In en, this message translates to:
@@ -229,12 +223,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a time in the future.'**
   String get validationDeliveryInPast;
-
-  /// No description provided for @validationDeliveryPassed.
-  ///
-  /// In en, this message translates to:
-  /// **'That delivery time has already passed. Pick a later time.'**
-  String get validationDeliveryPassed;
 
   /// No description provided for @validationAlreadyOpening.
   ///
@@ -565,12 +553,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set to open {delivery}'**
   String messageSetToOpen(String delivery);
-
-  /// No description provided for @messageArrived.
-  ///
-  /// In en, this message translates to:
-  /// **'Arrived {delivery}'**
-  String messageArrived(String delivery);
 
   /// Full date and time a message opens, e.g. 'Saturday, December 20, 2027 at 9:00 AM'.
   ///

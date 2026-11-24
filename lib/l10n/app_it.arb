@@ -21,10 +21,8 @@
   "validationPasswordsDiffer": "Le password non coincidono.",
   "validationBodyEmpty": "Scrivi qualcosa al te del futuro.",
   "validationBodyTooLong": "Resta sotto i {max} caratteri.",
-  "validationBodyInvalid": "Un messaggio deve contenere del testo, fino a {max} caratteri.",
   "validationDeliveryMissing": "Scegli una data e un'ora di consegna.",
   "validationDeliveryInPast": "Scegli un orario nel futuro.",
-  "validationDeliveryPassed": "Quell'orario di consegna è già passato. Scegline uno più avanti.",
   "validationAlreadyOpening": "Questo messaggio si sta già aprendo, quindi non può essere eliminato.",
 
   "commonRetry": "Riprova",
@@ -86,7 +84,6 @@
   "messageOpening": "Apertura del messaggio…",
   "messageWrittenOn": "Scritto il {date}",
   "messageSetToOpen": "Da aprire {delivery}",
-  "messageArrived": "Arrivato {delivery}",
 
   "deliveryDateTime": "{date} alle {time}",
 

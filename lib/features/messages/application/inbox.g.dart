@@ -8,13 +8,13 @@ part of 'inbox.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The signed-in user's released messages, newest first. New (unopened) and
+/// Ready letters, newest first. New (unopened) and
 /// read ones together; the inbox splits them.
 
 @ProviderFor(availableMessages)
 final availableMessagesProvider = AvailableMessagesProvider._();
 
-/// The signed-in user's released messages, newest first. New (unopened) and
+/// Ready letters, newest first. New (unopened) and
 /// read ones together; the inbox splits them.
 
 final class AvailableMessagesProvider
@@ -25,7 +25,7 @@ final class AvailableMessagesProvider
           FutureOr<List<InboxItem>>
         >
     with $FutureModifier<List<InboxItem>>, $FutureProvider<List<InboxItem>> {
-  /// The signed-in user's released messages, newest first. New (unopened) and
+  /// Ready letters, newest first. New (unopened) and
   /// read ones together; the inbox splits them.
   AvailableMessagesProvider._()
     : super(
@@ -55,16 +55,16 @@ final class AvailableMessagesProvider
 
 String _$availableMessagesHash() => r'6f0d51faee6b17d5ef6fd3d7676e3b2a4aec58a2';
 
-/// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded
+/// Ready letter [id] with its content, or null if it isn't available
+/// (unknown or still sealed). The first open is recorded
 /// before showing it, so the inbox moves it to Read; a failure to record
 /// never blocks reading.
 
 @ProviderFor(openedMessage)
 final openedMessageProvider = OpenedMessageFamily._();
 
-/// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded
+/// Ready letter [id] with its content, or null if it isn't available
+/// (unknown or still sealed). The first open is recorded
 /// before showing it, so the inbox moves it to Read; a failure to record
 /// never blocks reading.
 
@@ -78,8 +78,8 @@ final class OpenedMessageProvider
     with
         $FutureModifier<AvailableMessage?>,
         $FutureProvider<AvailableMessage?> {
-  /// Released message [id] with its content, or null if it isn't available
-  /// (unknown, someone else's, or still sealed). The first open is recorded
+  /// Ready letter [id] with its content, or null if it isn't available
+  /// (unknown or still sealed). The first open is recorded
   /// before showing it, so the inbox moves it to Read; a failure to record
   /// never blocks reading.
   OpenedMessageProvider._({
@@ -128,8 +128,8 @@ final class OpenedMessageProvider
 
 String _$openedMessageHash() => r'7d0d92a080a316f62ccc8e1cb379db0b4e79ffe8';
 
-/// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded
+/// Ready letter [id] with its content, or null if it isn't available
+/// (unknown or still sealed). The first open is recorded
 /// before showing it, so the inbox moves it to Read; a failure to record
 /// never blocks reading.
 
@@ -144,8 +144,8 @@ final class OpenedMessageFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// Released message [id] with its content, or null if it isn't available
-  /// (unknown, someone else's, or still sealed). The first open is recorded
+  /// Ready letter [id] with its content, or null if it isn't available
+  /// (unknown or still sealed). The first open is recorded
   /// before showing it, so the inbox moves it to Read; a failure to record
   /// never blocks reading.
 

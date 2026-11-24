@@ -47,14 +47,8 @@ final class AccountAlreadyExistsError extends AppError {
 enum ValidationProblem {
   bodyEmpty,
   bodyTooLong,
-
-  /// The server rejected the body (check constraint).
-  bodyInvalid,
   deliveryMissing,
   deliveryInPast,
-
-  /// The server rejected the delivery time as already passed.
-  deliveryPassed,
   alreadyOpening,
 }
 

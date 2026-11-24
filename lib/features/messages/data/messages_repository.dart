@@ -1,137 +1,146 @@
+import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../core/app_error.dart';
-import '../../../core/supabase_client.dart';
-import '../../../core/tables.dart';
+import '../../../core/clock.dart';
+import '../../../core/database.dart';
 import 'available_message.dart';
 import 'scheduled_message.dart';
 
 part 'messages_repository.g.dart';
 
-/// The only place that talks to the `messages` table. Every failure is
-/// rethrown as an [AppError].
+/// The only place that touches sealed letters. A letter is ready once its
+/// time has passed on the device clock; before that only its metadata is
+/// read. Every failure is rethrown as an [AppError].
 class MessagesRepository {
-  MessagesRepository(this._db, this._currentUserId);
+  MessagesRepository(this._db, this._now, this._newId);
 
-  final PostgrestClient _db;
-  final String? Function() _currentUserId;
+  final AppDatabase _db;
+  final DateTime Function() _now;
+  final String Function() _newId;
 
-  /// Inserts a sealed message. The database sets `status = 'scheduled'` and
-  /// RLS rejects a past [scheduledFor] or a foreign owner.
+  $LettersTable get _letters => _db.letters;
+
+  /// Seals a letter. Its body and time can't be changed afterwards.
   Future<void> createScheduledMessage({
     required String body,
     required DateTime scheduledFor,
     required String timezone,
-  }) async {
-    final userId = _currentUserId();
-    if (userId == null) {
-      throw const SignedOutError();
+  }) => _guard(() async {
+    final now = _now();
+    if (!scheduledFor.isAfter(now)) {
+      throw const ValidationError(ValidationProblem.deliveryInPast);
     }
-    try {
-      await _db.from(Tables.messages).insert({
-        'user_id': userId,
-        'body': body,
-        'scheduled_for': scheduledFor.toUtc().toIso8601String(),
-        'timezone': timezone,
-      });
-    } on PostgrestException catch (error) {
-      throw switch (error.code) {
-        // RLS: the only client-controllable reason is a time already past.
-        '42501' => const ValidationError(ValidationProblem.deliveryPassed),
-        // Check constraint on body.
-        '23514' => const ValidationError(ValidationProblem.bodyInvalid),
-        _ => mapSupabaseError(error),
-      };
-    } catch (error) {
-      throw mapSupabaseError(error);
-    }
-  }
+    await _db
+        .into(_letters)
+        .insert(
+          LettersCompanion.insert(
+            id: _newId(),
+            body: body,
+            scheduledFor: scheduledFor,
+            timezone: timezone,
+            createdAt: now,
+          ),
+        );
+  });
 
-  /// Deletes the user's sealed message [id]. RLS only allows it while the
-  /// message is still scheduled for the future; otherwise no row is deleted
-  /// and this throws a [ValidationError].
-  Future<void> deleteScheduledMessage(String id) async {
-    try {
-      final deleted = await _db
-          .from(Tables.messages)
-          .delete()
-          .eq('id', id)
-          .select('id');
-      if (deleted.isEmpty) {
-        throw const ValidationError(ValidationProblem.alreadyOpening);
-      }
-    } catch (error) {
-      throw mapSupabaseError(error);
+  /// Deletes letter [id] while it is not ready yet; otherwise nothing is
+  /// deleted and this throws a [ValidationError].
+  Future<void> deleteScheduledMessage(String id) => _guard(() async {
+    final deleted = await (_db.delete(
+      _letters,
+    )..where((l) => l.id.equals(id) & _notReady(l))).go();
+    if (deleted == 0) {
+      throw const ValidationError(ValidationProblem.alreadyOpening);
     }
-  }
+  });
 
-  /// The user's sealed, not-yet-released messages, soonest first. Selects
-  /// metadata only; `body` is not granted to clients anyway.
-  Future<List<ScheduledMessage>> listUpcoming() async {
-    try {
-      final rows = await _db
-          .from(Tables.messages)
-          .select('id, scheduled_for, timezone, created_at')
-          .eq('status', 'scheduled')
-          .order('scheduled_for', ascending: true);
-      return rows.map(ScheduledMessage.fromRow).toList();
-    } catch (error) {
-      throw mapSupabaseError(error);
-    }
-  }
+  /// Letters not ready yet, soonest first. Metadata only.
+  Future<List<ScheduledMessage>> listUpcoming() => _guard(() async {
+    final l = _letters;
+    final query = _db.selectOnly(l)
+      ..addColumns([l.id, l.scheduledFor, l.timezone, l.createdAt])
+      ..where(_notReady(l))
+      ..orderBy([OrderingTerm.asc(l.scheduledFor)]);
+    final rows = await query.get();
+    return [
+      for (final row in rows)
+        ScheduledMessage(
+          id: row.read(l.id)!,
+          scheduledFor: row.read(l.scheduledFor)!.toLocal(),
+          timezone: row.read(l.timezone)!,
+          createdAt: row.read(l.createdAt)!.toLocal(),
+        ),
+    ];
+  });
 
-  /// The user's released messages, newest first. Metadata only.
-  Future<List<InboxItem>> listAvailable() async {
-    try {
-      final rows = await _db
-          .from(Tables.messages)
-          .select('id, created_at, released_at, opened_at')
-          .eq('status', 'available')
-          .order('released_at', ascending: false);
-      return rows.map(InboxItem.fromRow).toList();
-    } catch (error) {
-      throw mapSupabaseError(error);
-    }
-  }
+  /// Ready letters, newest first. Metadata only.
+  Future<List<InboxItem>> listAvailable() => _guard(() async {
+    final l = _letters;
+    final query = _db.selectOnly(l)
+      ..addColumns([l.id, l.createdAt, l.scheduledFor, l.openedAt])
+      ..where(_ready(l))
+      ..orderBy([OrderingTerm.desc(l.scheduledFor)]);
+    final rows = await query.get();
+    return [
+      for (final row in rows)
+        InboxItem(
+          id: row.read(l.id)!,
+          createdAt: row.read(l.createdAt)!.toLocal(),
+          scheduledFor: row.read(l.scheduledFor)!.toLocal(),
+          openedAt: row.read(l.openedAt)?.toLocal(),
+        ),
+    ];
+  });
 
-  /// The released message [id] with its content, or null if it doesn't
-  /// exist, isn't the user's, hasn't been released yet, or [id] isn't a
-  /// valid message ID (e.g. from a bad link).
-  Future<AvailableMessage?> getAvailable(String id) async {
-    try {
-      final rows = await _db.rpc<List<dynamic>>(
-        Rpcs.getAvailableMessage,
-        params: {'p_message_id': id},
-      );
-      return rows.isEmpty
-          ? null
-          : AvailableMessage.fromRow(rows.first as Map<String, dynamic>);
-    } on PostgrestException catch (error) {
-      // invalid_text_representation: [id] is not a UUID.
-      if (error.code == '22P02') return null;
-      throw mapSupabaseError(error);
-    } catch (error) {
-      throw mapSupabaseError(error);
-    }
-  }
+  /// Ready letter [id] with its content, or null if it doesn't exist or
+  /// isn't ready yet.
+  Future<AvailableMessage?> getAvailable(String id) => _guard(() async {
+    final row = await (_db.select(
+      _letters,
+    )..where((l) => l.id.equals(id) & _ready(l))).getSingleOrNull();
+    if (row == null) return null;
+    return AvailableMessage(
+      id: row.id,
+      body: row.body,
+      scheduledFor: row.scheduledFor.toLocal(),
+      timezone: row.timezone,
+      createdAt: row.createdAt.toLocal(),
+      openedAt: row.openedAt?.toLocal(),
+    );
+  });
 
-  /// Records the first time the user opened released message [id]. The
-  /// server ignores repeats and messages that aren't released.
-  Future<void> markOpened(String id) async {
+  /// Records the first time ready letter [id] was opened. Repeats and
+  /// letters that aren't ready are ignored.
+  Future<void> markOpened(String id) => _guard(() async {
+    await (_db.update(_letters)..where(
+          (l) => l.id.equals(id) & l.openedAt.isNull() & _ready(l),
+        ))
+        .write(LettersCompanion(openedAt: Value(_now())));
+  });
+
+  Expression<bool> _ready($LettersTable l) =>
+      l.scheduledFor.isSmallerOrEqualValue(_now());
+
+  Expression<bool> _notReady($LettersTable l) =>
+      l.scheduledFor.isBiggerThanValue(_now());
+
+  Future<T> _guard<T>(Future<T> Function() action) async {
     try {
-      await _db.rpc<void>(
-        Rpcs.markMessageOpened,
-        params: {'p_message_id': id},
-      );
-    } catch (error) {
-      throw mapSupabaseError(error);
+      return await action();
+    } on AppError {
+      rethrow;
+    } on Exception {
+      // drift and sqlite3 failures; the app has no other storage errors.
+      throw const UnexpectedError();
     }
   }
 }
 
 @Riverpod(keepAlive: true)
-MessagesRepository messagesRepository(Ref ref) {
-  final client = ref.watch(supabaseClientProvider);
-  return MessagesRepository(client.rest, () => client.auth.currentUser?.id);
-}
+MessagesRepository messagesRepository(Ref ref) => MessagesRepository(
+  ref.watch(appDatabaseProvider),
+  ref.watch(clockProvider),
+  const Uuid().v4,
+);

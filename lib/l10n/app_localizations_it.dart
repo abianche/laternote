@@ -82,25 +82,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String validationBodyInvalid(int max) {
-    final intl.NumberFormat maxNumberFormat = intl.NumberFormat.decimalPattern(
-      localeName,
-    );
-    final String maxString = maxNumberFormat.format(max);
-
-    return 'Un messaggio deve contenere del testo, fino a $maxString caratteri.';
-  }
-
-  @override
   String get validationDeliveryMissing =>
       'Scegli una data e un\'ora di consegna.';
 
   @override
   String get validationDeliveryInPast => 'Scegli un orario nel futuro.';
-
-  @override
-  String get validationDeliveryPassed =>
-      'Quell\'orario di consegna è già passato. Scegline uno più avanti.';
 
   @override
   String get validationAlreadyOpening =>
@@ -329,11 +315,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String messageSetToOpen(String delivery) {
     return 'Da aprire $delivery';
-  }
-
-  @override
-  String messageArrived(String delivery) {
-    return 'Arrivato $delivery';
   }
 
   @override

@@ -98,8 +98,7 @@ class ComposeDraft extends _$ComposeDraft {
   }
 }
 
-/// Seals the draft: syncs it to Supabase as `scheduled`, then deletes the
-/// local draft. Holds the delivery time once sealed.
+/// Seals the draft: saves it as a sealed letter, then deletes the draft. Holds the delivery time once sealed.
 @riverpod
 class SealMessageController extends _$SealMessageController {
   @override

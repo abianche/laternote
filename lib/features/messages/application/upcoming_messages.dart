@@ -5,7 +5,7 @@ import '../data/scheduled_message.dart';
 
 part 'upcoming_messages.g.dart';
 
-/// The signed-in user's sealed messages, soonest first. Invalidate after
+/// Sealed letters not ready yet, soonest first. Invalidate after
 /// creating or deleting a message.
 @riverpod
 Future<List<ScheduledMessage>> upcomingMessages(Ref ref) =>

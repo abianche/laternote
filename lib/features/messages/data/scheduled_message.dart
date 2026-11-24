@@ -1,5 +1,5 @@
 /// A sealed message as the upcoming list sees it. Deliberately has no body:
-/// content is never fetched before release.
+/// content is never read before it is ready.
 class ScheduledMessage {
   const ScheduledMessage({
     required this.id,
@@ -7,14 +7,6 @@ class ScheduledMessage {
     required this.timezone,
     required this.createdAt,
   });
-
-  factory ScheduledMessage.fromRow(Map<String, dynamic> row) =>
-      ScheduledMessage(
-        id: row['id'] as String,
-        scheduledFor: DateTime.parse(row['scheduled_for'] as String).toLocal(),
-        timezone: row['timezone'] as String,
-        createdAt: DateTime.parse(row['created_at'] as String).toLocal(),
-      );
 
   final String id;
 
@@ -27,7 +19,8 @@ class ScheduledMessage {
   /// When it was sealed, in device-local time.
   final DateTime createdAt;
 
-  /// Past its time but not yet released by the server.
+  /// Past its time while the list still shows it; it moves to the inbox on
+  /// the next refresh.
   bool isOpeningSoon(DateTime now) => !scheduledFor.isAfter(now);
 
   @override

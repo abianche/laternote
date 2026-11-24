@@ -1,27 +1,20 @@
-/// A released message as the inbox lists it. Like `ScheduledMessage` it has
-/// no body: content is fetched only when the message is opened.
+/// A ready letter as the inbox lists it. Like `ScheduledMessage` it has no
+/// body: content is read only when the letter is opened.
 class InboxItem {
   const InboxItem({
     required this.id,
     required this.createdAt,
-    required this.releasedAt,
+    required this.scheduledFor,
     required this.openedAt,
   });
-
-  factory InboxItem.fromRow(Map<String, dynamic> row) => InboxItem(
-    id: row['id'] as String,
-    createdAt: _local(row['created_at'])!,
-    releasedAt: _local(row['released_at'])!,
-    openedAt: _local(row['opened_at']),
-  );
 
   final String id;
 
   /// When it was sealed, in device-local time.
   final DateTime createdAt;
 
-  /// When the server released it, in device-local time.
-  final DateTime releasedAt;
+  /// When it became ready to open, in device-local time.
+  final DateTime scheduledFor;
 
   /// First time the owner opened it; null while it's new.
   final DateTime? openedAt;
@@ -33,14 +26,14 @@ class InboxItem {
       other is InboxItem &&
       other.id == id &&
       other.createdAt == createdAt &&
-      other.releasedAt == releasedAt &&
+      other.scheduledFor == scheduledFor &&
       other.openedAt == openedAt;
 
   @override
-  int get hashCode => Object.hash(id, createdAt, releasedAt, openedAt);
+  int get hashCode => Object.hash(id, createdAt, scheduledFor, openedAt);
 }
 
-/// A released message with its content, from `get_available_message`.
+/// A ready letter with its content.
 class AvailableMessage {
   const AvailableMessage({
     required this.id,
@@ -48,25 +41,13 @@ class AvailableMessage {
     required this.scheduledFor,
     required this.timezone,
     required this.createdAt,
-    required this.releasedAt,
     required this.openedAt,
   });
-
-  factory AvailableMessage.fromRow(Map<String, dynamic> row) =>
-      AvailableMessage(
-        id: row['id'] as String,
-        body: row['body'] as String,
-        scheduledFor: _local(row['scheduled_for'])!,
-        timezone: row['timezone'] as String,
-        createdAt: _local(row['created_at'])!,
-        releasedAt: _local(row['released_at'])!,
-        openedAt: _local(row['opened_at']),
-      );
 
   final String id;
   final String body;
 
-  /// The time it was set to open, in device-local time.
+  /// When it became ready to open, in device-local time.
   final DateTime scheduledFor;
 
   /// IANA zone chosen when composing.
@@ -75,10 +56,7 @@ class AvailableMessage {
   /// When it was sealed, in device-local time.
   final DateTime createdAt;
 
-  /// When the server released it, in device-local time.
-  final DateTime releasedAt;
-
-  /// First time the owner opened it; null on the first open.
+  /// First time it was opened; null on the first open.
   final DateTime? openedAt;
 
   @override
@@ -89,7 +67,6 @@ class AvailableMessage {
       other.scheduledFor == scheduledFor &&
       other.timezone == timezone &&
       other.createdAt == createdAt &&
-      other.releasedAt == releasedAt &&
       other.openedAt == openedAt;
 
   @override
@@ -99,10 +76,6 @@ class AvailableMessage {
     scheduledFor,
     timezone,
     createdAt,
-    releasedAt,
     openedAt,
   );
 }
-
-DateTime? _local(Object? value) =>
-    value == null ? null : DateTime.parse(value as String).toLocal();
