@@ -6,14 +6,14 @@ import '../data/messages_repository.dart';
 
 part 'inbox.g.dart';
 
-/// The signed-in user's released messages, newest first. New (unopened) and
+/// Ready letters, newest first. New (unopened) and
 /// read ones together; the inbox splits them.
 @riverpod
 Future<List<InboxItem>> availableMessages(Ref ref) =>
     ref.watch(messagesRepositoryProvider).listAvailable();
 
-/// Released message [id] with its content, or null if it isn't available
-/// (unknown, someone else's, or still sealed). The first open is recorded
+/// Ready letter [id] with its content, or null if it isn't available
+/// (unknown or still sealed). The first open is recorded
 /// before showing it, so the inbox moves it to Read; a failure to record
 /// never blocks reading.
 @riverpod

@@ -81,7 +81,6 @@ void main() {
         scheduledFor: DateTime(2030, 3, 1, 9),
         timezone: 'Europe/Rome',
         createdAt: DateTime(2029, 7, 4),
-        releasedAt: DateTime(2030, 3, 1, 9, 0, 20),
         openedAt: null,
       ),
     ]);

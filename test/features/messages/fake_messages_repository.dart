@@ -67,10 +67,10 @@ class FakeMessagesRepository implements MessagesRepository {
         InboxItem(
           id: m.id,
           createdAt: m.createdAt,
-          releasedAt: m.releasedAt,
+          scheduledFor: m.scheduledFor,
           openedAt: m.openedAt,
         ),
-    ]..sort((a, b) => b.releasedAt.compareTo(a.releasedAt));
+    ]..sort((a, b) => b.scheduledFor.compareTo(a.scheduledFor));
   }
 
   @override
@@ -93,7 +93,6 @@ class FakeMessagesRepository implements MessagesRepository {
       scheduledFor: m.scheduledFor,
       timezone: m.timezone,
       createdAt: m.createdAt,
-      releasedAt: m.releasedAt,
       openedAt: DateTime(2030, 2),
     );
   }
@@ -106,6 +105,5 @@ AvailableMessage released(String id, {DateTime? openedAt}) => AvailableMessage(
   scheduledFor: DateTime(2030, 1, 1, 9),
   timezone: 'Europe/Rome',
   createdAt: DateTime(2029, 6, 1),
-  releasedAt: DateTime(2030, 1, 1, 9, 0, 20),
   openedAt: openedAt,
 );

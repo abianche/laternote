@@ -22,7 +22,7 @@ import 'delivery_format.dart';
 
 /// The draft read back before sealing. "Seal message" tucks the letter into
 /// its envelope while the message is saved; the button is sewn on once the
-/// server has it, then the app moves on to the sealed list. A failed save
+/// letter is saved, then the app moves on to the sealed list. A failed save
 /// takes the letter back out and shows why.
 class ReviewScreen extends ConsumerStatefulWidget {
   const ReviewScreen({super.key});

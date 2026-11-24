@@ -1,18 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:laternote/core/app_error.dart';
 import 'package:laternote/features/messages/data/draft_repository.dart';
 
 void main() {
-  late String? userId;
+  DraftRepository repository() => DraftRepository(const FlutterSecureStorage());
 
-  DraftRepository repository() =>
-      DraftRepository(const FlutterSecureStorage(), () => userId);
-
-  setUp(() {
-    FlutterSecureStorage.setMockInitialValues({});
-    userId = 'user-a';
-  });
+  setUp(() => FlutterSecureStorage.setMockInitialValues({}));
 
   test('loads nothing before a save', () async {
     expect(await repository().load(), isNull);
@@ -40,23 +33,10 @@ void main() {
     expect(await repository().load(), isNull);
   });
 
-  test("another account's draft is deleted, not shown", () async {
-    await repository().save((body: 'Private', deliverAt: null));
-
-    userId = 'user-b';
-    expect(await repository().load(), isNull);
-
-    userId = 'user-a';
-    expect(await repository().load(), isNull);
-  });
-
   for (final (name, raw) in [
     ('invalid JSON', '{not json'),
-    ('a missing body', '{"user_id":"user-a"}'),
-    (
-      'a bad delivery time',
-      '{"user_id":"user-a","body":"Hi","deliver_at":"x"}',
-    ),
+    ('a missing body', '{}'),
+    ('a bad delivery time', '{"body":"Hi","deliver_at":"x"}'),
   ]) {
     test('a draft with $name is deleted, not thrown', () async {
       FlutterSecureStorage.setMockInitialValues({'compose_draft': raw});
@@ -69,18 +49,9 @@ void main() {
     });
   }
 
-  test('saving while signed out fails', () async {
-    userId = null;
-
-    expect(
-      () => repository().save((body: 'Hi', deliverAt: null)),
-      throwsA(isA<SignedOutError>()),
-    );
-  });
-
   test('a draft that storage fails to read is deleted, not thrown', () async {
     final storage = _UnreadableStorage();
-    final repository = DraftRepository(storage, () => userId);
+    final repository = DraftRepository(storage);
 
     expect(await repository.load(), isNull);
     expect(storage.deleted, isTrue);

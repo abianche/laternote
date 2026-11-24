@@ -11,7 +11,7 @@ import '../data/available_message.dart';
 import 'envelope_tile.dart';
 import 'list_notice.dart';
 
-/// Released messages: new ones first, then the read archive. Lists dates
+/// Ready letters: new ones first, then the read archive. Lists dates
 /// only; tapping an item opens it. Pull down to refresh.
 class InboxList extends ConsumerWidget {
   const InboxList({super.key});
@@ -90,7 +90,7 @@ class _InboxTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final material = MaterialLocalizations.of(context);
     final l10n = AppLocalizations.of(context);
-    final arrived = material.formatShortDate(message.releasedAt);
+    final arrived = material.formatShortDate(message.scheduledFor);
     final written = material.formatShortDate(message.createdAt);
     return EnvelopeTile(
       envelope: Envelope(

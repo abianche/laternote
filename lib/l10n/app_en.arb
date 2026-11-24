@@ -27,13 +27,8 @@
   "@validationBodyTooLong": {
     "placeholders": { "max": { "type": "int", "format": "decimalPattern" } }
   },
-  "validationBodyInvalid": "A message needs some text, up to {max} characters.",
-  "@validationBodyInvalid": {
-    "placeholders": { "max": { "type": "int", "format": "decimalPattern" } }
-  },
   "validationDeliveryMissing": "Pick a delivery date and time.",
   "validationDeliveryInPast": "Pick a time in the future.",
-  "validationDeliveryPassed": "That delivery time has already passed. Pick a later time.",
   "validationAlreadyOpening": "This message is already opening, so it can't be deleted.",
 
   "commonRetry": "Retry",
@@ -117,10 +112,6 @@
   },
   "messageSetToOpen": "Set to open {delivery}",
   "@messageSetToOpen": {
-    "placeholders": { "delivery": { "type": "String" } }
-  },
-  "messageArrived": "Arrived {delivery}",
-  "@messageArrived": {
     "placeholders": { "delivery": { "type": "String" } }
   },
 

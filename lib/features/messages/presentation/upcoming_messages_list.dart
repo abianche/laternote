@@ -118,7 +118,7 @@ class _MessageTile extends ConsumerWidget {
                 countdownBetween(now, message.scheduledFor),
               ),
             ),
-      // Past its time the server refuses deletion, so don't offer it.
+      // Past its time the letter can't be deleted, so don't offer it.
       trailing: openingSoon
           ? null
           : IconButton(

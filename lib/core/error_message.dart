@@ -40,11 +40,7 @@ String validationText(AppLocalizations l10n, ValidationProblem problem) =>
       ValidationProblem.bodyTooLong => l10n.validationBodyTooLong(
         maxMessageLength,
       ),
-      ValidationProblem.bodyInvalid => l10n.validationBodyInvalid(
-        maxMessageLength,
-      ),
       ValidationProblem.deliveryMissing => l10n.validationDeliveryMissing,
       ValidationProblem.deliveryInPast => l10n.validationDeliveryInPast,
-      ValidationProblem.deliveryPassed => l10n.validationDeliveryPassed,
       ValidationProblem.alreadyOpening => l10n.validationAlreadyOpening,
     };
