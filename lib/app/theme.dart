@@ -1,161 +1,196 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../core/ui/stationery.dart';
+import '../core/ui/knit.dart';
+import '../core/ui/stitches.dart';
 
 final ColorScheme _colorScheme =
     ColorScheme.fromSeed(
-      seedColor: Palette.wax,
+      seedColor: Palette.tomato,
       dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
     ).copyWith(
-      primary: Palette.wax,
-      onPrimary: Palette.paperLight,
-      primaryContainer: const Color(0xFFF4D9D3),
-      onPrimaryContainer: Palette.waxDeep,
-      secondary: Palette.postmark,
-      onSecondary: Palette.paperLight,
-      tertiary: Palette.brass,
-      onTertiary: Palette.paperLight,
-      surface: Palette.paper,
-      onSurface: Palette.ink,
-      onSurfaceVariant: Palette.inkSoft,
-      surfaceContainerLowest: Palette.paperLight,
-      surfaceContainerLow: const Color(0xFFF3ECDF),
-      surfaceContainer: Palette.paperShade,
-      surfaceContainerHigh: const Color(0xFFEAE0CC),
-      surfaceContainerHighest: const Color(0xFFE4D9C3),
+      primary: Palette.tomato,
+      onPrimary: Palette.cream,
+      primaryContainer: Palette.peach,
+      onPrimaryContainer: Palette.tomatoDeep,
+      secondary: Palette.sageDeep,
+      onSecondary: Palette.cream,
+      secondaryContainer: Palette.sageLight,
+      onSecondaryContainer: Palette.sageDeep,
+      tertiary: Palette.mustardDeep,
+      onTertiary: Palette.cream,
+      tertiaryContainer: Palette.mustardLight,
+      onTertiaryContainer: Palette.cocoa,
+      surface: Palette.oat,
+      onSurface: Palette.cocoa,
+      onSurfaceVariant: Palette.cocoaSoft,
+      surfaceContainerLowest: Palette.cream,
+      surfaceContainerLow: const Color(0xFFF6EFE2),
+      surfaceContainer: const Color(0xFFF2EADC),
+      surfaceContainerHigh: Palette.oatShade,
+      surfaceContainerHighest: const Color(0xFFDFD2BA),
       surfaceTint: Colors.transparent,
-      outline: Palette.sepia,
-      outlineVariant: Palette.sepiaLight,
-      inverseSurface: Palette.ink,
-      onInverseSurface: Palette.paper,
-      inversePrimary: const Color(0xFFF2A79C),
+      outline: Palette.seam,
+      outlineVariant: Palette.tan,
+      inverseSurface: Palette.cocoa,
+      onInverseSurface: Palette.oat,
+      inversePrimary: Palette.tomatoLight,
     );
 
-/// Headlines and titles in Fraunces; UI text stays in the platform sans.
+/// Everything in Fredoka; sizes come from the Material defaults.
 final TextTheme _textTheme = TextTheme(
-  displayLarge: fraunces(400, opticalSize: 72),
-  displayMedium: fraunces(400, opticalSize: 72),
-  displaySmall: fraunces(400, opticalSize: 48),
-  headlineLarge: fraunces(500, opticalSize: 36),
-  headlineMedium: fraunces(500, opticalSize: 36),
-  headlineSmall: fraunces(500, opticalSize: 24),
-  titleLarge: fraunces(600, opticalSize: 24),
+  displayLarge: fredoka(500),
+  displayMedium: fredoka(500),
+  displaySmall: fredoka(500),
+  headlineLarge: fredoka(600),
+  headlineMedium: fredoka(600),
+  headlineSmall: fredoka(600),
+  titleLarge: fredoka(600),
+  titleMedium: fredoka(600),
+  titleSmall: fredoka(600),
+  bodyLarge: fredoka(400),
+  bodyMedium: fredoka(400),
+  bodySmall: fredoka(400),
+  labelLarge: fredoka(600),
+  labelMedium: fredoka(500),
+  labelSmall: fredoka(500),
 );
 
-const _stadium = StadiumBorder();
 const _buttonSize = Size(64, 52);
-const _buttonText = TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.3);
+final _buttonText = fredoka(600, size: 16).copyWith(letterSpacing: 0.2);
+const _pill = 999.0;
 
-/// "Ink & Wax" (see `Stationery`). Light mode only for now.
+/// "Knitted" (see `Knit`). Light mode only for now.
 final ThemeData appTheme = ThemeData(
   colorScheme: _colorScheme,
   textTheme: _textTheme,
-  scaffoldBackgroundColor: Palette.paper,
-  extensions: [Stationery.standard],
+  fontFamily: 'Fredoka',
+  scaffoldBackgroundColor: Palette.oat,
+  extensions: [Knit.standard],
   appBarTheme: AppBarThemeData(
-    backgroundColor: Palette.paper,
-    foregroundColor: Palette.ink,
+    backgroundColor: Palette.oat,
+    foregroundColor: Palette.cocoa,
     surfaceTintColor: Colors.transparent,
     scrolledUnderElevation: 0,
     centerTitle: true,
-    titleTextStyle: fraunces(
-      600,
-      size: 22,
-      opticalSize: 24,
-    ).copyWith(color: Palette.ink),
+    titleTextStyle: fredoka(600, size: 22).copyWith(color: Palette.cocoa),
   ),
+  // Filled buttons look like felt with a stitched seam inside the edge.
   filledButtonTheme: FilledButtonThemeData(
     style: FilledButton.styleFrom(
       minimumSize: _buttonSize,
-      shape: _stadium,
       textStyle: _buttonText,
+      shape: const StitchedBorder(
+        radius: _pill,
+        stitch: Color(0xB3FBF6EC),
+        inset: 5,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 28),
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       minimumSize: _buttonSize,
-      shape: _stadium,
       textStyle: _buttonText,
+      backgroundColor: Palette.cream,
+      foregroundColor: Palette.tomato,
+      shape: const StitchedBorder(
+        radius: _pill,
+        stitch: Palette.tan,
+        inset: 5,
+      ),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       minimumSize: _buttonSize,
-      shape: _stadium,
       textStyle: _buttonText,
-      foregroundColor: Palette.ink,
-      side: const BorderSide(color: Palette.sepia),
+      foregroundColor: Palette.cocoa,
+      side: const BorderSide(color: Palette.cocoa, width: 2),
+      shape: const StitchedBorder(radius: _pill),
     ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      foregroundColor: Palette.postmark,
+      foregroundColor: Palette.sageDeep,
       textStyle: _buttonText,
+      shape: const StadiumBorder(),
     ),
   ),
-  // Underlined fields, like writing on ruled paper.
+  // Soft rounded fields on cream, tomato when focused.
   inputDecorationTheme: const InputDecorationThemeData(
-    contentPadding: EdgeInsets.symmetric(vertical: 12),
-    border: UnderlineInputBorder(borderSide: BorderSide(color: Palette.sepia)),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Palette.sepia),
+    filled: true,
+    fillColor: Palette.cream,
+    contentPadding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(18)),
+      borderSide: BorderSide(color: Palette.seam, width: 1.5),
     ),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Palette.wax, width: 2),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(18)),
+      borderSide: BorderSide(color: Palette.seam, width: 1.5),
     ),
-    floatingLabelStyle: TextStyle(color: Palette.wax),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(18)),
+      borderSide: BorderSide(color: Palette.tomato, width: 2.5),
+    ),
+    floatingLabelStyle: TextStyle(color: Palette.tomato),
   ),
-  // A sheet of paper: flat, thin edge, barely rounded.
+  // A cushion of cream fabric with a stitched seam.
   cardTheme: const CardThemeData(
-    color: Palette.paperLight,
-    elevation: 0,
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(6)),
-      side: BorderSide(color: Palette.sepiaLight),
+    color: Palette.cream,
+    elevation: 2,
+    shadowColor: Color(0x66705030),
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+    shape: StitchedBorder(
+      side: BorderSide(color: Palette.tan, width: 1.5),
+      radius: 22,
+      stitch: Color(0xFFD36A5C),
+      inset: 7,
     ),
   ),
-  tabBarTheme: const TabBarThemeData(
-    indicatorColor: Palette.wax,
+  tabBarTheme: TabBarThemeData(
+    indicator: const StitchedPill(
+      color: Palette.mustard,
+      outline: Palette.cocoa,
+      stitch: Color(0x9943352B),
+    ),
     indicatorSize: TabBarIndicatorSize.tab,
-    labelColor: Palette.ink,
-    unselectedLabelColor: Palette.inkSoft,
-    dividerColor: Palette.sepiaLight,
-    labelStyle: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.5),
+    labelColor: Palette.cocoa,
+    unselectedLabelColor: Palette.cocoaSoft,
+    dividerColor: Colors.transparent,
+    labelStyle: fredoka(600, size: 15),
+    unselectedLabelStyle: fredoka(500, size: 15),
   ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: Palette.wax,
-    foregroundColor: Palette.paperLight,
-    shape: _stadium,
-    elevation: 2,
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: Palette.tomato,
+    foregroundColor: Palette.cream,
+    extendedTextStyle: _buttonText,
+    elevation: 3,
+    shape: const StitchedBorder(
+      radius: 24,
+      stitch: Color(0xCCFBF6EC),
+      inset: 6,
+    ),
   ),
   dialogTheme: DialogThemeData(
-    backgroundColor: Palette.paperLight,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-    ),
-    titleTextStyle: fraunces(
-      600,
-      size: 22,
-      opticalSize: 24,
-    ).copyWith(color: Palette.ink),
+    backgroundColor: Palette.cream,
+    shape: const StitchedBorder(radius: 26, stitch: Palette.tan, inset: 8),
+    titleTextStyle: fredoka(600, size: 22).copyWith(color: Palette.cocoa),
   ),
-  snackBarTheme: const SnackBarThemeData(
-    backgroundColor: Palette.ink,
-    contentTextStyle: TextStyle(color: Palette.paper),
-    actionTextColor: Palette.brassGlow,
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: Palette.cocoa,
+    contentTextStyle: fredoka(500, size: 15).copyWith(color: Palette.oat),
+    actionTextColor: Palette.mustard,
     behavior: SnackBarBehavior.floating,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(6)),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(16)),
     ),
   ),
-  dividerTheme: const DividerThemeData(color: Palette.sepiaLight, thickness: 1),
-  listTileTheme: const ListTileThemeData(iconColor: Palette.inkSoft),
+  dividerTheme: const DividerThemeData(color: Palette.tan, thickness: 1.5),
+  listTileTheme: const ListTileThemeData(iconColor: Palette.cocoaSoft),
   datePickerTheme: const DatePickerThemeData(
-    backgroundColor: Palette.paperLight,
+    backgroundColor: Palette.cream,
     surfaceTintColor: Colors.transparent,
   ),
-  timePickerTheme: const TimePickerThemeData(
-    backgroundColor: Palette.paperLight,
-  ),
+  timePickerTheme: const TimePickerThemeData(backgroundColor: Palette.cream),
 );

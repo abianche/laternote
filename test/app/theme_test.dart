@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/app/theme.dart';
-import 'package:laternote/core/ui/stationery.dart';
+import 'package:laternote/core/ui/knit.dart';
+import 'package:laternote/core/ui/stitches.dart';
 import 'package:material_ui/material_ui.dart';
 
 double contrast(Color a, Color b) {
@@ -35,7 +36,7 @@ void main() {
     expect(contrast(scheme.outline, scheme.surface), greaterThanOrEqualTo(3));
   });
 
-  test('defines the component themes and the stationery', () {
+  test('defines the stitched component themes and the knit', () {
     expect(appTheme.appBarTheme.backgroundColor, scheme.surface);
     expect(appTheme.filledButtonTheme.style, isNotNull);
     expect(appTheme.elevatedButtonTheme.style, isNotNull);
@@ -43,23 +44,29 @@ void main() {
     expect(appTheme.textButtonTheme.style, isNotNull);
     expect(
       appTheme.inputDecorationTheme.focusedBorder,
-      isA<UnderlineInputBorder>(),
+      isA<OutlineInputBorder>(),
     );
-    expect(appTheme.cardTheme.elevation, 0);
-    expect(appTheme.extension<Stationery>(), Stationery.standard);
+    expect(appTheme.cardTheme.shape, isA<StitchedBorder>());
+    expect(
+      appTheme.filledButtonTheme.style?.shape?.resolve({}),
+      isA<StitchedBorder>(),
+    );
+    expect(appTheme.tabBarTheme.indicator, isA<StitchedPill>());
+    expect(appTheme.extension<Knit>(), Knit.standard);
   });
 
-  test('headlines and titles are set in Fraunces, UI text is not', () {
+  test('UI text is in Fredoka, letters in Caveat', () {
     final text = appTheme.textTheme;
     for (final style in [
       text.displayLarge,
       text.headlineMedium,
       text.titleLarge,
+      text.bodyMedium,
+      text.labelLarge,
       appTheme.appBarTheme.titleTextStyle,
     ]) {
-      expect(style?.fontFamily, 'Fraunces');
+      expect(style?.fontFamily, 'Fredoka');
     }
-    expect(text.bodyMedium?.fontFamily, isNot('Fraunces'));
-    expect(text.labelLarge?.fontFamily, isNot('Fraunces'));
+    expect(Knit.standard.letter.fontFamily, 'Caveat');
   });
 }

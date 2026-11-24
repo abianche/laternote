@@ -49,6 +49,7 @@ class UpcomingMessagesList extends ConsumerWidget {
                     width: 120,
                     flap: 1,
                     sealed: false,
+                    calm: true,
                     letter: 0.45,
                   ),
                   text: l10n.sealedEmpty,
@@ -102,7 +103,7 @@ class _MessageTile extends ConsumerWidget {
     return EnvelopeTile(
       envelope: openingSoon
           ? const _GlowingEnvelope()
-          : const Envelope(width: 56),
+          : const Envelope(width: 56, calm: true),
       title: openingSoon
           ? l10n.sealedOpeningSoon
           : l10n.sealedOpens(
@@ -155,7 +156,7 @@ class _MessageTile extends ConsumerWidget {
   }
 }
 
-/// An envelope about to open: its seal glows a few times, then stays warm.
+/// An envelope about to open: its button glows a few times, then stays warm.
 class _GlowingEnvelope extends StatefulWidget {
   const _GlowingEnvelope();
 

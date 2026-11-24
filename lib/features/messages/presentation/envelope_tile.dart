@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../../core/ui/stationery.dart';
+import '../../../core/ui/knit.dart';
 
 /// A message in a list: its envelope, then what is known about it.
 class EnvelopeTile extends StatelessWidget {
@@ -67,10 +67,9 @@ class EnvelopeTile extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           note,
-                          style: Stationery.of(context).letter.copyWith(
-                            fontSize: 15,
-                            height: 1.3,
-                            fontStyle: FontStyle.italic,
+                          style: Knit.of(context).letter.copyWith(
+                            fontSize: 20,
+                            height: 1.1,
                             color: theme.colorScheme.tertiary,
                           ),
                         ),
@@ -87,7 +86,7 @@ class EnvelopeTile extends StatelessWidget {
   }
 }
 
-/// Small-caps header above a group of envelopes.
+/// Header above a group of envelopes.
 class EnvelopeGroupHeader extends StatelessWidget {
   const EnvelopeGroupHeader(this.text, {super.key});
 
@@ -99,9 +98,9 @@ class EnvelopeGroupHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 6),
       child: Text(
         text,
-        style: Stationery.of(
+        style: Knit.of(
           context,
-        ).smallCaps.copyWith(color: Theme.of(context).colorScheme.secondary),
+        ).label.copyWith(color: Theme.of(context).colorScheme.secondary),
       ),
     );
   }

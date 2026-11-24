@@ -1,6 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
-import 'stationery.dart';
+import 'knit.dart';
 
 /// "Laternote" in the wordmark style.
 class Wordmark extends StatelessWidget {
@@ -11,6 +11,6 @@ class Wordmark extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     'Laternote',
-    style: Stationery.of(context).wordmark.copyWith(fontSize: size),
+    style: Knit.of(context).wordmark.copyWith(fontSize: size),
   );
 }

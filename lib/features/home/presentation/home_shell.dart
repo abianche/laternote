@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../../core/ui/stitches.dart';
 import '../../../core/ui/wordmark.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../messages/presentation/inbox_list.dart';
@@ -40,8 +41,8 @@ class HomeShell extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
-          children: [InboxList(), UpcomingMessagesList()],
+        body: const Woven(
+          child: TabBarView(children: [InboxList(), UpcomingMessagesList()]),
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => context.go(Routes.compose),

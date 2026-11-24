@@ -4,8 +4,9 @@ import 'package:material_ui/material_ui.dart';
 import '../../../core/error_message.dart';
 import '../../../core/ui/envelope.dart';
 import '../../../core/ui/letter_paper.dart';
-import '../../../core/ui/postmark.dart';
-import '../../../core/ui/stationery.dart';
+import '../../../core/ui/stitches.dart';
+import '../../../core/ui/date_patch.dart';
+import '../../../core/ui/knit.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/inbox.dart';
@@ -26,28 +27,30 @@ class MessageScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.messageTitle)),
-      body: switch (message) {
-        AsyncData(value: final message?) => _MessageView(message),
-        AsyncData() => ListNotice(
-          illustration: const Envelope(width: 120),
-          text: l10n.messageUnavailable,
-        ),
-        AsyncError() when !message.isLoading => ListNotice(
-          icon: Icons.cloud_off_outlined,
-          text: errorMessage(context, message)!,
-          action: TextButton(
-            onPressed: () => ref.invalidate(openedMessageProvider(id)),
-            child: Text(l10n.commonRetry),
+      body: Woven(
+        child: switch (message) {
+          AsyncData(value: final message?) => _MessageView(message),
+          AsyncData() => ListNotice(
+            illustration: const Envelope(width: 120),
+            text: l10n.messageUnavailable,
           ),
-        ),
-        _ => ListNotice(progress: true, text: l10n.messageOpening),
-      },
+          AsyncError() when !message.isLoading => ListNotice(
+            icon: Icons.cloud_off_outlined,
+            text: errorMessage(context, message)!,
+            action: TextButton(
+              onPressed: () => ref.invalidate(openedMessageProvider(id)),
+              child: Text(l10n.commonRetry),
+            ),
+          ),
+          _ => ListNotice(progress: true, text: l10n.messageOpening),
+        },
+      ),
     );
   }
 }
 
-/// The letter, on paper. The first time it's opened, the seal breaks and
-/// the letter rises out of its envelope; a tap skips that.
+/// The letter, on paper. The first time it's opened, the button comes undone
+/// and the letter rises out of its envelope; a tap skips that.
 class _MessageView extends ConsumerStatefulWidget {
   const _MessageView(this.message);
 
@@ -113,7 +116,7 @@ class _MessageViewState extends ConsumerState<_MessageView>
                           child: Envelope(
                             width: 220,
                             stamped: true,
-                            crack: phase(0.05, 0.3),
+                            undone: phase(0.05, 0.3),
                             flap: phase(0.3, 0.55),
                             letter: phase(0.55, 0.85),
                           ),
@@ -178,14 +181,14 @@ class _Letter extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              Postmark(date: message.releasedAt, size: 72),
+              DatePatch(date: message.releasedAt, size: 72),
             ],
           ),
           const SizedBox(height: 20),
           LetterPaper(
             child: SelectableText(
               message.body,
-              style: Stationery.of(context).letter,
+              style: Knit.of(context).letter,
             ),
           ),
         ],

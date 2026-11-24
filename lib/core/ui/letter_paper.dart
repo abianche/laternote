@@ -1,43 +1,48 @@
 import 'package:material_ui/material_ui.dart';
 
-import 'stationery.dart';
+import 'knit.dart';
+import 'stitches.dart';
 
-/// A sheet of ruled letter paper with a margin line. Rules are spaced to
-/// [Stationery.letter]'s line height, so a child in that style writes on
-/// them when it starts at [padding]'s top.
+/// A soft sheet of ruled letter paper with a stitched edge. Rules are spaced
+/// to [Knit.letter]'s line height, so a child in that style writes on them
+/// when it starts at [padding]'s top.
 class LetterPaper extends StatelessWidget {
   const LetterPaper({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.fromLTRB(44, 20, 20, 24),
+    this.padding = const EdgeInsets.fromLTRB(24, 22, 22, 26),
   });
 
   final Widget child;
   final EdgeInsets padding;
 
+  static const _radius = 22.0;
+
   @override
   Widget build(BuildContext context) {
-    final s = Stationery.of(context);
+    final k = Knit.of(context);
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: s.paper,
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-        boxShadow: const [
+      decoration: ShapeDecoration(
+        color: k.fabric,
+        shape: StitchedBorder(
+          radius: _radius,
+          stitch: k.stitchCalm,
+          inset: 8,
+        ),
+        shadows: const [
           BoxShadow(
-            color: Color(0x1F5C4A2A),
-            blurRadius: 14,
-            offset: Offset(0, 4),
+            color: Color(0x33705030),
+            blurRadius: 16,
+            offset: Offset(0, 6),
           ),
         ],
       ),
       child: CustomPaint(
         painter: _RulesPainter(
-          rule: s.rule,
-          margin: s.margin,
+          rule: k.rule,
           top: padding.top,
-          lineHeight: s.letter.fontSize! * s.letter.height!,
-          marginX: padding.left - 14,
+          lineHeight: k.letter.fontSize! * k.letter.height!,
+          sideInset: 16,
         ),
         child: Padding(padding: padding, child: child),
       ),
@@ -48,41 +53,39 @@ class LetterPaper extends StatelessWidget {
 class _RulesPainter extends CustomPainter {
   const _RulesPainter({
     required this.rule,
-    required this.margin,
     required this.top,
     required this.lineHeight,
-    required this.marginX,
+    required this.sideInset,
   });
 
   final Color rule;
-  final Color margin;
   final double top;
   final double lineHeight;
-  final double marginX;
+  final double sideInset;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final pen = Paint()..color = rule;
-    // Just under each line's baseline.
+    final pen = Paint()
+      ..color = rule
+      ..strokeWidth = 1.5;
+    // Just under each line's baseline, inside the stitching.
     for (
-      var y = top + lineHeight * 0.82;
-      y < size.height - 6;
+      var y = top + lineHeight * 0.8;
+      y < size.height - 14;
       y += lineHeight
     ) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), pen);
+      canvas.drawLine(
+        Offset(sideInset, y),
+        Offset(size.width - sideInset, y),
+        pen,
+      );
     }
-    canvas.drawLine(
-      Offset(marginX, 0),
-      Offset(marginX, size.height),
-      Paint()..color = margin,
-    );
   }
 
   @override
   bool shouldRepaint(_RulesPainter old) =>
       old.rule != rule ||
-      old.margin != margin ||
       old.top != top ||
       old.lineHeight != lineHeight ||
-      old.marginX != marginX;
+      old.sideInset != sideInset;
 }

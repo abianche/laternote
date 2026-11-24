@@ -7,9 +7,10 @@ import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
 import '../../../core/tables.dart';
 import '../../../core/ui/letter_paper.dart';
-import '../../../core/ui/postmark.dart';
-import '../../../core/ui/stationery.dart';
-import '../../../core/ui/wax_seal.dart';
+import '../../../core/ui/stitches.dart';
+import '../../../core/ui/date_patch.dart';
+import '../../../core/ui/knit.dart';
+import '../../../core/ui/button_seal.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/message_draft.dart';
@@ -59,11 +60,13 @@ class ComposeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: switch (draft) {
-        AsyncData() => const _ComposeForm(),
-        AsyncError() => Center(child: Text(errorMessage(context, draft)!)),
-        _ => const Center(child: CircularProgressIndicator()),
-      },
+      body: Woven(
+        child: switch (draft) {
+          AsyncData() => const _ComposeForm(),
+          AsyncError() => Center(child: Text(errorMessage(context, draft)!)),
+          _ => const Center(child: CircularProgressIndicator()),
+        },
+      ),
     );
   }
 }
@@ -135,7 +138,7 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final stationery = Stationery.of(context);
+    final knit = Knit.of(context);
     final draft = ref.watch(composeDraftProvider).requireValue;
     final saveFailed = ref.watch(draftSaveFailedProvider);
     final timezone = ref.watch(deviceTimezoneProvider).value;
@@ -155,7 +158,7 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
             LetterPaper(
               child: TextFormField(
                 controller: _bodyController,
-                style: stationery.letter,
+                style: knit.letter,
                 // Written straight onto the paper's rules: no field chrome.
                 decoration: InputDecoration(
                   hintText: l10n.composeBodyHint,
@@ -179,36 +182,46 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
               ),
             ),
             const SizedBox(height: 16),
-            InkWell(
-              onTap: _pickDelivery,
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    Postmark(date: deliverAt, size: 64),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.composeDeliverOn,
-                            style: stationery.smallCaps.copyWith(
-                              color: theme.colorScheme.secondary,
+            Card(
+              margin: EdgeInsets.zero,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: _pickDelivery,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+                  child: Row(
+                    children: [
+                      DatePatch(date: deliverAt, size: 64),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.composeDeliverOn,
+                              style: knit.label.copyWith(
+                                color: theme.colorScheme.secondary,
+                              ),
                             ),
-                          ),
-                          Text(
-                            deliverAt == null
-                                ? l10n.composePickDateTime
-                                : formatDelivery(context, deliverAt, timezone),
-                            style: theme.textTheme.bodyLarge,
-                          ),
-                        ],
+                            Text(
+                              deliverAt == null
+                                  ? l10n.composePickDateTime
+                                  : formatDelivery(
+                                      context,
+                                      deliverAt,
+                                      timezone,
+                                    ),
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Icon(Icons.edit_calendar_outlined, color: theme.hintColor),
-                  ],
+                      Icon(
+                        Icons.edit_calendar_outlined,
+                        color: theme.hintColor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -222,7 +235,7 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: _review,
-              // A cream disc so the red seal shows on the red button.
+              // A cream disc so the red sewn button shows on the red one.
               icon: DecoratedBox(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onPrimary,
@@ -230,7 +243,7 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(1),
-                  child: WaxSeal(size: 22),
+                  child: ButtonSeal(size: 22),
                 ),
               ),
               label: Text(l10n.composeSeal),

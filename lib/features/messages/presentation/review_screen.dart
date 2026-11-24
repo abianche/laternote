@@ -9,9 +9,10 @@ import '../../../app/routes.dart';
 import '../../../core/error_message.dart';
 import '../../../core/ui/envelope.dart';
 import '../../../core/ui/letter_paper.dart';
-import '../../../core/ui/postmark.dart';
-import '../../../core/ui/stationery.dart';
-import '../../../core/ui/wax_seal.dart';
+import '../../../core/ui/stitches.dart';
+import '../../../core/ui/date_patch.dart';
+import '../../../core/ui/knit.dart';
+import '../../../core/ui/button_seal.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_form_widgets.dart';
 import '../../notifications/presentation/notification_prompt.dart';
@@ -20,7 +21,7 @@ import '../application/message_draft.dart';
 import 'delivery_format.dart';
 
 /// The draft read back before sealing. "Seal message" tucks the letter into
-/// its envelope while the message is saved; the wax is pressed once the
+/// its envelope while the message is saved; the button is sewn on once the
 /// server has it, then the app moves on to the sealed list. A failed save
 /// takes the letter back out and shows why.
 class ReviewScreen extends ConsumerStatefulWidget {
@@ -32,7 +33,7 @@ class ReviewScreen extends ConsumerStatefulWidget {
 
 /// Points along the sealing animation.
 const _flapClosed = 0.7;
-const _waxPressed = 0.82;
+const _buttonSewn = 0.82;
 
 class _ReviewScreenState extends ConsumerState<ReviewScreen>
     with SingleTickerProviderStateMixin {
@@ -72,9 +73,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen>
     ref.read(sealMessageControllerProvider.notifier).seal(draft);
   }
 
-  Future<void> _pressWax() async {
+  Future<void> _sewButton() async {
     await _tuckingIn;
-    await _animateTo(_waxPressed);
+    await _animateTo(_buttonSewn);
     unawaited(HapticFeedback.heavyImpact());
     await _animateTo(1);
   }
@@ -97,7 +98,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen>
 
     ref.listen(sealMessageControllerProvider, (_, next) async {
       if (next case AsyncData(value: final sealedFor?)) {
-        await _pressWax();
+        await _sewButton();
         if (!context.mounted) return;
         await offerNotifications(context, ref);
         if (!context.mounted) return;
@@ -122,20 +123,21 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen>
           title: Text(l10n.reviewTitle),
           automaticallyImplyLeading: false,
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _SealingStage(_sealing, label: l10n.reviewSealing),
-              const SizedBox(height: 32),
-              Text(
-                l10n.reviewSealing,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontStyle: FontStyle.italic,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+        body: Woven(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _SealingStage(_sealing, label: l10n.reviewSealing),
+                const SizedBox(height: 32),
+                Text(
+                  l10n.reviewSealing,
+                  style: Knit.of(context).letter.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
@@ -145,58 +147,60 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen>
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.reviewTitle)),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-        children: [
-          LetterPaper(
-            child: Text(draft.body, style: Stationery.of(context).letter),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Postmark(date: deliverAt, size: 64),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      deliverAt == null
-                          ? l10n.reviewNoDeliveryTime
-                          : formatDelivery(context, deliverAt, timezone),
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    Text(
-                      l10n.reviewSealedHint,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+      body: Woven(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          children: [
+            LetterPaper(
+              child: Text(draft.body, style: Knit.of(context).letter),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                DatePatch(date: deliverAt, size: 64),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        deliverAt == null
+                            ? l10n.reviewNoDeliveryTime
+                            : formatDelivery(context, deliverAt, timezone),
+                        style: theme.textTheme.titleMedium,
                       ),
-                    ),
-                  ],
+                      Text(
+                        l10n.reviewSealedHint,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          FormErrorText(errorMessage(context, state)),
-          const SizedBox(height: 24),
-          SubmitButton(
-            label: l10n.reviewSealButton,
-            isLoading: state.isLoading,
-            onPressed: () => _seal(draft),
-          ),
-          const SizedBox(height: 8),
-          OutlinedButton(
-            onPressed: state.isLoading ? null : () => context.pop(),
-            child: Text(l10n.reviewEdit),
-          ),
-        ],
+              ],
+            ),
+            FormErrorText(errorMessage(context, state)),
+            const SizedBox(height: 24),
+            SubmitButton(
+              label: l10n.reviewSealButton,
+              isLoading: state.isLoading,
+              onPressed: () => _seal(draft),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton(
+              onPressed: state.isLoading ? null : () => context.pop(),
+              child: Text(l10n.reviewEdit),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// The letter slides into its envelope, the flap closes and the wax is
-/// pressed onto it, following [progress] from 0 to 1.
+/// The letter slides into its envelope, the flap closes and a button is
+/// sewn onto it, following [progress] from 0 to 1.
 class _SealingStage extends StatelessWidget {
   const _SealingStage(this.progress, {required this.label});
 
@@ -207,10 +211,9 @@ class _SealingStage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Matches `Envelope`'s geometry: body height, headroom, flap tip.
-    const body = _width * 0.62;
-    const tip = body * 0.55 + body * 0.54;
-    const sealSize = body * 0.2 / 0.45;
+    final button = Envelope.buttonCenter(_width);
+    final buttonSize = Envelope.buttonRadius(_width) / ButtonSeal.radiusFactor;
+    const headroom = _width * 0.3;
     return Semantics(
       label: label,
       liveRegion: true,
@@ -223,10 +226,10 @@ class _SealingStage extends StatelessWidget {
             double to, [
             Curve curve = Curves.easeInOut,
           ]) => curve.transform(((t - from) / (to - from)).clamp(0, 1));
-          final press = phase(_flapClosed, _waxPressed, Curves.easeIn);
+          final press = phase(_flapClosed, _buttonSewn, Curves.easeIn);
           return Padding(
             // Room for the letter above the envelope.
-            padding: const EdgeInsets.only(top: body * 0.45),
+            padding: const EdgeInsets.only(top: headroom),
             child: SizedBox(
               width: _width,
               height: _width * Envelope.aspect,
@@ -241,13 +244,17 @@ class _SealingStage extends StatelessWidget {
                   ),
                   if (t > _flapClosed)
                     Positioned(
-                      left: (_width - sealSize) / 2,
-                      top: tip - sealSize / 2,
+                      left: button.dx - buttonSize / 2,
+                      top: button.dy - buttonSize / 2,
+                      // The button spins down onto the flap and is sewn on.
                       child: Opacity(
                         opacity: (press * 2).clamp(0, 1),
-                        child: Transform.scale(
-                          scale: 2.4 - 1.4 * press,
-                          child: const WaxSeal(size: sealSize),
+                        child: Transform.rotate(
+                          angle: -2.4 * (1 - press),
+                          child: Transform.scale(
+                            scale: 2.4 - 1.4 * press,
+                            child: ButtonSeal(size: buttonSize),
+                          ),
                         ),
                       ),
                     ),

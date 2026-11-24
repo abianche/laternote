@@ -4,7 +4,7 @@ import 'package:laternote/app/localization.dart';
 import 'package:laternote/app/theme.dart';
 import 'package:laternote/core/app_error.dart';
 import 'package:laternote/features/auth/data/auth_repository.dart';
-import 'package:laternote/core/ui/wax_seal.dart';
+import 'package:laternote/core/ui/button_seal.dart';
 import 'package:laternote/features/auth/presentation/sign_in_screen.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -28,6 +28,7 @@ void main() {
   testWidgets('shows validation errors for empty fields', (tester) async {
     await pumpScreen(tester);
 
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Sign in'));
     await tester.tap(find.widgetWithText(FilledButton, 'Sign in'));
     await tester.pump();
 
@@ -42,6 +43,7 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField).at(0), 'a@b.co');
     await tester.enterText(find.byType(TextFormField).at(1), 'secret123');
+    await tester.ensureVisible(find.widgetWithText(FilledButton, 'Sign in'));
     await tester.tap(find.widgetWithText(FilledButton, 'Sign in'));
     await tester.pumpAndSettle();
 
@@ -49,7 +51,7 @@ void main() {
     expect(find.text('Wrong email or password.'), findsOneWidget);
   });
 
-  testWidgets('builds under the app theme with seal, wordmark and tagline', (
+  testWidgets('builds under the app theme with button, wordmark and tagline', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -64,7 +66,7 @@ void main() {
     );
 
     expect(tester.takeException(), isNull);
-    expect(find.byType(WaxSeal), findsOneWidget);
+    expect(find.byType(ButtonSeal), findsOneWidget);
     expect(find.text('Laternote'), findsOneWidget);
     expect(find.text("A message to the person you'll become."), findsOneWidget);
     final button = tester.widget<FilledButton>(find.byType(FilledButton));

@@ -96,7 +96,7 @@ class _InboxTile extends StatelessWidget {
       envelope: Envelope(
         width: 56,
         flap: message.isNew ? 0 : 1,
-        crack: message.isNew ? 0 : 1,
+        undone: message.isNew ? 0 : 1,
         stamped: true,
       ),
       title: l10n.inboxArrived(arrived),

@@ -3,7 +3,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/routes.dart';
 import '../../../core/ui/envelope.dart';
-import '../../../core/ui/wax_seal.dart';
+import '../../../core/ui/knit.dart';
+import '../../../core/ui/stitches.dart';
+import '../../../core/ui/button_seal.dart';
 import '../../../core/ui/wordmark.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/validators.dart';
@@ -24,7 +26,7 @@ String? authFieldText(BuildContext context, AuthFieldProblem? problem) {
   };
 }
 
-/// Centered, width-capped, scrollable sheet of paper shared by the auth
+/// Centered, width-capped, scrollable fabric card shared by the auth
 /// screens.
 class AuthFormBody extends StatelessWidget {
   const AuthFormBody({required this.child, super.key});
@@ -33,14 +35,16 @@ class AuthFormBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Card(
-            margin: EdgeInsets.zero,
-            child: Padding(padding: const EdgeInsets.all(24), child: child),
+    return Woven(
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Card(
+              margin: EdgeInsets.zero,
+              child: Padding(padding: const EdgeInsets.all(24), child: child),
+            ),
           ),
         ),
       ),
@@ -48,7 +52,7 @@ class AuthFormBody extends StatelessWidget {
   }
 }
 
-/// The seal, the wordmark and what Laternote is for.
+/// The button, the wordmark and what Laternote is for.
 class AuthHeader extends StatelessWidget {
   const AuthHeader({super.key});
 
@@ -57,17 +61,16 @@ class AuthHeader extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        const WaxSeal(size: 72),
-        const SizedBox(height: 12),
+        const ButtonSeal(size: 72),
+        const SizedBox(height: 8),
         const Wordmark(size: 40),
         const SizedBox(height: 4),
         Text(
           AppLocalizations.of(context).authTagline,
           textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontStyle: FontStyle.italic,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          style: Knit.of(
+            context,
+          ).letter.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 32),
       ],

@@ -2,42 +2,53 @@ import 'dart:math';
 
 import 'package:material_ui/material_ui.dart';
 
-import 'stationery.dart';
-import 'wax_seal.dart';
+import 'button_seal.dart';
+import 'knit.dart';
+import 'stitches.dart';
 
-/// An envelope, drawn. Its height is [width] × [aspect], which includes room
-/// above it for the open flap and a rising letter.
+/// A felt envelope, drawn. Its height is [width] × [aspect], which includes
+/// room above it for the open flap and a rising letter.
 class Envelope extends StatelessWidget {
   const Envelope({
     super.key,
     this.width = 64,
     this.flap = 0,
     this.sealed = true,
-    this.crack = 0,
+    this.undone = 0,
     this.glow = 0,
     this.stamped = false,
+    this.calm = false,
     this.letter,
     this.semanticLabel,
   });
 
   static const aspect = _bodyRatio * (1 + _headroom);
 
+  /// Where the button sits on a closed envelope of [width], from its top
+  /// left corner, and the button's radius.
+  static Offset buttonCenter(double width) =>
+      Offset(width / 2, width * _bodyRatio * (_headroom + _tipDepth));
+  static double buttonRadius(double width) => width * _bodyRatio * _buttonRatio;
+
   final double width;
 
   /// 0 closed, 1 fully open.
   final double flap;
 
-  /// Whether a seal sits on the flap's tip.
+  /// Whether a button holds the flap shut.
   final bool sealed;
 
-  /// How broken the seal is, 0–1.
-  final double crack;
+  /// How far the button has come undone, 0–1.
+  final double undone;
 
-  /// Warm halo around the seal, 0–1.
+  /// Warm halo around the button, 0–1.
   final double glow;
 
-  /// A postmark: the letter was delivered.
+  /// A little heart patch: the letter was delivered.
   final bool stamped;
+
+  /// Sage felt, for a letter still on its way, instead of warm peach.
+  final bool calm;
 
   /// A letter inside: 0 tucked in, 1 risen out. Null for none.
   final double? letter;
@@ -50,13 +61,13 @@ class Envelope extends StatelessWidget {
     final painting = CustomPaint(
       size: Size(width, width * aspect),
       painter: EnvelopePainter(
-        Stationery.of(context),
-        outline: Theme.of(context).colorScheme.outline,
+        Knit.of(context),
         flap: flap,
         sealed: sealed,
-        crack: crack,
+        undone: undone,
         glow: glow,
         stamped: stamped,
+        calm: calm,
         letter: letter,
       ),
     );
@@ -67,28 +78,30 @@ class Envelope extends StatelessWidget {
   }
 }
 
-const _bodyRatio = 0.62;
+const _bodyRatio = 0.64;
 const _headroom = 0.55;
+const _tipDepth = 0.56;
+const _buttonRatio = 0.19;
 
 class EnvelopePainter extends CustomPainter {
   const EnvelopePainter(
-    this.s, {
-    required this.outline,
+    this.k, {
     required this.flap,
     required this.sealed,
-    required this.crack,
+    required this.undone,
     required this.glow,
     required this.stamped,
+    required this.calm,
     required this.letter,
   });
 
-  final Stationery s;
-  final Color outline;
+  final Knit k;
   final double flap;
   final bool sealed;
-  final double crack;
+  final double undone;
   final double glow;
   final bool stamped;
+  final bool calm;
   final double? letter;
 
   @override
@@ -97,20 +110,37 @@ class EnvelopePainter extends CustomPainter {
     final h = w * _bodyRatio;
     final top = h * _headroom;
     final body = Rect.fromLTWH(0, top, w, h);
-    final apex = Offset(w / 2, top + h * 0.54 * cos(pi * flap.clamp(0, 1)));
-    final flapOpen = apex.dy < top;
+    final corner = Radius.circular(w / 9);
+    final felt = calm ? k.envelopeCalm : k.envelope;
+    final inside = Color.lerp(felt, k.outline, 0.18)!;
+    final edgeWidth = max(1.3, w / 40);
     final edge = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = max(0.8, w / 120)
+      ..strokeWidth = edgeWidth
       ..strokeJoin = StrokeJoin.round
-      ..color = outline.withValues(alpha: 0.7);
-    final inside = Color.lerp(s.envelope, outline, 0.25)!;
+      ..strokeCap = StrokeCap.round
+      ..color = k.outline;
+    final seam = stitchPaint(
+      k.outline.withValues(alpha: 0.75),
+      width: max(1, w / 60),
+    );
+    final dash = max(2.5, w / 22);
+    final apex = Offset(
+      w / 2,
+      top + h * _tipDepth * cos(pi * flap.clamp(0, 1)),
+    );
+    final flapOpen = apex.dy < top + h * 0.05;
     Path tri(List<Offset> p) => Path()..addPolygon(p, true);
+    final inset = w * 0.06;
 
-    final back = RRect.fromRectAndRadius(body, Radius.circular(w / 40));
-    canvas
-      ..drawRRect(back, Paint()..color = inside)
-      ..drawRRect(back, edge);
+    final back = RRect.fromRectAndCorners(
+      body,
+      bottomLeft: corner,
+      bottomRight: corner,
+      topLeft: corner / 2,
+      topRight: corner / 2,
+    );
+    canvas.drawRRect(back, Paint()..color = inside);
 
     final flapPath = tri([body.topLeft, body.topRight, apex]);
     if (flapOpen) {
@@ -120,87 +150,137 @@ class EnvelopePainter extends CustomPainter {
     }
 
     if (letter case final rise?) {
-      final sheet = Rect.fromLTWH(
-        w * 0.08,
-        top + h * 0.06 - rise * h * 0.95,
-        w * 0.84,
-        h * 0.9,
+      final sheet = RRect.fromRectAndRadius(
+        Rect.fromLTWH(
+          w * 0.1,
+          top + h * 0.06 - rise * h * 0.95,
+          w * 0.8,
+          h * 0.9,
+        ),
+        Radius.circular(w / 30),
       );
       canvas
-        ..drawRect(sheet, Paint()..color = s.paper)
-        ..drawRect(sheet, edge);
+        ..drawRRect(sheet, Paint()..color = k.fabric)
+        ..drawRRect(sheet, edge..strokeWidth = edgeWidth * 0.7);
+      edge.strokeWidth = edgeWidth;
       final rule = Paint()
-        ..color = s.rule
-        ..strokeWidth = max(0.6, w / 200);
+        ..color = k.rule
+        ..strokeWidth = max(0.8, w / 150);
       for (var i = 1; i <= 5; i++) {
         final y = sheet.top + sheet.height * i / 6.5;
         canvas.drawLine(
           Offset(sheet.left + sheet.width * 0.1, y),
-          Offset(sheet.right - sheet.width * 0.08, y),
+          Offset(sheet.right - sheet.width * 0.1, y),
           rule,
         );
       }
     }
 
-    // The front pocket: two side folds and the bottom fold.
-    final middle = Offset(w / 2, top + h * 0.56);
-    final front = Paint()..color = s.envelope;
-    final shade = Paint()..color = Color.lerp(s.envelope, outline, 0.1)!;
-    for (final (path, paint) in [
-      (tri([body.topLeft, body.bottomLeft, middle]), shade),
-      (tri([body.topRight, body.bottomRight, middle]), shade),
-      (tri([body.bottomLeft, body.bottomRight, middle]), front),
-    ]) {
-      canvas
-        ..drawPath(path, paint)
-        ..drawPath(path, edge);
+    // The front pocket, with a stitched V where its folds meet.
+    final middle = Offset(w / 2, top + h * 0.5);
+    canvas
+      ..save()
+      ..clipRRect(back)
+      ..drawPath(
+        tri([
+          body.topLeft,
+          middle,
+          body.topRight,
+          body.bottomRight,
+          body.bottomLeft,
+        ]),
+        Paint()..color = felt,
+      )
+      ..restore();
+    if (flapOpen) {
+      drawStitches(
+        canvas,
+        Path()
+          ..moveTo(body.left + inset, body.top + inset * 0.8)
+          ..lineTo(middle.dx, middle.dy - inset * 0.3)
+          ..lineTo(body.right - inset, body.top + inset * 0.8),
+        seam,
+        dash: dash,
+        gap: dash * 0.8,
+      );
     }
+    canvas.drawRRect(back, edge);
 
     if (!flapOpen) {
+      final lit = Color.lerp(felt, k.fabric, 0.25)!;
       canvas
-        ..drawShadow(flapPath, const Color(0xFF000000), w / 80, false)
-        ..drawPath(flapPath, Paint()..color = s.envelope)
+        ..drawShadow(flapPath, const Color(0xFF000000), w / 70, false)
+        ..drawPath(flapPath, Paint()..color = lit)
         ..drawPath(flapPath, edge);
+      drawStitches(
+        canvas,
+        Path()
+          ..moveTo(body.left + inset * 1.6, body.top + inset * 0.7)
+          ..lineTo(apex.dx, apex.dy - inset * 1.1)
+          ..lineTo(body.right - inset * 1.6, body.top + inset * 0.7),
+        seam,
+        dash: dash,
+        gap: dash * 0.8,
+      );
     }
 
-    if (stamped) _paintStamp(canvas, body);
+    if (stamped) _paintHeart(canvas, body);
 
     if (sealed) {
-      paintWaxSeal(canvas, apex, h * 0.2, s, crack: crack, glow: glow);
+      paintButtonSeal(
+        canvas,
+        apex,
+        h * _buttonRatio,
+        k,
+        undone: undone,
+        glow: glow,
+      );
     }
   }
 
-  /// A small cancellation mark: two rings and wavy lines.
-  void _paintStamp(Canvas canvas, Rect body) {
-    final r = body.height * 0.15;
-    final c = Offset(body.right - r * 1.6, body.top + r * 1.6);
-    final ink = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = max(0.7, r / 9)
-      ..color = s.postmark.withValues(alpha: 0.75);
+  /// A little heart patch in the corner, sewn on at delivery.
+  void _paintHeart(Canvas canvas, Rect body) {
+    final s = body.height * 0.2;
+    final c = Offset(body.left + s * 1.2, body.bottom - s * 1.1);
+    final heart = Path()
+      ..moveTo(c.dx, c.dy + s * 0.45)
+      ..cubicTo(
+        c.dx - s * 0.9,
+        c.dy - s * 0.1,
+        c.dx - s * 0.45,
+        c.dy - s * 0.75,
+        c.dx,
+        c.dy - s * 0.3,
+      )
+      ..cubicTo(
+        c.dx + s * 0.45,
+        c.dy - s * 0.75,
+        c.dx + s * 0.9,
+        c.dy - s * 0.1,
+        c.dx,
+        c.dy + s * 0.45,
+      )
+      ..close();
     canvas
-      ..drawCircle(c, r, ink)
-      ..drawCircle(c, r * 0.72, ink);
-    for (var line = -1; line <= 1; line++) {
-      final wave = Path()..moveTo(c.dx - r * 1.3, c.dy + line * r * 0.45);
-      for (var x = 0.0; x <= r * 2.4; x += r / 6) {
-        wave.lineTo(
-          c.dx - r * 1.3 - x,
-          c.dy + line * r * 0.45 + sin(x / r * 4) * r * 0.12,
-        );
-      }
-      canvas.drawPath(wave, ink);
-    }
+      ..drawPath(heart, Paint()..color = k.patch)
+      ..drawPath(
+        heart,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = max(1, s / 8)
+          ..strokeJoin = StrokeJoin.round
+          ..color = k.outline,
+      );
   }
 
   @override
   bool shouldRepaint(EnvelopePainter old) =>
-      old.s != s ||
-      old.outline != outline ||
+      old.k != k ||
       old.flap != flap ||
       old.sealed != sealed ||
-      old.crack != crack ||
+      old.undone != undone ||
       old.glow != glow ||
       old.stamped != stamped ||
+      old.calm != calm ||
       old.letter != letter;
 }
