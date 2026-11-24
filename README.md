@@ -11,6 +11,8 @@
 
 ### A message to the person you'll become.
 
+![Laternote screens: inbox, writing a letter, sign in, and the sewn button and felt envelopes](docs/images/knitted.png)
+
 Laternote is a personal time-capsule app that lets you write messages to your future self.
 
 Capture thoughts, preserve memories, record intentions, or leave advice for the person you'll become. Choose a future date, seal your message, and rediscover it when the time comes.
