@@ -2,13 +2,16 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/clock.dart';
+import '../../../core/ui/envelope.dart';
 import '../../../core/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/delete_message_controller.dart';
 import '../application/upcoming_messages.dart';
 import '../data/scheduled_message.dart';
+import 'countdown.dart';
 import 'delivery_format.dart';
+import 'envelope_tile.dart';
 import 'list_notice.dart';
 
 /// The user's sealed messages, showing only when each opens and when it
@@ -42,13 +45,19 @@ class UpcomingMessagesList extends ConsumerWidget {
         child: list.isEmpty
             ? FillScroll(
                 child: ListNotice(
-                  icon: Icons.mark_email_unread_outlined,
+                  illustration: const Envelope(
+                    width: 120,
+                    flap: 1,
+                    sealed: false,
+                    calm: true,
+                    letter: 0.45,
+                  ),
                   text: l10n.sealedEmpty,
                 ),
               )
             : ListView.builder(
                 // Room for the floating action button.
-                padding: const EdgeInsets.only(bottom: 88),
+                padding: const EdgeInsets.only(top: 12, bottom: 88),
                 itemCount: list.length,
                 itemBuilder: (context, i) => _MessageTile(list[i]),
               ),
@@ -91,16 +100,24 @@ class _MessageTile extends ConsumerWidget {
     final openingSoon = message.isOpeningSoon(now);
     final deleting = ref.watch(deleteMessageControllerProvider).isLoading;
     final l10n = AppLocalizations.of(context);
-    return ListTile(
-      leading: Icon(openingSoon ? Icons.hourglass_top : Icons.lock_clock),
-      title: Text(
-        openingSoon
-            ? l10n.sealedOpeningSoon
-            : l10n.sealedOpens(
-                formatDelivery(context, message.scheduledFor, zone),
+    return EnvelopeTile(
+      envelope: openingSoon
+          ? const _GlowingEnvelope()
+          : const Envelope(width: 56, calm: true),
+      title: openingSoon
+          ? l10n.sealedOpeningSoon
+          : l10n.sealedOpens(
+              formatDelivery(context, message.scheduledFor, zone),
+            ),
+      subtitle: l10n.sealedOn(sealed),
+      note: openingSoon
+          ? null
+          : l10n.sealedCountdown(
+              formatCountdown(
+                l10n,
+                countdownBetween(now, message.scheduledFor),
               ),
-      ),
-      subtitle: Text(l10n.sealedOn(sealed)),
+            ),
       // Past its time the server refuses deletion, so don't offer it.
       trailing: openingSoon
           ? null
@@ -137,4 +154,48 @@ class _MessageTile extends ConsumerWidget {
       await controller.delete(message.id);
     }
   }
+}
+
+/// An envelope about to open: its button glows a few times, then stays warm.
+class _GlowingEnvelope extends StatefulWidget {
+  const _GlowingEnvelope();
+
+  @override
+  State<_GlowingEnvelope> createState() => _GlowingEnvelopeState();
+}
+
+class _GlowingEnvelopeState extends State<_GlowingEnvelope>
+    with SingleTickerProviderStateMixin {
+  late final _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _pulse.value = 1;
+    } else if (!_pulse.isAnimating && _pulse.value == 0) {
+      // A cancelled ticker (on dispose) never completes this future.
+      _pulse.repeat(reverse: true, count: 6).then((_) {
+        if (mounted) _pulse.value = 1;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _pulse,
+    builder: (context, _) => Envelope(
+      width: 56,
+      glow: 0.35 + 0.65 * Curves.easeInOut.transform(_pulse.value),
+    ),
+  );
 }

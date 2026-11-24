@@ -2,6 +2,11 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/routes.dart';
+import '../../../core/ui/envelope.dart';
+import '../../../core/ui/knit.dart';
+import '../../../core/ui/stitches.dart';
+import '../../../core/ui/button_seal.dart';
+import '../../../core/ui/wordmark.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/validators.dart';
 
@@ -21,7 +26,8 @@ String? authFieldText(BuildContext context, AuthFieldProblem? problem) {
   };
 }
 
-/// Centered, width-capped, scrollable body shared by the auth screens.
+/// Centered, width-capped, scrollable fabric card shared by the auth
+/// screens.
 class AuthFormBody extends StatelessWidget {
   const AuthFormBody({required this.child, super.key});
 
@@ -29,14 +35,45 @@ class AuthFormBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: child,
+    return Woven(
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Card(
+              margin: EdgeInsets.zero,
+              child: Padding(padding: const EdgeInsets.all(24), child: child),
+            ),
+          ),
         ),
       ),
+    );
+  }
+}
+
+/// The button, the wordmark and what Laternote is for.
+class AuthHeader extends StatelessWidget {
+  const AuthHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        const ButtonSeal(size: 72),
+        const SizedBox(height: 8),
+        const Wordmark(size: 40),
+        const SizedBox(height: 4),
+        Text(
+          AppLocalizations.of(context).authTagline,
+          textAlign: TextAlign.center,
+          style: Knit.of(
+            context,
+          ).letter.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 32),
+      ],
     );
   }
 }
@@ -83,7 +120,9 @@ class FormErrorText extends StatelessWidget {
       padding: const EdgeInsets.only(top: 16),
       child: Text(
         message,
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.error,
+        ),
       ),
     );
   }
@@ -105,7 +144,7 @@ class EmailSentMessage extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.mark_email_read_outlined, size: 48),
+        const Envelope(width: 96, sealed: false, stamped: true),
         const SizedBox(height: 16),
         Text(
           message,

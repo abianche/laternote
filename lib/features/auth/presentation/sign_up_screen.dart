@@ -62,6 +62,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const AuthHeader(),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,

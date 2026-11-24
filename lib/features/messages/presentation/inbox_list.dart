@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/routes.dart';
+import '../../../core/ui/envelope.dart';
 import '../../../core/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/inbox.dart';
 import '../data/available_message.dart';
+import 'envelope_tile.dart';
 import 'list_notice.dart';
 
 /// Released messages: new ones first, then the read archive. Lists dates
@@ -29,7 +31,10 @@ class InboxList extends ConsumerWidget {
             onRefresh: refresh,
             child: FillScroll(
               child: ListNotice(
-                icon: Icons.inbox_outlined,
+                illustration: const Opacity(
+                  opacity: 0.6,
+                  child: Envelope(width: 120, flap: 1, sealed: false),
+                ),
                 text: l10n.inboxEmpty,
               ),
             ),
@@ -41,14 +46,14 @@ class InboxList extends ConsumerWidget {
           onRefresh: refresh,
           child: ListView(
             // Room for the floating action button.
-            padding: const EdgeInsets.only(bottom: 88),
+            padding: const EdgeInsets.only(top: 4, bottom: 88),
             children: [
               if (fresh.isNotEmpty) ...[
-                _Header(l10n.inboxNewHeader),
+                EnvelopeGroupHeader(l10n.inboxNewHeader),
                 for (final m in fresh) _InboxTile(m),
               ],
               if (read.isNotEmpty) ...[
-                _Header(l10n.inboxReadHeader),
+                EnvelopeGroupHeader(l10n.inboxReadHeader),
                 for (final m in read) _InboxTile(m),
               ],
             ],
@@ -76,26 +81,6 @@ class InboxList extends ConsumerWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(
-        text,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
-      ),
-    );
-  }
-}
-
 class _InboxTile extends StatelessWidget {
   const _InboxTile(this.message);
 
@@ -107,17 +92,17 @@ class _InboxTile extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final arrived = material.formatShortDate(message.releasedAt);
     final written = material.formatShortDate(message.createdAt);
-    return ListTile(
-      leading: Icon(
-        message.isNew ? Icons.mark_email_unread : Icons.drafts_outlined,
+    return EnvelopeTile(
+      envelope: Envelope(
+        width: 56,
+        flap: message.isNew ? 0 : 1,
+        undone: message.isNew ? 0 : 1,
+        stamped: true,
       ),
-      title: Text(
-        l10n.inboxArrived(arrived),
-        style: message.isNew
-            ? const TextStyle(fontWeight: FontWeight.bold)
-            : null,
-      ),
-      subtitle: Text(l10n.inboxWrittenOn(written)),
+      title: l10n.inboxArrived(arrived),
+      subtitle: l10n.inboxWrittenOn(written),
+      emphasized: message.isNew,
+      faded: !message.isNew,
       onTap: () => context.go(Routes.message(message.id)),
     );
   }

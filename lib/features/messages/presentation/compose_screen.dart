@@ -6,6 +6,11 @@ import '../../../app/routes.dart';
 import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
 import '../../../core/tables.dart';
+import '../../../core/ui/letter_paper.dart';
+import '../../../core/ui/stitches.dart';
+import '../../../core/ui/date_patch.dart';
+import '../../../core/ui/knit.dart';
+import '../../../core/ui/button_seal.dart';
 import '../../../l10n/app_localizations.dart';
 import '../application/compose_controllers.dart';
 import '../application/message_draft.dart';
@@ -55,11 +60,13 @@ class ComposeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: switch (draft) {
-        AsyncData() => const _ComposeForm(),
-        AsyncError() => Center(child: Text(errorMessage(context, draft)!)),
-        _ => const Center(child: CircularProgressIndicator()),
-      },
+      body: Woven(
+        child: switch (draft) {
+          AsyncData() => const _ComposeForm(),
+          AsyncError() => Center(child: Text(errorMessage(context, draft)!)),
+          _ => const Center(child: CircularProgressIndicator()),
+        },
+      ),
     );
   }
 }
@@ -130,6 +137,8 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final knit = Knit.of(context);
     final draft = ref.watch(composeDraftProvider).requireValue;
     final saveFailed = ref.watch(draftSaveFailedProvider);
     final timezone = ref.watch(deviceTimezoneProvider).value;
@@ -140,57 +149,117 @@ class _ComposeFormState extends ConsumerState<_ComposeForm> {
 
     return Form(
       key: _formKey,
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          TextFormField(
-            controller: _bodyController,
-            decoration: InputDecoration(
-              labelText: l10n.composeBodyLabel,
-              alignLabelWithHint: true,
-              border: const OutlineInputBorder(),
+      // Not a lazy list: the status line below the letter is always built.
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            LetterPaper(
+              child: TextFormField(
+                controller: _bodyController,
+                style: knit.letter,
+                // Written straight onto the paper's rules: no field chrome.
+                decoration: InputDecoration(
+                  hintText: l10n.composeBodyHint,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                minLines: 10,
+                maxLines: null,
+                maxLength: maxMessageLength,
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
+                validator: (value) {
+                  final problem = validateBody(value);
+                  return problem == null ? null : validationText(l10n, problem);
+                },
+                onChanged: ref.read(composeDraftProvider.notifier).setBody,
+              ),
             ),
-            minLines: 8,
-            maxLines: null,
-            maxLength: maxMessageLength,
-            keyboardType: TextInputType.multiline,
-            textCapitalization: TextCapitalization.sentences,
-            validator: (value) {
-              final problem = validateBody(value);
-              return problem == null ? null : validationText(l10n, problem);
-            },
-            onChanged: ref.read(composeDraftProvider.notifier).setBody,
-          ),
-          const SizedBox(height: 8),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.schedule),
-            title: Text(l10n.composeDeliverOn),
-            subtitle: Text(
-              deliverAt == null
-                  ? l10n.composePickDateTime
-                  : formatDelivery(context, deliverAt, timezone),
+            const SizedBox(height: 16),
+            Card(
+              margin: EdgeInsets.zero,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: _pickDelivery,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+                  child: Row(
+                    children: [
+                      DatePatch(date: deliverAt, size: 64),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.composeDeliverOn,
+                              style: knit.label.copyWith(
+                                color: theme.colorScheme.secondary,
+                              ),
+                            ),
+                            Text(
+                              deliverAt == null
+                                  ? l10n.composePickDateTime
+                                  : formatDelivery(
+                                      context,
+                                      deliverAt,
+                                      timezone,
+                                    ),
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.edit_calendar_outlined,
+                        color: theme.hintColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            onTap: _pickDelivery,
-          ),
-          if (deliveryError != null)
+            if (deliveryError != null)
+              Text(
+                validationText(l10n, deliveryError),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _review,
+              // A cream disc so the red sewn button shows on the red one.
+              icon: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onPrimary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(1),
+                  child: ButtonSeal(size: 22),
+                ),
+              ),
+              label: Text(l10n.composeSeal),
+            ),
+            const SizedBox(height: 8),
             Text(
-              validationText(l10n, deliveryError),
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              saveFailed ? l10n.composeSaveFailed : l10n.composeSavedLocally,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: saveFailed
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
             ),
-          const SizedBox(height: 24),
-          FilledButton(onPressed: _review, child: Text(l10n.composeSeal)),
-          const SizedBox(height: 8),
-          Text(
-            saveFailed ? l10n.composeSaveFailed : l10n.composeSavedLocally,
-            style: saveFailed
-                ? Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  )
-                : Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

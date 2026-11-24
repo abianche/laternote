@@ -27,7 +27,7 @@ void main() {
   late FakePushRepository push;
   late ProviderContainer container;
 
-  Future<void> pumpApp(WidgetTester tester) async {
+  Future<void> pumpApp(WidgetTester tester, {bool animations = true}) async {
     final router = GoRouter(
       initialLocation: Routes.compose,
       routes: [
@@ -56,6 +56,12 @@ void main() {
         child: MaterialApp.router(
           localizationsDelegates: appLocalizationsDelegates,
           routerConfig: router,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(disableAnimations: !animations),
+            child: child!,
+          ),
         ),
       ),
     );
@@ -124,6 +130,38 @@ void main() {
     expect(find.textContaining('Sealed until'), findsOneWidget);
     expect(find.textContaining('Opens '), findsOneWidget);
     expect(find.text('Dear me'), findsNothing);
+    expect(drafts.stored, isNull);
+  });
+
+  testWidgets('sealing tucks the letter into its envelope first', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
+    await tapButton(tester, 'Seal…');
+    await tester.tap(find.text('Seal message'));
+    await tester.pump();
+
+    expect(find.text('Sealing your message'), findsOneWidget);
+    expect(find.text('Dear me'), findsNothing);
+
+    await tester.pumpAndSettle();
+    expect(find.byType(UpcomingMessagesList), findsOneWidget);
+  });
+
+  testWidgets('with animations off, sealing ends the same way', (
+    tester,
+  ) async {
+    await pumpApp(tester, animations: false);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
+    await tapButton(tester, 'Seal…');
+    await tapButton(tester, 'Seal message');
+
+    expect(repository.calls, hasLength(1));
+    expect(find.byType(UpcomingMessagesList), findsOneWidget);
+    expect(find.textContaining('Sealed until'), findsOneWidget);
     expect(drafts.stored, isNull);
   });
 

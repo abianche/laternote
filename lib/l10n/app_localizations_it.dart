@@ -125,6 +125,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get authSignInTitle => 'Accedi';
 
   @override
+  String get authTagline => 'Un messaggio per la persona che diventerai.';
+
+  @override
   String get authSignInButton => 'Accedi';
 
   @override
@@ -232,6 +235,69 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String sealedCountdown(String duration) {
+    return 'tra $duration';
+  }
+
+  @override
+  String countdownYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count anni',
+      one: '1 anno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownMonths(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mesi',
+      one: '1 mese',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni',
+      one: '1 giorno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ore',
+      one: '1 ora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuti',
+      one: '1 minuto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get countdownUnderMinute => 'meno di un minuto';
+
+  @override
   String get sealedDeleted => 'Messaggio eliminato.';
 
   @override
@@ -243,6 +309,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get messageTitle => 'Messaggio';
+
+  @override
+  String get messageOpeningEnvelope =>
+      'Apertura della busta. Tocca per saltare.';
 
   @override
   String get messageUnavailable =>
@@ -290,7 +360,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get composeDiscard => 'Elimina';
 
   @override
-  String get composeBodyLabel => 'Il tuo messaggio';
+  String get composeBodyHint => 'Ciao, futuro me,';
 
   @override
   String get composeDeliverOn => 'Consegna il';
@@ -311,6 +381,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get reviewTitle => 'Rivedi';
+
+  @override
+  String get reviewSealing => 'Sigillatura del messaggio';
 
   @override
   String get reviewNoDeliveryTime => 'Nessun orario di consegna';
