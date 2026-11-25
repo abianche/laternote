@@ -4,7 +4,7 @@ Local-only Flutter app (no backend). Read `docs/ARCHITECTURE.md` before any task
 
 ## Rules
 
-- **No fallbacks or backward compatibility, ever.** Laternote is a new app with no legacy users, data, or APIs to support. Use only the current recommended approach for every library and service. Do not add fallback code paths, legacy aliases, deprecated options, compatibility shims, or migration code for old formats. When something changes, replace it outright.
+- **No fallbacks or backward compatibility, ever.** Laternote is a new app with no legacy users, data, or APIs to support. Use only the current recommended approach for every library and service. Do not add fallback code paths, legacy aliases, deprecated options, compatibility shims, or migration code for old formats. When something changes, replace it outright. The one exception is the drift schema (below).
 
 ## Workflow
 
@@ -25,6 +25,7 @@ Local-only Flutter app (no backend). Read `docs/ARCHITECTURE.md` before any task
 
 - Never commit secrets or signing material.
 - The database schema is defined only in drift tables; no raw SQL outside drift.
+- Letters live only on the user's device, so a schema change must never lose them: every change bumps drift's `schemaVersion` and ships a migration with a test against the schema snapshots (see `docs/ARCHITECTURE.md` › Storage).
 - New pub packages must be justified in the PR description.
 - Don't touch code unrelated to the current issue.
 
