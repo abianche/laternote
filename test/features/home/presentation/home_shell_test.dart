@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/app/localization.dart';
+import 'package:laternote/app/theme.dart';
 import 'package:laternote/features/home/presentation/home_shell.dart';
 import 'package:laternote/features/messages/application/compose_controllers.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
@@ -9,7 +10,11 @@ import 'package:material_ui/material_ui.dart';
 import '../../messages/fake_messages_repository.dart';
 
 void main() {
-  Future<void> pump(WidgetTester tester, HomeShell shell) => tester.pumpWidget(
+  Future<void> pump(
+    WidgetTester tester,
+    HomeShell shell, {
+    ThemeData? theme,
+  }) => tester.pumpWidget(
     ProviderScope(
       overrides: [
         messagesRepositoryProvider.overrideWithValue(
@@ -20,6 +25,7 @@ void main() {
         ),
       ],
       child: MaterialApp(
+        theme: theme,
         localizationsDelegates: appLocalizationsDelegates,
         home: shell,
       ),
@@ -45,5 +51,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Nothing sealed yet'), findsOneWidget);
+  });
+
+  testWidgets('builds under the dark theme', (tester) async {
+    await pump(tester, const HomeShell(), theme: appDarkTheme);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(
+      Theme.of(tester.element(find.byType(HomeShell))).brightness,
+      Brightness.dark,
+    );
+    expect(find.textContaining('Nothing has opened yet'), findsOneWidget);
   });
 }

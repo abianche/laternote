@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laternote/app/app.dart';
+import 'package:laternote/app/theme.dart';
 import 'package:laternote/features/messages/application/compose_controllers.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/notifications/data/local_notifications_repository.dart';
@@ -38,6 +39,23 @@ void main() {
     expect(find.text('Inbox'), findsOneWidget);
     expect(find.textContaining('Nothing has opened yet'), findsOneWidget);
     expect(find.text('New message'), findsOneWidget);
+  });
+
+  testWidgets('follows the OS light/dark setting', (tester) async {
+    await launch(tester);
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.theme, appTheme);
+    expect(app.darkTheme, appDarkTheme);
+    expect(app.themeMode, ThemeMode.system);
+
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+    await tester.pumpAndSettle();
+
+    expect(
+      Theme.of(tester.element(find.text('Inbox'))).brightness,
+      Brightness.dark,
+    );
   });
 
   testWidgets('settings has notifications, export, import and privacy', (

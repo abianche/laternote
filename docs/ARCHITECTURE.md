@@ -48,10 +48,11 @@ test/                  # mirrors lib/
 
 ## Look and feel
 
-- "Knitted": warm, soft and homemade. A message is a letter on stitched cream fabric, in a felt envelope kept shut by a sewn-on button that comes undone when it opens. Light mode only for now.
-- `appTheme` (`app/theme.dart`) sets an oat/tomato/sage/mustard `ColorScheme`, Fredoka for all UI text, and the component themes (stitched cards, pill buttons and tabs). Presentation widgets take colors and text styles from the theme, never inline values. A test keeps key text colors at WCAG AA contrast.
+- "Knitted": warm, soft and homemade. A message is a letter on stitched cream fabric, in a felt envelope kept shut by a sewn-on button that comes undone when it opens.
+- Light and dark: `MaterialApp` has `theme` and `darkTheme` and follows the OS setting (`ThemeMode.system`, no in-app toggle). Dark mode is deep bark-brown wool with brighter tomato/sage/mustard.
+- `appTheme` and `appDarkTheme` (`app/theme.dart`) are built by one function from an oat/tomato/sage/mustard `ColorScheme` (light or dark) and a `Knit` set, Fredoka for all UI text, and the component themes (stitched cards, pill buttons and tabs). Presentation widgets take colors and text styles from the theme, never inline values. A test keeps key text colors at WCAG AA contrast in both themes.
 - Fredoka and Caveat (SIL OFL, variable fonts) are bundled in `assets/fonts/` with their licences; fonts are never fetched at runtime.
-- `Knit` (`core/ui/knit.dart`) is a `ThemeExtension` for what Material has no role for: button, felt, thread and stitch colors, the handwritten letter style (Caveat), the wordmark and labels.
+- `Knit` (`core/ui/knit.dart`, `Knit.light` and `Knit.dark`) is a `ThemeExtension` for what Material has no role for: button, felt, thread and stitch colors, the handwritten letter style (Caveat), the wordmark and labels.
 - `core/ui/stitches.dart` has the stitched shapes the theme uses (`StitchedBorder`, `StitchedPill`) and `Woven`, the fabric texture behind the main screens.
 - `core/ui/` holds the drawn pieces (`ButtonSeal`, `Envelope`, `DatePatch`, `LetterPaper`, `Wordmark`), all `CustomPainter`, decorative to screen readers unless given a label.
 - Sealing (review) and the first opening of a message are animated. Animations are skipped when the OS turns them off, a tap skips the opening, and neither changes what is saved or where the app goes.
