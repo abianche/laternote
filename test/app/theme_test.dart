@@ -13,6 +13,20 @@ double contrast(Color a, Color b) {
 }
 
 void main() {
+  for (final (mode, theme, knit) in [
+    ('light', appTheme, Knit.light),
+    ('dark', appDarkTheme, Knit.dark),
+  ]) {
+    group(mode, () => themeTests(theme, knit));
+  }
+
+  test('the themes are light and dark', () {
+    expect(appTheme.brightness, Brightness.light);
+    expect(appDarkTheme.brightness, Brightness.dark);
+  });
+}
+
+void themeTests(ThemeData appTheme, Knit knit) {
   final scheme = appTheme.colorScheme;
 
   test('text colors meet WCAG AA on their backgrounds', () {
@@ -26,6 +40,10 @@ void main() {
       'tertiary/card': (scheme.tertiary, scheme.surfaceContainerLowest),
       'error/surface': (scheme.error, scheme.surface),
       'snackbar': (scheme.onInverseSurface, scheme.inverseSurface),
+      'snackbar action': (scheme.inversePrimary, scheme.inverseSurface),
+      'letter/paper': (knit.letter.color!, knit.fabric),
+      'tab label/indicator': (knit.outline, knit.glow),
+      'wordmark/surface': (knit.wordmark.color!, scheme.surface),
     };
     for (final MapEntry(key: name, value: (fg, bg)) in pairs.entries) {
       expect(contrast(fg, bg), greaterThanOrEqualTo(4.5), reason: name);
@@ -52,7 +70,7 @@ void main() {
       isA<StitchedBorder>(),
     );
     expect(appTheme.tabBarTheme.indicator, isA<StitchedPill>());
-    expect(appTheme.extension<Knit>(), Knit.standard);
+    expect(appTheme.extension<Knit>(), knit);
   });
 
   test('UI text is in Fredoka, letters in Caveat', () {
@@ -67,6 +85,6 @@ void main() {
     ]) {
       expect(style?.fontFamily, 'Fredoka');
     }
-    expect(Knit.standard.letter.fontFamily, 'Caveat');
+    expect(knit.letter.fontFamily, 'Caveat');
   });
 }

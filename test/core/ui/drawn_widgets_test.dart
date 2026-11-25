@@ -10,9 +10,15 @@ import 'package:laternote/core/ui/wordmark.dart';
 import 'package:material_ui/material_ui.dart';
 
 void main() {
+  for (final (mode, theme) in [('light', appTheme), ('dark', appDarkTheme)]) {
+    group(mode, () => drawnWidgetTests(theme));
+  }
+}
+
+void drawnWidgetTests(ThemeData theme) {
   Future<void> pump(WidgetTester tester, Widget child) => tester.pumpWidget(
     MaterialApp(
-      theme: appTheme,
+      theme: theme,
       localizationsDelegates: appLocalizationsDelegates,
       home: Scaffold(body: Center(child: child)),
     ),
