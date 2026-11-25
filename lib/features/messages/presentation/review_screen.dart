@@ -23,7 +23,7 @@ import 'delivery_format.dart';
 /// The draft read back before sealing. "Seal message" tucks the letter into
 /// its envelope while the message is saved; the button is sewn on once the
 /// letter is saved, then the app moves on to the sealed list. A failed save
-/// takes the letter back out and shows why.
+/// takes the letter back out and shows why. Back is blocked while sealing.
 class ReviewScreen extends ConsumerStatefulWidget {
   const ReviewScreen({super.key});
 
@@ -118,25 +118,30 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen>
     });
 
     if (_tuckingIn != null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.reviewTitle),
-          automaticallyImplyLeading: false,
-        ),
-        body: Woven(
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _SealingStage(_sealing, label: l10n.reviewSealing),
-                const SizedBox(height: 32),
-                Text(
-                  l10n.reviewSealing,
-                  style: Knit.of(context).letter.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+      // Leaving mid-save would look like a bug; back works again once a
+      // failed save takes the letter back out.
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.reviewTitle),
+            automaticallyImplyLeading: false,
+          ),
+          body: Woven(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _SealingStage(_sealing, label: l10n.reviewSealing),
+                  const SizedBox(height: 32),
+                  Text(
+                    l10n.reviewSealing,
+                    style: Knit.of(context).letter.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
