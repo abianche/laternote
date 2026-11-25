@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:laternote/core/tables.dart';
+import 'package:laternote/core/limits.dart';
 import 'package:laternote/features/messages/application/message_draft.dart';
 
 void main() {

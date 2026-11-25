@@ -1,5 +1,5 @@
 import '../../../core/app_error.dart';
-import '../../../core/tables.dart';
+import '../../../core/limits.dart';
 
 /// A message being composed. [deliverAt] is a device-local time, null until
 /// picked.
