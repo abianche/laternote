@@ -45,10 +45,7 @@ void main() {
   test('every app error has its own text', () {
     final errors = <AppError>[
       const NetworkError(),
-      const SignedOutError(),
-      const AccountAlreadyExistsError(),
       const UnexpectedError(),
-      ...[for (final f in AuthFailure.values) AuthError(f)],
       ...[for (final p in ValidationProblem.values) ValidationError(p)],
     ];
     final texts = errors.map((e) => appErrorText(en, e)).toSet();

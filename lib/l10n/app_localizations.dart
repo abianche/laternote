@@ -110,96 +110,6 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get errorUnexpected;
 
-  /// No description provided for @errorSignedOut.
-  ///
-  /// In en, this message translates to:
-  /// **'You are signed out. Sign in and try again.'**
-  String get errorSignedOut;
-
-  /// No description provided for @errorInvalidCredentials.
-  ///
-  /// In en, this message translates to:
-  /// **'Wrong email or password.'**
-  String get errorInvalidCredentials;
-
-  /// No description provided for @errorEmailNotConfirmed.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm your email address before signing in.'**
-  String get errorEmailNotConfirmed;
-
-  /// No description provided for @errorWeakPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose a stronger password.'**
-  String get errorWeakPassword;
-
-  /// No description provided for @errorSamePassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose a password different from your current one.'**
-  String get errorSamePassword;
-
-  /// No description provided for @errorRateLimited.
-  ///
-  /// In en, this message translates to:
-  /// **'Too many attempts. Wait a moment and try again.'**
-  String get errorRateLimited;
-
-  /// No description provided for @errorLinkExpired.
-  ///
-  /// In en, this message translates to:
-  /// **'This link has expired. Request a new one.'**
-  String get errorLinkExpired;
-
-  /// No description provided for @errorAuthFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'That didn\'t work. Check your details and try again.'**
-  String get errorAuthFailed;
-
-  /// No description provided for @errorAccountExists.
-  ///
-  /// In en, this message translates to:
-  /// **'An account already exists.'**
-  String get errorAccountExists;
-
-  /// No description provided for @validationEmailEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter your email address.'**
-  String get validationEmailEmpty;
-
-  /// No description provided for @validationEmailInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter a valid email address.'**
-  String get validationEmailInvalid;
-
-  /// No description provided for @validationPasswordEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter a password.'**
-  String get validationPasswordEmpty;
-
-  /// No description provided for @validationPasswordTooShort.
-  ///
-  /// In en, this message translates to:
-  /// **'Password must be at least {min} characters.'**
-  String validationPasswordTooShort(int min);
-
-  /// No description provided for @validationConfirmationEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm your password.'**
-  String get validationConfirmationEmpty;
-
-  /// No description provided for @validationPasswordsDiffer.
-  ///
-  /// In en, this message translates to:
-  /// **'Passwords do not match.'**
-  String get validationPasswordsDiffer;
-
   /// No description provided for @validationBodyEmpty.
   ///
   /// In en, this message translates to:
@@ -248,131 +158,11 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get commonDelete;
 
-  /// No description provided for @commonEmail.
+  /// No description provided for @homeSettingsTooltip.
   ///
   /// In en, this message translates to:
-  /// **'Email'**
-  String get commonEmail;
-
-  /// No description provided for @commonPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Password'**
-  String get commonPassword;
-
-  /// No description provided for @authSignInTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign in'**
-  String get authSignInTitle;
-
-  /// No description provided for @authTagline.
-  ///
-  /// In en, this message translates to:
-  /// **'A message to the person you\'ll become.'**
-  String get authTagline;
-
-  /// No description provided for @authSignInButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign in'**
-  String get authSignInButton;
-
-  /// No description provided for @authForgotPasswordLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Forgot password?'**
-  String get authForgotPasswordLink;
-
-  /// No description provided for @authSignUpLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Don\'t have an account? Sign up'**
-  String get authSignUpLink;
-
-  /// No description provided for @authCreateAccountTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Create account'**
-  String get authCreateAccountTitle;
-
-  /// No description provided for @authCreateAccountButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Create account'**
-  String get authCreateAccountButton;
-
-  /// No description provided for @authConfirmPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm password'**
-  String get authConfirmPassword;
-
-  /// No description provided for @authConfirmEmailSent.
-  ///
-  /// In en, this message translates to:
-  /// **'Check your email to confirm your account before signing in.'**
-  String get authConfirmEmailSent;
-
-  /// No description provided for @authBackToSignIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Back to sign in'**
-  String get authBackToSignIn;
-
-  /// No description provided for @authResetPasswordTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset password'**
-  String get authResetPasswordTitle;
-
-  /// No description provided for @authResetPasswordIntro.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter your account\'s email and we\'ll send a link to reset your password.'**
-  String get authResetPasswordIntro;
-
-  /// No description provided for @authSendResetLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Send reset link'**
-  String get authSendResetLink;
-
-  /// No description provided for @authResetLinkSent.
-  ///
-  /// In en, this message translates to:
-  /// **'If an account exists for that email, a reset link has been sent.'**
-  String get authResetLinkSent;
-
-  /// No description provided for @authNewPasswordTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Set a new password'**
-  String get authNewPasswordTitle;
-
-  /// No description provided for @authNewPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'New password'**
-  String get authNewPassword;
-
-  /// No description provided for @authConfirmNewPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm new password'**
-  String get authConfirmNewPassword;
-
-  /// No description provided for @authUpdatePassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Update password'**
-  String get authUpdatePassword;
-
-  /// No description provided for @homeAccountTooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Account'**
-  String get homeAccountTooltip;
+  /// **'Settings'**
+  String get homeSettingsTooltip;
 
   /// No description provided for @homeInboxTab.
   ///
@@ -674,47 +464,17 @@ abstract class AppLocalizations {
   /// **'Sealed until {delivery}.'**
   String reviewSealedUntil(String delivery);
 
-  /// No description provided for @accountTitle.
+  /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Account'**
-  String get accountTitle;
+  /// **'Settings'**
+  String get settingsTitle;
 
-  /// No description provided for @accountSignedInAs.
-  ///
-  /// In en, this message translates to:
-  /// **'Signed in as'**
-  String get accountSignedInAs;
-
-  /// No description provided for @accountUnknownEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown'**
-  String get accountUnknownEmail;
-
-  /// No description provided for @accountPrivacy.
+  /// No description provided for @settingsPrivacy.
   ///
   /// In en, this message translates to:
   /// **'Privacy & data'**
-  String get accountPrivacy;
-
-  /// No description provided for @accountRequestDeletion.
-  ///
-  /// In en, this message translates to:
-  /// **'Request account deletion'**
-  String get accountRequestDeletion;
-
-  /// No description provided for @accountSignOut.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign out'**
-  String get accountSignOut;
-
-  /// No description provided for @accountMailAppMissing.
-  ///
-  /// In en, this message translates to:
-  /// **'Could not open a mail app. Email {email} directly to request deletion.'**
-  String accountMailAppMissing(String email);
+  String get settingsPrivacy;
 
   /// No description provided for @privacyTitle.
   ///
@@ -731,19 +491,19 @@ abstract class AppLocalizations {
   /// No description provided for @privacyDraftsBody.
   ///
   /// In en, this message translates to:
-  /// **'While you write, your draft is saved encrypted on this device only. It is never sent to our servers, and it is deleted when you seal it, discard it, or sign out.'**
+  /// **'While you write, your draft is saved encrypted on this device only. It is deleted when you seal it or discard it, and it is never included in backups.'**
   String get privacyDraftsBody;
 
   /// No description provided for @privacySealedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Sealed messages'**
+  /// **'Sealed messages stay on this device'**
   String get privacySealedTitle;
 
   /// No description provided for @privacySealedBody.
   ///
   /// In en, this message translates to:
-  /// **'When you seal a message we store it with its opening time, time zone and status. Access is enforced by the database itself, not just the app: only your account can see your messages, and nobody, not even you, can read one before it opens.'**
+  /// **'Laternote has no accounts and no servers. Sealed messages are stored on this device with their opening time and time zone, and never leave it except in backups of your device or exports you make.'**
   String get privacySealedBody;
 
   /// No description provided for @privacyNotificationsTitle.
@@ -767,19 +527,19 @@ abstract class AppLocalizations {
   /// No description provided for @privacyTrackingBody.
   ///
   /// In en, this message translates to:
-  /// **'Laternote has no analytics, ads or crash reporting. Our logs record counts only, never message content.'**
+  /// **'Laternote has no analytics, ads or crash reporting.'**
   String get privacyTrackingBody;
 
   /// No description provided for @privacyDeletionTitle.
   ///
   /// In en, this message translates to:
-  /// **'Deleting your account'**
+  /// **'Deleting your messages'**
   String get privacyDeletionTitle;
 
   /// No description provided for @privacyDeletionBody.
   ///
   /// In en, this message translates to:
-  /// **'During this early MVP, account deletion is handled manually: use \"Request account deletion\" on the Account screen to send a request. We delete your account, messages and device addresses by hand, normally within a few business days, and confirm by email.'**
+  /// **'Uninstalling Laternote deletes your messages and draft from this device. Copies in your device backups or in files you exported stay until you delete them.'**
   String get privacyDeletionBody;
 
   /// No description provided for @privacyBackupsTitle.
@@ -791,7 +551,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyBackupsBody.
   ///
   /// In en, this message translates to:
-  /// **'Encrypted backups age out after about 30 days. If one is ever restored, deletion requests made since then are applied again.'**
+  /// **'Your sealed messages are included in your device\'s backup, so restoring it brings them back. The seal follows this device\'s clock: anyone who changes the clock or reads the app\'s files can open a message early.'**
   String get privacyBackupsBody;
 
   /// No description provided for @notificationsTitle.
@@ -865,54 +625,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ready messages'**
   String get notificationChannelName;
-
-  /// No description provided for @linkContinue.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get linkContinue;
-
-  /// No description provided for @linkEmailConfirmedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Email confirmed'**
-  String get linkEmailConfirmedTitle;
-
-  /// No description provided for @linkEmailConfirmedBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Your email is confirmed and you\'re signed in.'**
-  String get linkEmailConfirmedBody;
-
-  /// No description provided for @linkProblemTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Link not usable'**
-  String get linkProblemTitle;
-
-  /// No description provided for @linkProblemExpired.
-  ///
-  /// In en, this message translates to:
-  /// **'This link has expired or was already used. Request a new one.'**
-  String get linkProblemExpired;
-
-  /// No description provided for @linkProblemInvalid.
-  ///
-  /// In en, this message translates to:
-  /// **'This link can\'t be used. Open it on the device where you requested it, or request a new one.'**
-  String get linkProblemInvalid;
-
-  /// No description provided for @linkProblemUnrecognized.
-  ///
-  /// In en, this message translates to:
-  /// **'Laternote doesn\'t recognize this link.'**
-  String get linkProblemUnrecognized;
-
-  /// No description provided for @linkProblemNetwork.
-  ///
-  /// In en, this message translates to:
-  /// **'No connection. Check your network and open the link again.'**
-  String get linkProblemNetwork;
 }
 
 class _AppLocalizationsDelegate

@@ -16,57 +16,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorUnexpected => 'Something went wrong. Please try again.';
 
   @override
-  String get errorSignedOut => 'You are signed out. Sign in and try again.';
-
-  @override
-  String get errorInvalidCredentials => 'Wrong email or password.';
-
-  @override
-  String get errorEmailNotConfirmed =>
-      'Confirm your email address before signing in.';
-
-  @override
-  String get errorWeakPassword => 'Choose a stronger password.';
-
-  @override
-  String get errorSamePassword =>
-      'Choose a password different from your current one.';
-
-  @override
-  String get errorRateLimited =>
-      'Too many attempts. Wait a moment and try again.';
-
-  @override
-  String get errorLinkExpired => 'This link has expired. Request a new one.';
-
-  @override
-  String get errorAuthFailed =>
-      'That didn\'t work. Check your details and try again.';
-
-  @override
-  String get errorAccountExists => 'An account already exists.';
-
-  @override
-  String get validationEmailEmpty => 'Enter your email address.';
-
-  @override
-  String get validationEmailInvalid => 'Enter a valid email address.';
-
-  @override
-  String get validationPasswordEmpty => 'Enter a password.';
-
-  @override
-  String validationPasswordTooShort(int min) {
-    return 'Password must be at least $min characters.';
-  }
-
-  @override
-  String get validationConfirmationEmpty => 'Confirm your password.';
-
-  @override
-  String get validationPasswordsDiffer => 'Passwords do not match.';
-
-  @override
   String get validationBodyEmpty => 'Write something to your future self.';
 
   @override
@@ -99,70 +48,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonDelete => 'Delete';
 
   @override
-  String get commonEmail => 'Email';
-
-  @override
-  String get commonPassword => 'Password';
-
-  @override
-  String get authSignInTitle => 'Sign in';
-
-  @override
-  String get authTagline => 'A message to the person you\'ll become.';
-
-  @override
-  String get authSignInButton => 'Sign in';
-
-  @override
-  String get authForgotPasswordLink => 'Forgot password?';
-
-  @override
-  String get authSignUpLink => 'Don\'t have an account? Sign up';
-
-  @override
-  String get authCreateAccountTitle => 'Create account';
-
-  @override
-  String get authCreateAccountButton => 'Create account';
-
-  @override
-  String get authConfirmPassword => 'Confirm password';
-
-  @override
-  String get authConfirmEmailSent =>
-      'Check your email to confirm your account before signing in.';
-
-  @override
-  String get authBackToSignIn => 'Back to sign in';
-
-  @override
-  String get authResetPasswordTitle => 'Reset password';
-
-  @override
-  String get authResetPasswordIntro =>
-      'Enter your account\'s email and we\'ll send a link to reset your password.';
-
-  @override
-  String get authSendResetLink => 'Send reset link';
-
-  @override
-  String get authResetLinkSent =>
-      'If an account exists for that email, a reset link has been sent.';
-
-  @override
-  String get authNewPasswordTitle => 'Set a new password';
-
-  @override
-  String get authNewPassword => 'New password';
-
-  @override
-  String get authConfirmNewPassword => 'Confirm new password';
-
-  @override
-  String get authUpdatePassword => 'Update password';
-
-  @override
-  String get homeAccountTooltip => 'Account';
+  String get homeSettingsTooltip => 'Settings';
 
   @override
   String get homeInboxTab => 'Inbox';
@@ -380,27 +266,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get accountTitle => 'Account';
+  String get settingsTitle => 'Settings';
 
   @override
-  String get accountSignedInAs => 'Signed in as';
-
-  @override
-  String get accountUnknownEmail => 'Unknown';
-
-  @override
-  String get accountPrivacy => 'Privacy & data';
-
-  @override
-  String get accountRequestDeletion => 'Request account deletion';
-
-  @override
-  String get accountSignOut => 'Sign out';
-
-  @override
-  String accountMailAppMissing(String email) {
-    return 'Could not open a mail app. Email $email directly to request deletion.';
-  }
+  String get settingsPrivacy => 'Privacy & data';
 
   @override
   String get privacyTitle => 'Privacy & data';
@@ -410,14 +279,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyDraftsBody =>
-      'While you write, your draft is saved encrypted on this device only. It is never sent to our servers, and it is deleted when you seal it, discard it, or sign out.';
+      'While you write, your draft is saved encrypted on this device only. It is deleted when you seal it or discard it, and it is never included in backups.';
 
   @override
-  String get privacySealedTitle => 'Sealed messages';
+  String get privacySealedTitle => 'Sealed messages stay on this device';
 
   @override
   String get privacySealedBody =>
-      'When you seal a message we store it with its opening time, time zone and status. Access is enforced by the database itself, not just the app: only your account can see your messages, and nobody, not even you, can read one before it opens.';
+      'Laternote has no accounts and no servers. Sealed messages are stored on this device with their opening time and time zone, and never leave it except in backups of your device or exports you make.';
 
   @override
   String get privacyNotificationsTitle => 'Notifications';
@@ -431,21 +300,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyTrackingBody =>
-      'Laternote has no analytics, ads or crash reporting. Our logs record counts only, never message content.';
+      'Laternote has no analytics, ads or crash reporting.';
 
   @override
-  String get privacyDeletionTitle => 'Deleting your account';
+  String get privacyDeletionTitle => 'Deleting your messages';
 
   @override
   String get privacyDeletionBody =>
-      'During this early MVP, account deletion is handled manually: use \"Request account deletion\" on the Account screen to send a request. We delete your account, messages and device addresses by hand, normally within a few business days, and confirm by email.';
+      'Uninstalling Laternote deletes your messages and draft from this device. Copies in your device backups or in files you exported stay until you delete them.';
 
   @override
   String get privacyBackupsTitle => 'Backups';
 
   @override
   String get privacyBackupsBody =>
-      'Encrypted backups age out after about 30 days. If one is ever restored, deletion requests made since then are applied again.';
+      'Your sealed messages are included in your device\'s backup, so restoring it brings them back. The seal follows this device\'s clock: anyone who changes the clock or reads the app\'s files can open a message early.';
 
   @override
   String get notificationsTitle => 'Notifications';
@@ -484,33 +353,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationChannelName => 'Ready messages';
-
-  @override
-  String get linkContinue => 'Continue';
-
-  @override
-  String get linkEmailConfirmedTitle => 'Email confirmed';
-
-  @override
-  String get linkEmailConfirmedBody =>
-      'Your email is confirmed and you\'re signed in.';
-
-  @override
-  String get linkProblemTitle => 'Link not usable';
-
-  @override
-  String get linkProblemExpired =>
-      'This link has expired or was already used. Request a new one.';
-
-  @override
-  String get linkProblemInvalid =>
-      'This link can\'t be used. Open it on the device where you requested it, or request a new one.';
-
-  @override
-  String get linkProblemUnrecognized =>
-      'Laternote doesn\'t recognize this link.';
-
-  @override
-  String get linkProblemNetwork =>
-      'No connection. Check your network and open the link again.';
 }

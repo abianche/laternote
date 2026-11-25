@@ -11,7 +11,7 @@ import '../../messages/presentation/upcoming_messages_list.dart';
 /// Home's tabs, in order.
 enum HomeTab { inbox, sealed }
 
-/// Signed-in landing page: the inbox of released messages and the list of
+/// Landing page: the inbox of released messages and the list of
 /// sealed ones, in two tabs.
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key, this.initialTab = HomeTab.inbox});
@@ -29,9 +29,9 @@ class HomeShell extends StatelessWidget {
           title: const Wordmark(),
           actions: [
             IconButton(
-              icon: const Icon(Icons.account_circle_outlined),
-              tooltip: l10n.homeAccountTooltip,
-              onPressed: () => context.go(Routes.account),
+              icon: const Icon(Icons.settings_outlined),
+              tooltip: l10n.homeSettingsTooltip,
+              onPressed: () => context.go(Routes.settings),
             ),
           ],
           bottom: TabBar(

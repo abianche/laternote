@@ -17,58 +17,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get errorUnexpected => 'Qualcosa è andato storto. Riprova.';
 
   @override
-  String get errorSignedOut =>
-      'Non hai effettuato l\'accesso. Accedi e riprova.';
-
-  @override
-  String get errorInvalidCredentials => 'Email o password errate.';
-
-  @override
-  String get errorEmailNotConfirmed =>
-      'Conferma il tuo indirizzo email prima di accedere.';
-
-  @override
-  String get errorWeakPassword => 'Scegli una password più sicura.';
-
-  @override
-  String get errorSamePassword =>
-      'Scegli una password diversa da quella attuale.';
-
-  @override
-  String get errorRateLimited =>
-      'Troppi tentativi. Attendi un momento e riprova.';
-
-  @override
-  String get errorLinkExpired => 'Questo link è scaduto. Richiedine uno nuovo.';
-
-  @override
-  String get errorAuthFailed =>
-      'Non ha funzionato. Controlla i dati e riprova.';
-
-  @override
-  String get errorAccountExists => 'Esiste già un account.';
-
-  @override
-  String get validationEmailEmpty => 'Inserisci il tuo indirizzo email.';
-
-  @override
-  String get validationEmailInvalid => 'Inserisci un indirizzo email valido.';
-
-  @override
-  String get validationPasswordEmpty => 'Inserisci una password.';
-
-  @override
-  String validationPasswordTooShort(int min) {
-    return 'La password deve avere almeno $min caratteri.';
-  }
-
-  @override
-  String get validationConfirmationEmpty => 'Conferma la password.';
-
-  @override
-  String get validationPasswordsDiffer => 'Le password non coincidono.';
-
-  @override
   String get validationBodyEmpty => 'Scrivi qualcosa al te del futuro.';
 
   @override
@@ -102,70 +50,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get commonDelete => 'Elimina';
 
   @override
-  String get commonEmail => 'Email';
-
-  @override
-  String get commonPassword => 'Password';
-
-  @override
-  String get authSignInTitle => 'Accedi';
-
-  @override
-  String get authTagline => 'Un messaggio per la persona che diventerai.';
-
-  @override
-  String get authSignInButton => 'Accedi';
-
-  @override
-  String get authForgotPasswordLink => 'Password dimenticata?';
-
-  @override
-  String get authSignUpLink => 'Non hai un account? Registrati';
-
-  @override
-  String get authCreateAccountTitle => 'Crea account';
-
-  @override
-  String get authCreateAccountButton => 'Crea account';
-
-  @override
-  String get authConfirmPassword => 'Conferma password';
-
-  @override
-  String get authConfirmEmailSent =>
-      'Controlla la tua email per confermare l\'account prima di accedere.';
-
-  @override
-  String get authBackToSignIn => 'Torna all\'accesso';
-
-  @override
-  String get authResetPasswordTitle => 'Reimposta password';
-
-  @override
-  String get authResetPasswordIntro =>
-      'Inserisci l\'email del tuo account e ti invieremo un link per reimpostare la password.';
-
-  @override
-  String get authSendResetLink => 'Invia link';
-
-  @override
-  String get authResetLinkSent =>
-      'Se esiste un account con questa email, ti abbiamo inviato un link per reimpostare la password.';
-
-  @override
-  String get authNewPasswordTitle => 'Imposta una nuova password';
-
-  @override
-  String get authNewPassword => 'Nuova password';
-
-  @override
-  String get authConfirmNewPassword => 'Conferma nuova password';
-
-  @override
-  String get authUpdatePassword => 'Aggiorna password';
-
-  @override
-  String get homeAccountTooltip => 'Account';
+  String get homeSettingsTooltip => 'Impostazioni';
 
   @override
   String get homeInboxTab => 'In arrivo';
@@ -385,27 +270,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get accountTitle => 'Account';
+  String get settingsTitle => 'Impostazioni';
 
   @override
-  String get accountSignedInAs => 'Accesso effettuato come';
-
-  @override
-  String get accountUnknownEmail => 'Sconosciuto';
-
-  @override
-  String get accountPrivacy => 'Privacy e dati';
-
-  @override
-  String get accountRequestDeletion => 'Richiedi l\'eliminazione dell\'account';
-
-  @override
-  String get accountSignOut => 'Esci';
-
-  @override
-  String accountMailAppMissing(String email) {
-    return 'Impossibile aprire un\'app di posta. Scrivi direttamente a $email per richiedere l\'eliminazione.';
-  }
+  String get settingsPrivacy => 'Privacy e dati';
 
   @override
   String get privacyTitle => 'Privacy e dati';
@@ -415,14 +283,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get privacyDraftsBody =>
-      'Mentre scrivi, la bozza viene salvata cifrata solo su questo dispositivo. Non viene mai inviata ai nostri server e viene cancellata quando la sigilli, la elimini o esci.';
+      'Mentre scrivi, la bozza viene salvata cifrata solo su questo dispositivo. Viene cancellata quando la sigilli o la elimini e non viene mai inclusa nei backup.';
 
   @override
-  String get privacySealedTitle => 'Messaggi sigillati';
+  String get privacySealedTitle =>
+      'I messaggi sigillati restano su questo dispositivo';
 
   @override
   String get privacySealedBody =>
-      'Quando sigilli un messaggio lo conserviamo insieme all\'orario di apertura, al fuso orario e allo stato. L\'accesso è controllato dal database stesso, non solo dall\'app: solo il tuo account può vedere i tuoi messaggi e nessuno, nemmeno tu, può leggerne uno prima che si apra.';
+      'Laternote non ha account né server. I messaggi sigillati sono conservati su questo dispositivo insieme all\'orario di apertura e al fuso orario, e non lo lasciano mai, se non nei backup del dispositivo o nelle esportazioni che fai tu.';
 
   @override
   String get privacyNotificationsTitle => 'Notifiche';
@@ -436,21 +305,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get privacyTrackingBody =>
-      'Laternote non ha analisi, pubblicità né segnalazione degli arresti anomali. I nostri log registrano solo conteggi, mai il contenuto dei messaggi.';
+      'Laternote non ha analisi, pubblicità né segnalazione degli arresti anomali.';
 
   @override
-  String get privacyDeletionTitle => 'Eliminare l\'account';
+  String get privacyDeletionTitle => 'Eliminare i messaggi';
 
   @override
   String get privacyDeletionBody =>
-      'In questa prima versione (MVP) l\'eliminazione dell\'account è gestita manualmente: usa \"Richiedi l\'eliminazione dell\'account\" nella schermata Account per inviare una richiesta. Eliminiamo a mano account, messaggi e indirizzi dei dispositivi, di solito entro pochi giorni lavorativi, e lo confermiamo via email.';
+      'Disinstallare Laternote cancella i messaggi e la bozza da questo dispositivo. Le copie nei backup del dispositivo o nei file che hai esportato restano finché non le elimini.';
 
   @override
   String get privacyBackupsTitle => 'Backup';
 
   @override
   String get privacyBackupsBody =>
-      'I backup cifrati scadono dopo circa 30 giorni. Se uno viene ripristinato, le richieste di eliminazione fatte da allora vengono applicate di nuovo.';
+      'I messaggi sigillati sono inclusi nel backup del dispositivo, quindi ripristinarlo li riporta indietro. Il sigillo segue l\'orologio di questo dispositivo: chi cambia l\'orologio o legge i file dell\'app può aprire un messaggio in anticipo.';
 
   @override
   String get notificationsTitle => 'Notifiche';
@@ -490,32 +359,4 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationChannelName => 'Messaggi pronti';
-
-  @override
-  String get linkContinue => 'Continua';
-
-  @override
-  String get linkEmailConfirmedTitle => 'Email confermata';
-
-  @override
-  String get linkEmailConfirmedBody =>
-      'La tua email è confermata e hai effettuato l\'accesso.';
-
-  @override
-  String get linkProblemTitle => 'Link non utilizzabile';
-
-  @override
-  String get linkProblemExpired =>
-      'Questo link è scaduto o è già stato usato. Richiedine uno nuovo.';
-
-  @override
-  String get linkProblemInvalid =>
-      'Questo link non può essere usato. Aprilo sul dispositivo da cui l\'hai richiesto, oppure richiedine uno nuovo.';
-
-  @override
-  String get linkProblemUnrecognized => 'Laternote non riconosce questo link.';
-
-  @override
-  String get linkProblemNetwork =>
-      'Nessuna connessione. Controlla la rete e apri di nuovo il link.';
 }

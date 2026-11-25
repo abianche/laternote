@@ -11,8 +11,7 @@ part 'notification_routing.g.dart';
 
 /// Opens the letter whose notification the user tapped, both the one that
 /// launched the app and any tapped while it runs, or the inbox if the
-/// letter is gone. Signed out, the router sends them to sign-in first and
-/// on to the letter after.
+/// letter is gone.
 @Riverpod(keepAlive: true)
 void notificationRouting(Ref ref) {
   final notifications = ref.watch(localNotificationsRepositoryProvider);

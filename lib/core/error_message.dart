@@ -18,17 +18,6 @@ String? errorMessage(BuildContext context, AsyncValue<Object?> value) =>
 /// Localized text for [error].
 String appErrorText(AppLocalizations l10n, AppError error) => switch (error) {
   NetworkError() => l10n.errorNetwork,
-  SignedOutError() => l10n.errorSignedOut,
-  AuthError(:final failure) => switch (failure) {
-    AuthFailure.invalidCredentials => l10n.errorInvalidCredentials,
-    AuthFailure.emailNotConfirmed => l10n.errorEmailNotConfirmed,
-    AuthFailure.weakPassword => l10n.errorWeakPassword,
-    AuthFailure.samePassword => l10n.errorSamePassword,
-    AuthFailure.rateLimited => l10n.errorRateLimited,
-    AuthFailure.linkExpired => l10n.errorLinkExpired,
-    AuthFailure.other => l10n.errorAuthFailed,
-  },
-  AccountAlreadyExistsError() => l10n.errorAccountExists,
   ValidationError(:final problem) => validationText(l10n, problem),
   UnexpectedError() => l10n.errorUnexpected,
 };
