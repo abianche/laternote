@@ -29,18 +29,6 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!-- The app routes deep links itself (lib/app/deep_link_routing.dart); keep them away from go_router. -->
-            <meta-data
-              android:name="flutter_deeplinking_enabled"
-              android:value="false"
-              />
-            <!-- Deep links: io.laternote://auth/... from Supabase Auth emails (docs/ARCHITECTURE.md). -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="io.laternote" android:host="auth"/>
-            </intent-filter>
         </activity>
         <!-- flutter_local_notifications: shows scheduled notifications and
              reschedules them after a reboot or an app update. -->

@@ -5,7 +5,7 @@ import '../../../l10n/app_localizations.dart';
 import '../application/notification_permission.dart';
 import '../data/local_notifications_repository.dart';
 
-/// Account row with the notification status; turns them on while the user
+/// Settings row with the notification status; turns them on while the user
 /// hasn't decided yet.
 class NotificationsTile extends ConsumerWidget {
   const NotificationsTile({super.key});

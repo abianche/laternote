@@ -12,7 +12,6 @@ dependencies:
 
   cupertino_icons: ^2.0.0
   supabase_flutter: ^2.18.3
-  url_launcher: ^6.3.3
   flutter_riverpod: ^3.5.0
   riverpod_annotation: ^4.0.8
   go_router: ^18.1.4
@@ -26,7 +25,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-  app_links: ^7.2.2
   drift: ^2.35.4
   drift_flutter: ^0.3.1
   uuid: ^4.6.0

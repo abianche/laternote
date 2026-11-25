@@ -10,24 +10,21 @@ part of 'notification_routing.dart';
 // ignore_for_file: type=lint, type=warning
 /// Opens the letter whose notification the user tapped, both the one that
 /// launched the app and any tapped while it runs, or the inbox if the
-/// letter is gone. Signed out, the router sends them to sign-in first and
-/// on to the letter after.
+/// letter is gone.
 
 @ProviderFor(notificationRouting)
 final notificationRoutingProvider = NotificationRoutingProvider._();
 
 /// Opens the letter whose notification the user tapped, both the one that
 /// launched the app and any tapped while it runs, or the inbox if the
-/// letter is gone. Signed out, the router sends them to sign-in first and
-/// on to the letter after.
+/// letter is gone.
 
 final class NotificationRoutingProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
   /// Opens the letter whose notification the user tapped, both the one that
   /// launched the app and any tapped while it runs, or the inbox if the
-  /// letter is gone. Signed out, the router sends them to sign-in first and
-  /// on to the letter after.
+  /// letter is gone.
   NotificationRoutingProvider._()
     : super(
         from: null,
