@@ -35,6 +35,7 @@ void themeTests(ThemeData appTheme, Knit knit) {
       'onSurfaceVariant/surface': (scheme.onSurfaceVariant, scheme.surface),
       'onSurface/card': (scheme.onSurface, scheme.surfaceContainerLowest),
       'primary/surface': (scheme.primary, scheme.surface),
+      'primary/card': (scheme.primary, scheme.surfaceContainerLowest),
       'onPrimary/primary': (scheme.onPrimary, scheme.primary),
       'secondary/surface': (scheme.secondary, scheme.surface),
       'tertiary/card': (scheme.tertiary, scheme.surfaceContainerLowest),
@@ -44,6 +45,7 @@ void themeTests(ThemeData appTheme, Knit knit) {
       'letter/paper': (knit.letter.color!, knit.fabric),
       'tab label/indicator': (knit.outline, knit.glow),
       'wordmark/surface': (knit.wordmark.color!, scheme.surface),
+      'date patch': (knit.outline, knit.patch),
     };
     for (final MapEntry(key: name, value: (fg, bg)) in pairs.entries) {
       expect(contrast(fg, bg), greaterThanOrEqualTo(4.5), reason: name);
@@ -52,6 +54,10 @@ void themeTests(ThemeData appTheme, Knit knit) {
 
   test('field outlines meet 3:1 for UI components', () {
     expect(contrast(scheme.outline, scheme.surface), greaterThanOrEqualTo(3));
+    expect(
+      contrast(scheme.outline, scheme.surfaceContainerLowest),
+      greaterThanOrEqualTo(3),
+    );
   });
 
   test('defines the stitched component themes and the knit', () {
