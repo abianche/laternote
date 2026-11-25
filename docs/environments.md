@@ -47,8 +47,6 @@ select vault.create_secret('<PUSH_CRON_SECRET value>', 'push_cron_secret');
 
 To change a value later, use `vault.update_secret(id, '<new value>')` with the `id` from `vault.secrets`.
 
-Add the deep links `io.laternote://auth/reset-password`, `io.laternote://auth/confirm-email` and `io.laternote://auth/magic-link` to each Supabase project's Auth redirect allow-list (local development already has them in `supabase/config.toml`; add the same URLs in the production project's Auth settings before launch). Also enable email confirmations in the production project's Auth settings (local development leaves them disabled for faster iteration).
-
 ## Current setup status
 
 Repository configuration includes environment IDs, flavor definitions, startup validation, placeholder config, and the initial database migration. Provider-side projects, actual credential files, Apple signing, push capabilities, and scheduled function deployment still require access to Laternote's Supabase, Firebase, and Apple Developer accounts.

@@ -1,47 +1,38 @@
 # Privacy and data handling (MVP)
 
-This note covers the current MVP and matches the in-app **Account → Privacy
+This note covers the current MVP and matches the in-app **Settings → Privacy
 & data** screen. It will be replaced by a full privacy policy before public
 launch.
 
-## Drafts stay on your device
+## Drafts stay on this device
 
-While you write, your draft is saved encrypted on your device only. It is
-never sent to our servers, and it is deleted when you seal it, discard it,
-or sign out.
+While you write, your draft is saved encrypted on this device only. It is
+deleted when you seal it or discard it, and it is never included in backups.
 
-## Sealed messages
+## Sealed messages stay on this device
 
-When you seal a message we store it with its opening time, time zone and
-status. Access is enforced by the database (Row Level Security and column
-grants), not just the app: only your account can see your messages, and
-nobody, not even you, can read one before it opens.
+Laternote has no accounts and no servers. Sealed messages are stored on
+this device with their opening time and time zone, and never leave it
+except in backups of your device or exports you make.
 
 ## Notifications
 
 A notification only says "A message is ready". It never contains what you
-wrote, so nothing private shows on your lock screen. To send it we keep a
-notification address for your device from Firebase Cloud Messaging, removed when you
-sign out.
+wrote, so nothing private shows on your lock screen. Your phone schedules
+it itself when you seal a message, so nothing is sent anywhere.
 
 ## No tracking
 
-Laternote has no analytics, ads or crash reporting. Server logs record
-counts only, never message content or device addresses.
+Laternote has no analytics, ads or crash reporting.
 
-## Account deletion
+## Deleting your messages
 
-This MVP does not yet have automated self-service account deletion. Until
-then, deletion is a manual, documented process:
+Uninstalling Laternote deletes your messages and draft from this device.
+Copies in your device backups or in files you exported stay until you
+delete them.
 
-1. In the app, open **Account → Request account deletion**. This opens an
-   email to `privacy@laternote.app` identifying your account.
-2. You can also email that address directly from any client.
-3. We delete your account, messages, and device addresses by hand, normally
-   within a few business days, and confirm by email once it is done.
+## Backups
 
-## Retention
-
-Encrypted operational backups are retained for a limited period (target:
-30 days) after which they age out. A deletion request made before a backup
-ages out will be re-applied if that backup is ever restored.
+Your sealed messages are included in your device's backup, so restoring it
+brings them back. The seal follows this device's clock: anyone who changes
+the clock or reads the app's files can open a message early.
