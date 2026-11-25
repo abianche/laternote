@@ -46,6 +46,7 @@ void main() {
     final errors = <AppError>[
       const NetworkError(),
       const UnexpectedError(),
+      const InvalidFileError(),
       ...[for (final p in ValidationProblem.values) ValidationError(p)],
     ];
     final texts = errors.map((e) => appErrorText(en, e)).toSet();

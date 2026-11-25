@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:laternote/core/database.dart';
+
 import 'package:laternote/features/messages/data/available_message.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/data/scheduled_message.dart';
@@ -40,6 +42,27 @@ class FakeMessagesRepository implements MessagesRepository {
         createdAt: DateTime(2030),
       ),
     );
+  }
+
+  /// What [exportAll] returns; [importLetters] adds to it.
+  final letters = <LetterRow>[];
+
+  @override
+  Future<List<LetterRow>> exportAll() async {
+    if (error case final error?) throw error;
+    return [...letters];
+  }
+
+  @override
+  Future<int> importLetters(List<LetterRow> rows) async {
+    if (error case final error?) throw error;
+    final ids = {for (final l in letters) l.id};
+    final added = [
+      for (final l in rows)
+        if (!ids.contains(l.id)) l,
+    ];
+    letters.addAll(added);
+    return added.length;
   }
 
   @override

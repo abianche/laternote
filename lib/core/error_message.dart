@@ -19,6 +19,7 @@ String? errorMessage(BuildContext context, AsyncValue<Object?> value) =>
 String appErrorText(AppLocalizations l10n, AppError error) => switch (error) {
   NetworkError() => l10n.errorNetwork,
   ValidationError(:final problem) => validationText(l10n, problem),
+  InvalidFileError() => l10n.errorInvalidFile,
   UnexpectedError() => l10n.errorUnexpected,
 };
 

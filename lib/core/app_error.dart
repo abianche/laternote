@@ -25,6 +25,11 @@ final class ValidationError extends AppError {
   final ValidationProblem problem;
 }
 
+/// A file to import that isn't a valid export; nothing was imported.
+final class InvalidFileError extends AppError {
+  const InvalidFileError();
+}
+
 /// Anything not covered above.
 final class UnexpectedError extends AppError {
   const UnexpectedError();

@@ -207,4 +207,42 @@ void main() {
       expect(row.openedAt, isNull);
     });
   });
+
+  group('exportAll and importLetters', () {
+    LetterRow letter(String id, {DateTime? openedAt}) => LetterRow(
+      id: id,
+      body: 'Body of $id',
+      scheduledFor: DateTime.utc(2030, 1, 2, 9),
+      timezone: 'Europe/Rome',
+      createdAt: DateTime.utc(2029, 6, 1),
+      openedAt: openedAt,
+    );
+
+    test('exports every letter with its content', () async {
+      await seal(const Duration(hours: 1), body: 'Later');
+      await seal(const Duration(days: 1), body: 'Much later');
+
+      final letters = await repository.exportAll();
+
+      expect(letters.map((l) => l.body), ['Later', 'Much later']);
+    });
+
+    test('adds only letters it does not have yet', () async {
+      final read = DateTime.utc(2030, 1, 3);
+
+      expect(await repository.importLetters([letter('a'), letter('b')]), 2);
+      expect(
+        await repository.importLetters([
+          letter('a', openedAt: read),
+          letter('c', openedAt: read),
+        ]),
+        1,
+      );
+
+      final rows = await db.select(db.letters).get();
+      expect(rows.map((r) => r.id), unorderedEquals(['a', 'b', 'c']));
+      final a = rows.firstWhere((r) => r.id == 'a');
+      expect(a.openedAt, isNull, reason: 'a stored letter is not changed');
+    });
+  });
 }
