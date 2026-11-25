@@ -6,7 +6,7 @@ Laternote is local-only: letters live on the device, with no accounts, server or
 
 ## Stack
 
-- **Flutter** (stable channel), Dart 3
+- **Flutter** (stable channel), Dart 3. The exact Flutter version is `environment.flutter` in `pubspec.yaml`; CI reads it from there
 - **State management:** Riverpod 3 with code generation (`riverpod_annotation` + `riverpod_generator` + `build_runner`)
 - **Navigation:** go_router
 - **Storage:** `drift` (SQLite) for sealed letters, `flutter_secure_storage` for the draft
