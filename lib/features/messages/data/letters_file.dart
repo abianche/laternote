@@ -55,12 +55,12 @@ List<LetterRow> decodeLetters(Uint8List bytes) {
 
 LetterRow _letter(Object? item) => switch (item) {
   {
-    'id': String id,
-    'body': String body,
-    'scheduledFor': String scheduledFor,
-    'timezone': String timezone,
-    'createdAt': String createdAt,
-    'openedAt': String? openedAt,
+    'id': final String id,
+    'body': final String body,
+    'scheduledFor': final String scheduledFor,
+    'timezone': final String timezone,
+    'createdAt': final String createdAt,
+    'openedAt': final String? openedAt,
   }
       when id.isNotEmpty &&
           timezone.isNotEmpty &&
