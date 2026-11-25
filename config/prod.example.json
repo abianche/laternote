@@ -1,5 +1,0 @@
-{
-  "APP_ENV": "production",
-  "SUPABASE_URL": "https://YOUR-PROD-PROJECT.supabase.co",
-  "SUPABASE_PUBLISHABLE_KEY": "YOUR_PROD_PUBLISHABLE_KEY"
-}

@@ -5,8 +5,6 @@
 [![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey)](#platforms)
 
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=fff)](https://flutter.dev)
-[![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=fff)](https://supabase.com)
-[![Firebase](https://img.shields.io/badge/Firebase-039BE5?logo=Firebase&logoColor=white)](https://firebase.google.com)
 [![Claude](https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff)](https://claude.ai)
 
 ### A message to the person you'll become.
@@ -73,7 +71,7 @@ Initial language support:
 
 ## Architecture and environments
 
-The MVP architecture, data access rules, delivery behavior, and development/production setup are documented in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/environments.md](docs/environments.md). Local backend configuration belongs in ignored `config/dev.json` and `config/prod.json`; start from the example files.
+The MVP architecture, data access rules, delivery behavior, and development/production setup are documented in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/environments.md](docs/environments.md).
 
 ## Vision
 

@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'tables.dart';
+import 'limits.dart';
 
 part 'database.g.dart';
 

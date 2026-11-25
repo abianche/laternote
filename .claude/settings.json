@@ -6,24 +6,7 @@
       "Bash(flutter analyze:*)",
       "Bash(flutter test:*)",
       "Bash(dart format:*)",
-      "Bash(dart analyze:*)",
-      "Bash(supabase status)",
-      "Bash(supabase start)",
-      "Bash(supabase stop)",
-      "Bash(supabase migration list:*)",
-      "Bash(supabase migration new:*)",
-      "Bash(supabase db diff:*)",
-      "Bash(supabase db lint:*)"
-    ],
-    "ask": [
-      "Bash(supabase db reset:*)",
-      "Bash(supabase db push:*)",
-      "Bash(supabase link:*)"
-    ],
-    "deny": [
-      "Read(./config/dev.json)",
-      "Read(./config/prod.json)",
-      "Read(./supabase/.env*)"
+      "Bash(dart analyze:*)"
     ]
   }
 }

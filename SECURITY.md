@@ -17,9 +17,8 @@ Include what you found, steps to reproduce it, and the impact you expect. You wi
 In scope:
 
 - The Laternote Flutter app (Android and iOS)
-- The Supabase database schema, Row Level Security policies, and Edge Functions in this repository
 - The GitHub Actions workflows in this repository
 
-Especially relevant: anything that lets a user read another user's messages, or read their own message content before its scheduled delivery time.
+Especially relevant: anything that lets another app or person read letters stored on the device, or that leaks letter content off the device. Opening a letter early by changing the device clock or reading the app's own files is accepted (see docs/ARCHITECTURE.md).
 
-Out of scope: vulnerabilities in third-party services (Supabase, Firebase, Apple, Google) themselves; report those to the respective vendor.
+Out of scope: vulnerabilities in third-party services (Apple, Google) themselves; report those to the respective vendor.

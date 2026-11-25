@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../l10n/app_localizations.dart';
 import 'app_error.dart';
-import 'tables.dart';
+import 'limits.dart';
 
 /// Localized message to show for a failed [AsyncValue], or null.
 String? errorMessage(BuildContext context, AsyncValue<Object?> value) =>

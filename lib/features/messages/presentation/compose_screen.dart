@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/routes.dart';
 import '../../../core/clock.dart';
 import '../../../core/error_message.dart';
-import '../../../core/tables.dart';
+import '../../../core/limits.dart';
 import '../../../core/ui/letter_paper.dart';
 import '../../../core/ui/stitches.dart';
 import '../../../core/ui/date_patch.dart';
