@@ -13,23 +13,55 @@ import 'upcoming_messages.dart';
 
 part 'letter_transfer.g.dart';
 
+/// Where an export goes.
+enum ExportTarget {
+  /// The system save dialog, to a folder the user picks.
+  save,
+
+  /// The share sheet, to another app.
+  share,
+}
+
+/// What the last export or import did, for the UI to report.
+sealed class TransferOutcome {
+  const TransferOutcome();
+}
+
+/// The export file was saved.
+final class ExportSaved extends TransferOutcome {
+  const ExportSaved();
+}
+
+/// An import added [added] letters (0 when it had none new).
+final class LettersImported extends TransferOutcome {
+  const LettersImported(this.added);
+
+  final int added;
+}
+
 /// Exports letters to a file and imports them back. Holds the outcome of the
-/// last run: the number of letters an import added, or null after an export
-/// or a cancelled pick.
+/// last run, or null when there is nothing to report (shared, or cancelled).
 @riverpod
 class LetterTransfer extends _$LetterTransfer {
   @override
-  FutureOr<int?> build() => null;
+  FutureOr<TransferOutcome?> build() => null;
 
-  /// Writes every letter to a file and opens the share sheet anchored at
-  /// [origin].
-  Future<void> export({Rect? origin}) => _run(() async {
+  /// Writes every letter to a file and saves or shares it. [origin] anchors
+  /// the share sheet on iPad.
+  Future<void> export(ExportTarget target, {Rect? origin}) => _run(() async {
     final now = ref.read(clockProvider)();
     final letters = await ref.read(messagesRepositoryProvider).exportAll();
-    await ref
-        .read(letterFileRepositoryProvider)
-        .share(encodeLetters(letters, now), _fileName(now), origin);
-    return null;
+    final bytes = encodeLetters(letters, now);
+    final files = ref.read(letterFileRepositoryProvider);
+    switch (target) {
+      case ExportTarget.save:
+        return await files.save(bytes, _fileName(now))
+            ? const ExportSaved()
+            : null;
+      case ExportTarget.share:
+        await files.share(bytes, _fileName(now), origin);
+        return null;
+    }
   });
 
   /// Adds the letters of a picked file that aren't on the device yet and
@@ -47,10 +79,10 @@ class LetterTransfer extends _$LetterTransfer {
         ..invalidate(availableMessagesProvider);
       unawaited(ref.read(readyNotificationsProvider.notifier).sync());
     }
-    return added;
+    return LettersImported(added);
   });
 
-  Future<void> _run(Future<int?> Function() action) async {
+  Future<void> _run(Future<TransferOutcome?> Function() action) async {
     if (state.isLoading) return;
     state = const AsyncLoading();
     final result = await AsyncValue.guard(action);

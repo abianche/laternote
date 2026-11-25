@@ -81,7 +81,9 @@
   "settingsImportSubtitle": "Aggiungi lettere da un file esportato",
   "exportWarningTitle": "Esportare le lettere?",
   "exportWarningBody": "Il file non è cifrato. Contiene il testo di tutte le lettere, anche di quelle sigillate, e chiunque abbia il file può leggerle.",
-  "exportWarningConfirm": "Esporta",
+  "exportSave": "Salva sul dispositivo",
+  "exportShare": "Condividi",
+  "exportSaved": "Lettere salvate",
   "importAdded": "{count, plural, =0{Nessuna lettera nuova in questo file} =1{1 lettera aggiunta} other{{count} lettere aggiunte}}",
 
   "privacyTitle": "Privacy e dati",

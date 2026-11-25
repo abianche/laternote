@@ -80,7 +80,7 @@ A letter starts as a draft: `DraftRepository` stores one draft per device (body,
 - Export writes all sealed letters (including `opened_at`) to one versioned JSON file that the user saves or shares through the OS. It is how to move letters to another device or keep a copy outside the OS backup. The file is not encrypted, and the app says so before exporting.
 - Import reads such a file and adds the letters it does not have yet, matched by letter ID, then schedules their notifications. A file of an unknown version or invalid content is rejected as a whole.
 - Format: UTF-8 JSON `{"format": "laternote-letters", "version": 1, "exportedAt", "letters": [...]}`, each letter with all its columns and times in ISO 8601 UTC (`features/messages/data/letters_file.dart`). The import runs in one transaction, so a failure adds nothing.
-- Export and Import are in Settings. `share_plus` opens the share sheet and `file_selector` picks the file to import; `LetterFileRepository` is the only code that uses them.
+- Export and Import are in Settings. Export saves the file through the system save dialog or hands it to the share sheet (Android's share sheet can't save to Files). `file_picker` saves and picks files and `share_plus` shares them; `LetterFileRepository` is the only code that uses them.
 
 ## Privacy
 

@@ -16,7 +16,10 @@ class LetterTransferTiles extends ConsumerWidget {
     ref.listen(letterTransferProvider, (previous, next) {
       if (!(previous?.isLoading ?? false) || next.isLoading) return;
       final text = switch (next) {
-        AsyncData(value: final added?) => l10n.importAdded(added),
+        AsyncData(value: ExportSaved()) => l10n.exportSaved,
+        AsyncData(value: LettersImported(:final added)) => l10n.importAdded(
+          added,
+        ),
         AsyncData() => null,
         _ => errorMessage(context, next),
       };
@@ -57,23 +60,27 @@ class LetterTransferTiles extends ConsumerWidget {
     final origin = box == null
         ? null
         : box.localToGlobal(Offset.zero) & box.size;
-    final confirmed = await showDialog<bool>(
+    final target = await showDialog<ExportTarget>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.exportWarningTitle),
         content: Text(l10n.exportWarningBody),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(context),
             child: Text(l10n.commonCancel),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.exportWarningConfirm),
+            onPressed: () => Navigator.pop(context, ExportTarget.share),
+            child: Text(l10n.exportShare),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, ExportTarget.save),
+            child: Text(l10n.exportSave),
           ),
         ],
       ),
     );
-    if (confirmed ?? false) await transfer.export(origin: origin);
+    if (target != null) await transfer.export(target, origin: origin);
   }
 }

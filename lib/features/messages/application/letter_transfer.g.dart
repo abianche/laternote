@@ -9,20 +9,17 @@ part of 'letter_transfer.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Exports letters to a file and imports them back. Holds the outcome of the
-/// last run: the number of letters an import added, or null after an export
-/// or a cancelled pick.
+/// last run, or null when there is nothing to report (shared, or cancelled).
 
 @ProviderFor(LetterTransfer)
 final letterTransferProvider = LetterTransferProvider._();
 
 /// Exports letters to a file and imports them back. Holds the outcome of the
-/// last run: the number of letters an import added, or null after an export
-/// or a cancelled pick.
+/// last run, or null when there is nothing to report (shared, or cancelled).
 final class LetterTransferProvider
-    extends $AsyncNotifierProvider<LetterTransfer, int?> {
+    extends $AsyncNotifierProvider<LetterTransfer, TransferOutcome?> {
   /// Exports letters to a file and imports them back. Holds the outcome of the
-  /// last run: the number of letters an import added, or null after an export
-  /// or a cancelled pick.
+  /// last run, or null when there is nothing to report (shared, or cancelled).
   LetterTransferProvider._()
     : super(
         from: null,
@@ -42,23 +39,23 @@ final class LetterTransferProvider
   LetterTransfer create() => LetterTransfer();
 }
 
-String _$letterTransferHash() => r'536b1b1fecee9ab63be4b43f464b3b1637a6a07c';
+String _$letterTransferHash() => r'9ddf6d298619c6561d97118c1a9180319a669147';
 
 /// Exports letters to a file and imports them back. Holds the outcome of the
-/// last run: the number of letters an import added, or null after an export
-/// or a cancelled pick.
+/// last run, or null when there is nothing to report (shared, or cancelled).
 
-abstract class _$LetterTransfer extends $AsyncNotifier<int?> {
-  FutureOr<int?> build();
+abstract class _$LetterTransfer extends $AsyncNotifier<TransferOutcome?> {
+  FutureOr<TransferOutcome?> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<int?>, int?>;
+    final ref =
+        this.ref as $Ref<AsyncValue<TransferOutcome?>, TransferOutcome?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<int?>, int?>,
-              AsyncValue<int?>,
+              AnyNotifier<AsyncValue<TransferOutcome?>, TransferOutcome?>,
+              AsyncValue<TransferOutcome?>,
               Object?,
               Object?
             >;

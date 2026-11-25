@@ -57,23 +57,45 @@ void main() {
       ),
   ], DateTime.utc(2030));
 
-  testWidgets('warns before exporting and shares only once confirmed', (
+  Future<void> openExport(WidgetTester tester) async {
+    await tester.tap(find.text('Export letters'));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('warns before exporting and does nothing on cancel', (
     tester,
   ) async {
     await pump(tester);
 
-    await tester.tap(find.text('Export letters'));
-    await tester.pumpAndSettle();
+    await openExport(tester);
     expect(find.textContaining("The file isn't encrypted"), findsOneWidget);
     await tester.tap(find.text('Cancel'));
     await tester.pumpAndSettle();
-    expect(files.shared, isEmpty);
 
-    await tester.tap(find.text('Export letters'));
+    expect(files.shared, isEmpty);
+    expect(files.saved, isEmpty);
+  });
+
+  testWidgets('saves to the device and says so', (tester) async {
+    await pump(tester);
+
+    await openExport(tester);
+    await tester.tap(find.text('Save to device'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Export'));
+
+    expect(files.saved, hasLength(1));
+    expect(find.text('Letters saved'), findsOneWidget);
+  });
+
+  testWidgets('shares through the share sheet', (tester) async {
+    await pump(tester);
+
+    await openExport(tester);
+    await tester.tap(find.text('Share'));
     await tester.pumpAndSettle();
+
     expect(files.shared, hasLength(1));
+    expect(find.byType(SnackBar), findsNothing);
   });
 
   testWidgets('says how many letters an import added', (tester) async {

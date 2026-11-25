@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:file_selector/file_selector.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -31,21 +31,28 @@ class LetterFileRepository {
         );
       });
 
+  /// Opens the system save dialog for [bytes] as a JSON file named [name].
+  /// Returns false when the user cancels.
+  Future<bool> save(Uint8List bytes, String name) => _guard(() async {
+    final saved = await FilePicker.saveFile(
+      fileName: name,
+      bytes: bytes,
+      mimeType: 'application/json',
+    );
+    return saved != null;
+  });
+
   /// Lets the user pick a JSON file and returns its content, or null when
   /// they cancel.
   Future<Uint8List?> pick() => _guard(() async {
-    final file = await openFile(
-      acceptedTypeGroups: const [
-        XTypeGroup(
-          label: 'JSON',
-          extensions: ['json'],
-          mimeTypes: ['application/json'],
-          uniformTypeIdentifiers: ['public.json'],
-        ),
-      ],
+    final file = await FilePicker.pickFile(
+      type: FileType.custom,
+      allowedExtensions: const ['json'],
     );
     if (file == null) return null;
-    if (await file.length() > maxImportBytes) throw const InvalidFileError();
+    if ((await file.length() ?? 0) > maxImportBytes) {
+      throw const InvalidFileError();
+    }
     return file.readAsBytes();
   });
 

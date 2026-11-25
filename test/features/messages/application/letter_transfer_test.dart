@@ -44,7 +44,8 @@ class Device {
 
   LetterTransfer get transfer =>
       container.read(letterTransferProvider.notifier);
-  AsyncValue<int?> get state => container.read(letterTransferProvider);
+  AsyncValue<TransferOutcome?> get state =>
+      container.read(letterTransferProvider);
   Future<List<LetterRow>> letters() =>
       (db.select(db.letters)..orderBy([(l) => OrderingTerm.asc(l.id)])).get();
 
@@ -76,18 +77,36 @@ void main() {
   });
 
   Future<Device> exportToNewDevice() async {
-    await phone.transfer.export();
+    await phone.transfer.export(ExportTarget.share);
     final fresh = Device()..files.toPick = phone.files.shared.single.bytes;
     return fresh;
   }
 
-  test('exports every letter to a dated file', () async {
-    await phone.transfer.export();
+  test('shares every letter as a dated file', () async {
+    await phone.transfer.export(ExportTarget.share);
 
     final file = phone.files.shared.single;
     expect(file.name, 'laternote-2030-01-01.json');
     expect(utf8.decode(file.bytes), contains('Body of future'));
-    expect(phone.state, const AsyncData<int?>(null));
+    expect(phone.state.value, isNull);
+  });
+
+  test('saves the same file and reports it', () async {
+    await phone.transfer.export(ExportTarget.share);
+    await phone.transfer.export(ExportTarget.save);
+
+    final file = phone.files.saved.single;
+    expect(file.name, 'laternote-2030-01-01.json');
+    expect(file.bytes, phone.files.shared.single.bytes);
+    expect(phone.state.value, isA<ExportSaved>());
+  });
+
+  test('a cancelled save reports nothing', () async {
+    phone.files.cancelSave = true;
+
+    await phone.transfer.export(ExportTarget.save);
+
+    expect(phone.state.value, isNull);
   });
 
   test('import into an empty store gives the same letters', () async {
@@ -95,7 +114,10 @@ void main() {
 
     await fresh.transfer.import();
 
-    expect(fresh.state.value, 2);
+    expect(
+      fresh.state.value,
+      isA<LettersImported>().having((o) => o.added, 'added', 2),
+    );
     expect(await fresh.letters(), await phone.letters());
   });
 
@@ -114,7 +136,10 @@ void main() {
 
     await fresh.transfer.import();
 
-    expect(fresh.state.value, 0);
+    expect(
+      fresh.state.value,
+      isA<LettersImported>().having((o) => o.added, 'added', 0),
+    );
     expect(await fresh.letters(), hasLength(2));
   });
 
@@ -133,14 +158,14 @@ void main() {
   test('a cancelled pick changes nothing', () async {
     await phone.transfer.import();
 
-    expect(phone.state, const AsyncData<int?>(null));
+    expect(phone.state.value, isNull);
     expect(await phone.letters(), hasLength(2));
   });
 
   test('a failing share sheet is reported', () async {
     phone.files.error = const UnexpectedError();
 
-    await phone.transfer.export();
+    await phone.transfer.export(ExportTarget.share);
 
     expect(phone.state.error, isA<UnexpectedError>());
   });

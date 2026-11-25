@@ -300,7 +300,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il file non è cifrato. Contiene il testo di tutte le lettere, anche di quelle sigillate, e chiunque abbia il file può leggerle.';
 
   @override
-  String get exportWarningConfirm => 'Esporta';
+  String get exportSave => 'Salva sul dispositivo';
+
+  @override
+  String get exportShare => 'Condividi';
+
+  @override
+  String get exportSaved => 'Lettere salvate';
 
   @override
   String importAdded(int count) {

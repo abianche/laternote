@@ -296,7 +296,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'The file isn\'t encrypted. It holds the text of all your letters, including sealed ones, and anyone with the file can read them.';
 
   @override
-  String get exportWarningConfirm => 'Export';
+  String get exportSave => 'Save to device';
+
+  @override
+  String get exportShare => 'Share';
+
+  @override
+  String get exportSaved => 'Letters saved';
 
   @override
   String importAdded(int count) {

@@ -518,11 +518,23 @@ abstract class AppLocalizations {
   /// **'The file isn\'t encrypted. It holds the text of all your letters, including sealed ones, and anyone with the file can read them.'**
   String get exportWarningBody;
 
-  /// No description provided for @exportWarningConfirm.
+  /// No description provided for @exportSave.
   ///
   /// In en, this message translates to:
-  /// **'Export'**
-  String get exportWarningConfirm;
+  /// **'Save to device'**
+  String get exportSave;
+
+  /// No description provided for @exportShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get exportShare;
+
+  /// No description provided for @exportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Letters saved'**
+  String get exportSaved;
 
   /// No description provided for @importAdded.
   ///
