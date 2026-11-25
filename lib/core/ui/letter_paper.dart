@@ -29,11 +29,11 @@ class LetterPaper extends StatelessWidget {
           stitch: k.stitchCalm,
           inset: 8,
         ),
-        shadows: const [
+        shadows: [
           BoxShadow(
-            color: Color(0x33705030),
+            color: k.shadow.withValues(alpha: k.shadow.a / 2),
             blurRadius: 16,
-            offset: Offset(0, 6),
+            offset: const Offset(0, 6),
           ),
         ],
       ),
