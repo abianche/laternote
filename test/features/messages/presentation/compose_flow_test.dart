@@ -244,6 +244,38 @@ void main() {
     expect(drafts.stored?.body, 'Dear me');
   });
 
+  testWidgets('back is blocked while sealing', (tester) async {
+    await pumpApp(tester);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
+    await tapButton(tester, 'Seal…');
+    await tester.tap(find.text('Seal message'));
+    await tester.pump();
+
+    await tester.binding.handlePopRoute();
+    await tester.pump();
+    expect(find.byType(ReviewScreen), findsOneWidget);
+    expect(find.text('Sealing your message'), findsOneWidget);
+
+    await tester.pumpAndSettle();
+    expect(find.byType(UpcomingMessagesList), findsOneWidget);
+  });
+
+  testWidgets('back works again after a failed save', (tester) async {
+    repository.error = const NetworkError();
+    await pumpApp(tester);
+    await tester.enterText(find.byType(TextFormField), 'Dear me');
+    container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
+    await tapButton(tester, 'Seal…');
+    await tapButton(tester, 'Seal message');
+    expect(find.byType(ReviewScreen), findsOneWidget);
+
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.byType(ReviewScreen), findsNothing);
+    expect(find.byType(ComposeScreen), findsOneWidget);
+  });
+
   testWidgets('a failed local save says the draft is not saved', (
     tester,
   ) async {
