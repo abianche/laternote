@@ -122,7 +122,7 @@
   "privacySealedTitle": "Messaggi sigillati",
   "privacySealedBody": "Quando sigilli un messaggio lo conserviamo insieme all'orario di apertura, al fuso orario e allo stato. L'accesso è controllato dal database stesso, non solo dall'app: solo il tuo account può vedere i tuoi messaggi e nessuno, nemmeno tu, può leggerne uno prima che si apra.",
   "privacyNotificationsTitle": "Notifiche",
-  "privacyNotificationsBody": "Una notifica dice solo che un messaggio è pronto. Non contiene mai ciò che hai scritto, quindi sulla schermata di blocco non compare nulla di privato. Per inviarla conserviamo un indirizzo di notifica di Firebase Cloud Messaging per questo dispositivo, che viene rimosso quando esci.",
+  "privacyNotificationsBody": "Una notifica dice solo che un messaggio è pronto. Non contiene mai ciò che hai scritto, quindi sulla schermata di blocco non compare nulla di privato. È il telefono stesso a programmarla quando sigilli un messaggio, quindi non viene inviato nulla.",
   "privacyTrackingTitle": "Nessun tracciamento",
   "privacyTrackingBody": "Laternote non ha analisi, pubblicità né segnalazione degli arresti anomali. I nostri log registrano solo conteggi, mai il contenuto dei messaggi.",
   "privacyDeletionTitle": "Eliminare l'account",
@@ -139,6 +139,9 @@
   "notificationsPromptContent": "Ti invieremo una notifica quando un messaggio è pronto da leggere. Non mostra mai ciò che hai scritto.",
   "notificationsNotNow": "Non ora",
   "notificationsTurnOn": "Attiva",
+  "notificationReadyTitle": "Un messaggio è pronto",
+  "notificationReadyBody": "Tocca per aprirlo.",
+  "notificationChannelName": "Messaggi pronti",
 
   "linkContinue": "Continua",
   "linkEmailConfirmedTitle": "Email confermata",

@@ -755,7 +755,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyNotificationsBody.
   ///
   /// In en, this message translates to:
-  /// **'A notification only says \"A message is ready\". It never contains what you wrote, so nothing private shows on your lock screen. To send it we keep a notification address for this device from Firebase Cloud Messaging, removed when you sign out.'**
+  /// **'A notification only says \"A message is ready\". It never contains what you wrote, so nothing private shows on your lock screen. Your phone schedules it itself when you seal a message, so nothing is sent anywhere.'**
   String get privacyNotificationsBody;
 
   /// No description provided for @privacyTrackingTitle.
@@ -847,6 +847,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn on'**
   String get notificationsTurnOn;
+
+  /// No description provided for @notificationReadyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A message is ready'**
+  String get notificationReadyTitle;
+
+  /// No description provided for @notificationReadyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to open it.'**
+  String get notificationReadyBody;
+
+  /// No description provided for @notificationChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready messages'**
+  String get notificationChannelName;
 
   /// No description provided for @linkContinue.
   ///

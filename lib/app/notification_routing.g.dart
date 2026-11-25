@@ -8,26 +8,26 @@ part of 'notification_routing.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Opens the message whose notification the user tapped, both the one that
-/// launched the app and any tapped while it runs. Signed out, the router
-/// sends them to sign-in first and on to the message after. A notification
-/// arriving while the app is open refreshes the lists instead.
+/// Opens the letter whose notification the user tapped, both the one that
+/// launched the app and any tapped while it runs, or the inbox if the
+/// letter is gone. Signed out, the router sends them to sign-in first and
+/// on to the letter after.
 
 @ProviderFor(notificationRouting)
 final notificationRoutingProvider = NotificationRoutingProvider._();
 
-/// Opens the message whose notification the user tapped, both the one that
-/// launched the app and any tapped while it runs. Signed out, the router
-/// sends them to sign-in first and on to the message after. A notification
-/// arriving while the app is open refreshes the lists instead.
+/// Opens the letter whose notification the user tapped, both the one that
+/// launched the app and any tapped while it runs, or the inbox if the
+/// letter is gone. Signed out, the router sends them to sign-in first and
+/// on to the letter after.
 
 final class NotificationRoutingProvider
     extends $FunctionalProvider<void, void, void>
     with $Provider<void> {
-  /// Opens the message whose notification the user tapped, both the one that
-  /// launched the app and any tapped while it runs. Signed out, the router
-  /// sends them to sign-in first and on to the message after. A notification
-  /// arriving while the app is open refreshes the lists instead.
+  /// Opens the letter whose notification the user tapped, both the one that
+  /// launched the app and any tapped while it runs, or the inbox if the
+  /// letter is gone. Signed out, the router sends them to sign-in first and
+  /// on to the letter after.
   NotificationRoutingProvider._()
     : super(
         from: null,
@@ -62,4 +62,4 @@ final class NotificationRoutingProvider
 }
 
 String _$notificationRoutingHash() =>
-    r'a1f53ea4dac1e23967f8f43451404bc3d59b37a8';
+    r'e973c9a8f7046ec5b816a5662b5cadb22f460971';

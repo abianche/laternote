@@ -11,11 +11,11 @@ import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/presentation/compose_screen.dart';
 import 'package:laternote/features/messages/presentation/review_screen.dart';
 import 'package:laternote/features/messages/presentation/upcoming_messages_list.dart';
-import 'package:laternote/features/notifications/data/push_repository.dart';
+import 'package:laternote/features/notifications/data/local_notifications_repository.dart';
 import 'package:laternote/l10n/app_localizations_en.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../notifications/fake_push_repository.dart';
+import '../../notifications/fake_local_notifications_repository.dart';
 import '../fake_draft_repository.dart';
 import '../fake_messages_repository.dart';
 
@@ -24,7 +24,7 @@ void main() {
   final deliverAt = DateTime(2030, 6, 1, 9);
   late FakeMessagesRepository repository;
   late FakeDraftRepository drafts;
-  late FakePushRepository push;
+  late FakeLocalNotificationsRepository notifications;
   late ProviderContainer container;
 
   Future<void> pumpApp(WidgetTester tester, {bool animations = true}) async {
@@ -71,10 +71,10 @@ void main() {
   setUp(() {
     repository = FakeMessagesRepository();
     drafts = FakeDraftRepository();
-    push = FakePushRepository();
+    notifications = FakeLocalNotificationsRepository();
     container = ProviderContainer.test(
       overrides: [
-        pushRepositoryProvider.overrideWithValue(push),
+        localNotificationsRepositoryProvider.overrideWithValue(notifications),
         messagesRepositoryProvider.overrideWithValue(repository),
         draftRepositoryProvider.overrideWithValue(drafts),
         clockProvider.overrideWithValue(() => now),
@@ -168,7 +168,7 @@ void main() {
   testWidgets('offers notifications after sealing while undecided', (
     tester,
   ) async {
-    push.status = PushPermission.notDetermined;
+    notifications.status = NotificationAccess.notDetermined;
     await pumpApp(tester);
     await tester.enterText(find.byType(TextFormField), 'Dear me');
     container.read(composeDraftProvider.notifier).setDeliverAt(deliverAt);
@@ -180,7 +180,7 @@ void main() {
 
     await tapButton(tester, 'Turn on');
 
-    expect(push.calls, ['requestPermission']);
+    expect(notifications.calls, ['requestPermission']);
     expect(find.byType(UpcomingMessagesList), findsOneWidget);
   });
 

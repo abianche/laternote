@@ -429,7 +429,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get privacyNotificationsBody =>
-      'Una notifica dice solo che un messaggio è pronto. Non contiene mai ciò che hai scritto, quindi sulla schermata di blocco non compare nulla di privato. Per inviarla conserviamo un indirizzo di notifica di Firebase Cloud Messaging per questo dispositivo, che viene rimosso quando esci.';
+      'Una notifica dice solo che un messaggio è pronto. Non contiene mai ciò che hai scritto, quindi sulla schermata di blocco non compare nulla di privato. È il telefono stesso a programmarla quando sigilli un messaggio, quindi non viene inviato nulla.';
 
   @override
   String get privacyTrackingTitle => 'Nessun tracciamento';
@@ -481,6 +481,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationsTurnOn => 'Attiva';
+
+  @override
+  String get notificationReadyTitle => 'Un messaggio è pronto';
+
+  @override
+  String get notificationReadyBody => 'Tocca per aprirlo.';
+
+  @override
+  String get notificationChannelName => 'Messaggi pronti';
 
   @override
   String get linkContinue => 'Continua';

@@ -7,11 +7,15 @@ import 'package:laternote/features/messages/application/delete_message_controlle
 import 'package:laternote/features/messages/application/upcoming_messages.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
 import 'package:laternote/features/messages/data/scheduled_message.dart';
+import 'package:laternote/features/notifications/data/local_notifications_repository.dart';
+import 'package:laternote/features/notifications/presentation/ready_notification_text.dart';
 
+import '../../notifications/fake_local_notifications_repository.dart';
 import '../fake_messages_repository.dart';
 
 void main() {
   late FakeMessagesRepository repository;
+  late FakeLocalNotificationsRepository notifications;
   late ProviderContainer container;
 
   setUp(() {
@@ -24,9 +28,16 @@ void main() {
           createdAt: DateTime(2030),
         ),
       );
+    notifications = FakeLocalNotificationsRepository();
     container = ProviderContainer.test(
       retry: (_, _) => null,
-      overrides: [messagesRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        messagesRepositoryProvider.overrideWithValue(repository),
+        localNotificationsRepositoryProvider.overrideWithValue(notifications),
+        readyNotificationTextProvider.overrideWithValue(
+          (title: 'Ready', body: 'Tap', channelName: 'Ready'),
+        ),
+      ],
     );
     container.listen(deleteMessageControllerProvider, (_, _) {});
     container.listen(upcomingMessagesProvider, (_, _) {});
@@ -43,6 +54,16 @@ void main() {
     expect(repository.deleted, ['m1']);
     expect(container.read(deleteMessageControllerProvider).hasError, isFalse);
     expect(await container.read(upcomingMessagesProvider.future), isEmpty);
+  });
+
+  test('cancels the deleted message\'s notification', () async {
+    notifications.pending['m1'] = DateTime(2030, 6, 1);
+
+    await controller().delete('m1');
+    await pumpEventQueue();
+
+    expect(notifications.calls, contains('cancel:m1'));
+    expect(notifications.pending, isEmpty);
   });
 
   test('reports a failure and still refreshes the list', () async {

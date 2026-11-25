@@ -8,18 +8,18 @@ part of 'delete_message_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Deletes a sealed message before it opens, then refreshes the upcoming
-/// list. Holds the outcome of the last deletion.
+/// Deletes a sealed message before it opens, cancels its notification and
+/// refreshes the upcoming list. Holds the outcome of the last deletion.
 
 @ProviderFor(DeleteMessageController)
 final deleteMessageControllerProvider = DeleteMessageControllerProvider._();
 
-/// Deletes a sealed message before it opens, then refreshes the upcoming
-/// list. Holds the outcome of the last deletion.
+/// Deletes a sealed message before it opens, cancels its notification and
+/// refreshes the upcoming list. Holds the outcome of the last deletion.
 final class DeleteMessageControllerProvider
     extends $AsyncNotifierProvider<DeleteMessageController, void> {
-  /// Deletes a sealed message before it opens, then refreshes the upcoming
-  /// list. Holds the outcome of the last deletion.
+  /// Deletes a sealed message before it opens, cancels its notification and
+  /// refreshes the upcoming list. Holds the outcome of the last deletion.
   DeleteMessageControllerProvider._()
     : super(
         from: null,
@@ -40,10 +40,10 @@ final class DeleteMessageControllerProvider
 }
 
 String _$deleteMessageControllerHash() =>
-    r'3f755bc860dbb24ef0aeca4e2cd22496e2f36677';
+    r'6d7ee3d14962cd45fc304a12c2141e83ce68a644';
 
-/// Deletes a sealed message before it opens, then refreshes the upcoming
-/// list. Holds the outcome of the last deletion.
+/// Deletes a sealed message before it opens, cancels its notification and
+/// refreshes the upcoming list. Holds the outcome of the last deletion.
 
 abstract class _$DeleteMessageController extends $AsyncNotifier<void> {
   FutureOr<void> build();

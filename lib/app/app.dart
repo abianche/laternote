@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/messages/application/draft_cleanup.dart';
-import '../features/notifications/application/push_registration.dart';
+import '../features/notifications/application/ready_notifications.dart';
 import 'deep_link_routing.dart';
 import 'localization.dart';
 import 'notification_routing.dart';
@@ -16,7 +16,7 @@ class LaternoteApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref
       ..watch(draftCleanupProvider)
-      ..watch(pushRegistrationProvider)
+      ..watch(readyNotificationsProvider)
       ..watch(notificationRoutingProvider)
       ..watch(deepLinkRoutingProvider);
     return MaterialApp.router(

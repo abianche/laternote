@@ -17,7 +17,7 @@ final notificationPermissionProvider = NotificationPermissionProvider._();
 /// Whether the app may show notifications. Re-read whenever the app
 /// resumes, since the user can change it in the device settings.
 final class NotificationPermissionProvider
-    extends $AsyncNotifierProvider<NotificationPermission, PushPermission> {
+    extends $AsyncNotifierProvider<NotificationPermission, NotificationAccess> {
   /// Whether the app may show notifications. Re-read whenever the app
   /// resumes, since the user can change it in the device settings.
   NotificationPermissionProvider._()
@@ -40,22 +40,24 @@ final class NotificationPermissionProvider
 }
 
 String _$notificationPermissionHash() =>
-    r'032c2367e6603d1cd675c3f3b12c9173858b67c9';
+    r'ade93956c576310846900986a378a0feb170cae6';
 
 /// Whether the app may show notifications. Re-read whenever the app
 /// resumes, since the user can change it in the device settings.
 
-abstract class _$NotificationPermission extends $AsyncNotifier<PushPermission> {
-  FutureOr<PushPermission> build();
+abstract class _$NotificationPermission
+    extends $AsyncNotifier<NotificationAccess> {
+  FutureOr<NotificationAccess> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<PushPermission>, PushPermission>;
+    final ref =
+        this.ref as $Ref<AsyncValue<NotificationAccess>, NotificationAccess>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<PushPermission>, PushPermission>,
-              AsyncValue<PushPermission>,
+              AnyNotifier<AsyncValue<NotificationAccess>, NotificationAccess>,
+              AsyncValue<NotificationAccess>,
               Object?,
               Object?
             >;

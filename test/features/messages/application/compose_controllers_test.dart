@@ -7,7 +7,10 @@ import 'package:laternote/features/messages/application/message_draft.dart';
 import 'package:laternote/features/messages/application/upcoming_messages.dart';
 import 'package:laternote/features/messages/data/draft_repository.dart';
 import 'package:laternote/features/messages/data/messages_repository.dart';
+import 'package:laternote/features/notifications/data/local_notifications_repository.dart';
+import 'package:laternote/features/notifications/presentation/ready_notification_text.dart';
 
+import '../../notifications/fake_local_notifications_repository.dart';
 import '../fake_draft_repository.dart';
 import '../fake_messages_repository.dart';
 
@@ -15,13 +18,19 @@ void main() {
   final now = DateTime(2030, 1, 1, 12);
   late FakeMessagesRepository repository;
   late FakeDraftRepository drafts;
+  late FakeLocalNotificationsRepository notifications;
   late ProviderContainer container;
 
   setUp(() {
     repository = FakeMessagesRepository();
     drafts = FakeDraftRepository();
+    notifications = FakeLocalNotificationsRepository();
     container = ProviderContainer.test(
       overrides: [
+        localNotificationsRepositoryProvider.overrideWithValue(notifications),
+        readyNotificationTextProvider.overrideWithValue(
+          (title: 'Ready', body: 'Tap', channelName: 'Ready'),
+        ),
         messagesRepositoryProvider.overrideWithValue(repository),
         draftRepositoryProvider.overrideWithValue(drafts),
         clockProvider.overrideWithValue(() => now),
@@ -114,6 +123,26 @@ void main() {
       scheduledFor: at,
       timezone: 'Europe/Rome',
     ));
+  });
+
+  test('sealing schedules its notification', () async {
+    final at = now.add(const Duration(hours: 1));
+    await loadDraft();
+    await seal(MessageDraft(body: 'Hi', deliverAt: at));
+    await pumpEventQueue();
+
+    expect(notifications.pending, {'sealed-1': at});
+  });
+
+  test('a seal whose notification fails still succeeds', () async {
+    final at = now.add(const Duration(hours: 1));
+    notifications.error = const UnexpectedError();
+    await loadDraft();
+    final state = await seal(MessageDraft(body: 'Hi', deliverAt: at));
+    await pumpEventQueue();
+
+    expect(state, AsyncData<DateTime?>(at));
+    expect(notifications.pending, isEmpty);
   });
 
   test('sealing deletes the local draft', () async {

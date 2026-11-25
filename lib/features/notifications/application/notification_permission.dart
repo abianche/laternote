@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../data/push_repository.dart';
+import '../data/local_notifications_repository.dart';
 
 part 'notification_permission.g.dart';
 
@@ -10,16 +10,16 @@ part 'notification_permission.g.dart';
 @Riverpod(keepAlive: true)
 class NotificationPermission extends _$NotificationPermission {
   @override
-  Future<PushPermission> build() {
+  Future<NotificationAccess> build() {
     final listener = AppLifecycleListener(onResume: ref.invalidateSelf);
     ref.onDispose(listener.dispose);
-    return ref.watch(pushRepositoryProvider).permission();
+    return ref.watch(localNotificationsRepositoryProvider).permission();
   }
 
   /// Shows the system prompt; does nothing once the user has decided.
   Future<void> request() async {
     final result = await AsyncValue.guard(
-      ref.read(pushRepositoryProvider).requestPermission,
+      ref.read(localNotificationsRepositoryProvider).requestPermission,
     );
     if (ref.mounted) state = result;
   }
