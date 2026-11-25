@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Used only pre-API 31, where allowBackup="false" already disables Auto
-  Backup; this is a belt-and-suspenders exclusion so a future
-  allowBackup flip can't silently back up session/refresh tokens.
+  Auto Backup on Android 11 and below. Only the letters database is backed
+  up; flutter_secure_storage's data (the draft) is left out because its
+  Keystore key doesn't survive a restore (docs/ARCHITECTURE.md).
 -->
 <full-backup-content>
-    <exclude domain="root" path="." />
+    <include domain="root" path="app_flutter/laternote.sqlite" />
 </full-backup-content>

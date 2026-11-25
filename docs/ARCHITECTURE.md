@@ -61,7 +61,7 @@ test/                  # mirrors lib/
 - Sealed letters live in one drift (SQLite) database in the app's documents directory. A letter has an ID (UUID), `body` (capped at 20,000 characters), `scheduled_for` (UTC), `timezone` (IANA zone at composition), `created_at` and `opened_at`. The app shows opening times in the device's current zone, not the stored one.
 - A letter is ready when `scheduled_for <= now` on the device clock; `opened_at` (null until first read) separates the inbox's new letters from the read archive and keeps the first time.
 - Sealed letters are delete-only: the repository has no update for `body` or `scheduled_for`. The schema is defined only in drift tables.
-- The database is included in the OS backup: iCloud/Finder device backup on iOS, Auto Backup on Android (`allowBackup` on, with backup rules that exclude secure storage, whose Keystore key does not survive a restore). Restoring a backup brings the letters back.
+- The database is included in the OS backup: iCloud/Finder device backup on iOS, Auto Backup and device transfer on Android (`allowBackup` on; the backup rules include only the database, so secure storage, whose Keystore key does not survive a restore, is left out). Restoring a backup brings the letters back.
 
 ### Drafts (pre-seal)
 
