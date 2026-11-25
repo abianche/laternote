@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get errorUnexpected;
 
+  /// No description provided for @errorInvalidFile.
+  ///
+  /// In en, this message translates to:
+  /// **'This file isn\'t a Laternote export or is damaged. Nothing was imported.'**
+  String get errorInvalidFile;
+
   /// No description provided for @validationBodyEmpty.
   ///
   /// In en, this message translates to:
@@ -475,6 +481,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy & data'**
   String get settingsPrivacy;
+
+  /// No description provided for @settingsExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export letters'**
+  String get settingsExport;
+
+  /// No description provided for @settingsExportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy of all your letters as a file'**
+  String get settingsExportSubtitle;
+
+  /// No description provided for @settingsImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import letters'**
+  String get settingsImport;
+
+  /// No description provided for @settingsImportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add letters from an exported file'**
+  String get settingsImportSubtitle;
+
+  /// No description provided for @exportWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your letters?'**
+  String get exportWarningTitle;
+
+  /// No description provided for @exportWarningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The file isn\'t encrypted. It holds the text of all your letters, including sealed ones, and anyone with the file can read them.'**
+  String get exportWarningBody;
+
+  /// No description provided for @exportWarningConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get exportWarningConfirm;
+
+  /// No description provided for @importAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No new letters in this file} =1{1 letter added} other{{count} letters added}}'**
+  String importAdded(int count);
 
   /// No description provided for @privacyTitle.
   ///

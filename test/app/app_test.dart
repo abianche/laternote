@@ -40,15 +40,19 @@ void main() {
     expect(find.text('New message'), findsOneWidget);
   });
 
-  testWidgets('settings has notifications and privacy only', (tester) async {
+  testWidgets('settings has notifications, export, import and privacy', (
+    tester,
+  ) async {
     await launch(tester);
 
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
 
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.byType(ListTile), findsNWidgets(2));
+    expect(find.byType(ListTile), findsNWidgets(4));
     expect(find.text('Notifications'), findsOneWidget);
+    expect(find.text('Export letters'), findsOneWidget);
+    expect(find.text('Import letters'), findsOneWidget);
 
     await tester.tap(find.text('Privacy & data'));
     await tester.pumpAndSettle();

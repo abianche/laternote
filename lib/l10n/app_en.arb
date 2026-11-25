@@ -3,6 +3,7 @@
 
   "errorNetwork": "No connection. Check your network and try again.",
   "errorUnexpected": "Something went wrong. Please try again.",
+  "errorInvalidFile": "This file isn't a Laternote export or is damaged. Nothing was imported.",
 
   "validationBodyEmpty": "Write something to your future self.",
   "validationBodyTooLong": "Keep it under {max} characters.",
@@ -111,6 +112,17 @@
 
   "settingsTitle": "Settings",
   "settingsPrivacy": "Privacy & data",
+  "settingsExport": "Export letters",
+  "settingsExportSubtitle": "Save a copy of all your letters as a file",
+  "settingsImport": "Import letters",
+  "settingsImportSubtitle": "Add letters from an exported file",
+  "exportWarningTitle": "Export your letters?",
+  "exportWarningBody": "The file isn't encrypted. It holds the text of all your letters, including sealed ones, and anyone with the file can read them.",
+  "exportWarningConfirm": "Export",
+  "importAdded": "{count, plural, =0{No new letters in this file} =1{1 letter added} other{{count} letters added}}",
+  "@importAdded": {
+    "placeholders": { "count": { "type": "int" } }
+  },
 
   "privacyTitle": "Privacy & data",
   "privacyDraftsTitle": "Drafts stay on this device",
