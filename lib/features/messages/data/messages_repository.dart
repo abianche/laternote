@@ -120,6 +120,30 @@ class MessagesRepository {
         .write(LettersCompanion(openedAt: Value(_now())));
   });
 
+  /// Every letter with its content, oldest first, for export.
+  Future<List<LetterRow>> exportAll() => _guard(
+    () => (_db.select(
+      _letters,
+    )..orderBy([(l) => OrderingTerm.asc(l.createdAt)])).get(),
+  );
+
+  /// Adds [letters] whose ID isn't stored yet and returns how many were
+  /// added. All or nothing: a failure adds none.
+  Future<int> importLetters(List<LetterRow> letters) => _guard(
+    () => _db.transaction(() async {
+      final before = await _count();
+      await _db.batch(
+        (b) => b.insertAll(_letters, letters, mode: InsertMode.insertOrIgnore),
+      );
+      return await _count() - before;
+    }),
+  );
+
+  Future<int> _count() =>
+      (_db.selectOnly(_letters)..addColumns([_letters.id.count()]))
+          .map((row) => row.read(_letters.id.count())!)
+          .getSingle();
+
   Expression<bool> _ready($LettersTable l) =>
       l.scheduledFor.isSmallerOrEqualValue(_now());
 

@@ -17,6 +17,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get errorUnexpected => 'Qualcosa è andato storto. Riprova.';
 
   @override
+  String get errorInvalidFile =>
+      'Questo file non è un\'esportazione di Laternote o è danneggiato. Non è stato importato nulla.';
+
+  @override
   String get validationBodyEmpty => 'Scrivi qualcosa al te del futuro.';
 
   @override
@@ -274,6 +278,47 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsPrivacy => 'Privacy e dati';
+
+  @override
+  String get settingsExport => 'Esporta lettere';
+
+  @override
+  String get settingsExportSubtitle =>
+      'Salva una copia di tutte le lettere in un file';
+
+  @override
+  String get settingsImport => 'Importa lettere';
+
+  @override
+  String get settingsImportSubtitle => 'Aggiungi lettere da un file esportato';
+
+  @override
+  String get exportWarningTitle => 'Esportare le lettere?';
+
+  @override
+  String get exportWarningBody =>
+      'Il file non è cifrato. Contiene il testo di tutte le lettere, anche di quelle sigillate, e chiunque abbia il file può leggerle.';
+
+  @override
+  String get exportSave => 'Salva sul dispositivo';
+
+  @override
+  String get exportShare => 'Condividi';
+
+  @override
+  String get exportSaved => 'Lettere salvate';
+
+  @override
+  String importAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lettere aggiunte',
+      one: '1 lettera aggiunta',
+      zero: 'Nessuna lettera nuova in questo file',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get privacyTitle => 'Privacy e dati';

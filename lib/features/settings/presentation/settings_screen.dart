@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../messages/presentation/letter_transfer_tiles.dart';
 import '../../notifications/presentation/notifications_tile.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -16,6 +17,7 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           const NotificationsTile(),
+          const LetterTransferTiles(),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
             title: Text(l10n.settingsPrivacy),

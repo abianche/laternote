@@ -16,6 +16,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorUnexpected => 'Something went wrong. Please try again.';
 
   @override
+  String get errorInvalidFile =>
+      'This file isn\'t a Laternote export or is damaged. Nothing was imported.';
+
+  @override
   String get validationBodyEmpty => 'Write something to your future self.';
 
   @override
@@ -270,6 +274,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsPrivacy => 'Privacy & data';
+
+  @override
+  String get settingsExport => 'Export letters';
+
+  @override
+  String get settingsExportSubtitle =>
+      'Save a copy of all your letters as a file';
+
+  @override
+  String get settingsImport => 'Import letters';
+
+  @override
+  String get settingsImportSubtitle => 'Add letters from an exported file';
+
+  @override
+  String get exportWarningTitle => 'Export your letters?';
+
+  @override
+  String get exportWarningBody =>
+      'The file isn\'t encrypted. It holds the text of all your letters, including sealed ones, and anyone with the file can read them.';
+
+  @override
+  String get exportSave => 'Save to device';
+
+  @override
+  String get exportShare => 'Share';
+
+  @override
+  String get exportSaved => 'Letters saved';
+
+  @override
+  String importAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count letters added',
+      one: '1 letter added',
+      zero: 'No new letters in this file',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get privacyTitle => 'Privacy & data';
