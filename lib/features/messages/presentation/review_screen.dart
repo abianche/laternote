@@ -14,7 +14,7 @@ import '../../../core/ui/date_patch.dart';
 import '../../../core/ui/knit.dart';
 import '../../../core/ui/button_seal.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../auth/presentation/auth_form_widgets.dart';
+import '../../../core/ui/form_widgets.dart';
 import '../../notifications/presentation/notification_prompt.dart';
 import '../application/compose_controllers.dart';
 import '../application/message_draft.dart';
