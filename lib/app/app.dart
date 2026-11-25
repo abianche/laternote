@@ -18,6 +18,8 @@ class LaternoteApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Laternote',
       theme: appTheme,
+      darkTheme: appDarkTheme,
+      themeMode: ThemeMode.system,
       localizationsDelegates: appLocalizationsDelegates,
       supportedLocales: appSupportedLocales,
       routerConfig: ref.watch(routerProvider),

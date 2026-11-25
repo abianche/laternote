@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../core/ui/knit.dart';
 import '../core/ui/stitches.dart';
 
-final ColorScheme _colorScheme =
+final ColorScheme _lightScheme =
     ColorScheme.fromSeed(
       seedColor: Palette.tomato,
       dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
@@ -23,6 +23,7 @@ final ColorScheme _colorScheme =
       surface: Palette.oat,
       onSurface: Palette.cocoa,
       onSurfaceVariant: Palette.cocoaSoft,
+      // Cards, fields and dialogs.
       surfaceContainerLowest: Palette.cream,
       surfaceContainerLow: const Color(0xFFF6EFE2),
       surfaceContainer: const Color(0xFFF2EADC),
@@ -33,7 +34,44 @@ final ColorScheme _colorScheme =
       outlineVariant: Palette.tan,
       inverseSurface: Palette.cocoa,
       onInverseSurface: Palette.oat,
-      inversePrimary: Palette.tomatoLight,
+      // Snackbar actions.
+      inversePrimary: Palette.mustard,
+    );
+
+final ColorScheme _darkScheme =
+    ColorScheme.fromSeed(
+      seedColor: Palette.tomato,
+      brightness: Brightness.dark,
+      dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+    ).copyWith(
+      primary: Palette.tomatoLight,
+      onPrimary: Palette.ink,
+      primaryContainer: Palette.tomatoDeep,
+      onPrimaryContainer: Palette.peach,
+      secondary: Palette.sageBright,
+      onSecondary: Palette.ink,
+      secondaryContainer: Palette.sageDeep,
+      onSecondaryContainer: Palette.sageLight,
+      tertiary: Palette.mustard,
+      onTertiary: Palette.ink,
+      tertiaryContainer: Palette.mustardDeep,
+      onTertiaryContainer: Palette.mustardLight,
+      surface: Palette.bark,
+      onSurface: Palette.oatLight,
+      onSurfaceVariant: Palette.tan,
+      // Cards, fields and dialogs are lifted above the wool, as in light mode.
+      surfaceContainerLowest: Palette.barkLifted,
+      surfaceContainerLow: Palette.barkDeep,
+      surfaceContainer: const Color(0xFF30261F),
+      surfaceContainerHigh: Palette.barkHigh,
+      surfaceContainerHighest: Palette.barkHighest,
+      surfaceTint: Colors.transparent,
+      outline: Palette.seamLight,
+      outlineVariant: Palette.seamDark,
+      inverseSurface: Palette.oat,
+      onInverseSurface: Palette.cocoa,
+      // Snackbar actions.
+      inversePrimary: Palette.tomato,
     );
 
 /// Everything in Fredoka; sizes come from the Material defaults.
@@ -59,29 +97,32 @@ const _buttonSize = Size(64, 52);
 final _buttonText = fredoka(600, size: 16).copyWith(letterSpacing: 0.2);
 const _pill = 999.0;
 
-/// "Knitted" (see `Knit`). Light mode only for now.
-final ThemeData appTheme = ThemeData(
-  colorScheme: _colorScheme,
+/// "Knitted" (see `Knit`), light and dark; the app follows the OS setting.
+final ThemeData appTheme = _knitted(_lightScheme, Knit.light);
+final ThemeData appDarkTheme = _knitted(_darkScheme, Knit.dark);
+
+ThemeData _knitted(ColorScheme scheme, Knit knit) => ThemeData(
+  colorScheme: scheme,
   textTheme: _textTheme,
   fontFamily: 'Fredoka',
-  scaffoldBackgroundColor: Palette.oat,
-  extensions: [Knit.standard],
+  scaffoldBackgroundColor: scheme.surface,
+  extensions: [knit],
   appBarTheme: AppBarThemeData(
-    backgroundColor: Palette.oat,
-    foregroundColor: Palette.cocoa,
+    backgroundColor: scheme.surface,
+    foregroundColor: scheme.onSurface,
     surfaceTintColor: Colors.transparent,
     scrolledUnderElevation: 0,
     centerTitle: true,
-    titleTextStyle: fredoka(600, size: 22).copyWith(color: Palette.cocoa),
+    titleTextStyle: fredoka(600, size: 22).copyWith(color: scheme.onSurface),
   ),
   // Filled buttons look like felt with a stitched seam inside the edge.
   filledButtonTheme: FilledButtonThemeData(
     style: FilledButton.styleFrom(
       minimumSize: _buttonSize,
       textStyle: _buttonText,
-      shape: const StitchedBorder(
+      shape: StitchedBorder(
         radius: _pill,
-        stitch: Color(0xB3FBF6EC),
+        stitch: scheme.onPrimary.withValues(alpha: 0.7),
         inset: 5,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -91,11 +132,11 @@ final ThemeData appTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       minimumSize: _buttonSize,
       textStyle: _buttonText,
-      backgroundColor: Palette.cream,
-      foregroundColor: Palette.tomato,
-      shape: const StitchedBorder(
+      backgroundColor: scheme.surfaceContainerLowest,
+      foregroundColor: scheme.primary,
+      shape: StitchedBorder(
         radius: _pill,
-        stitch: Palette.tan,
+        stitch: scheme.outlineVariant,
         inset: 5,
       ),
     ),
@@ -104,93 +145,100 @@ final ThemeData appTheme = ThemeData(
     style: OutlinedButton.styleFrom(
       minimumSize: _buttonSize,
       textStyle: _buttonText,
-      foregroundColor: Palette.cocoa,
-      side: const BorderSide(color: Palette.cocoa, width: 2),
+      foregroundColor: scheme.onSurface,
+      side: BorderSide(color: scheme.onSurface, width: 2),
       shape: const StitchedBorder(radius: _pill),
     ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      foregroundColor: Palette.sageDeep,
+      foregroundColor: scheme.secondary,
       textStyle: _buttonText,
       shape: const StadiumBorder(),
     ),
   ),
   // Soft rounded fields on cream, tomato when focused.
-  inputDecorationTheme: const InputDecorationThemeData(
+  inputDecorationTheme: InputDecorationThemeData(
     filled: true,
-    fillColor: Palette.cream,
-    contentPadding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(18)),
-      borderSide: BorderSide(color: Palette.seam, width: 1.5),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(18)),
-      borderSide: BorderSide(color: Palette.seam, width: 1.5),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(18)),
-      borderSide: BorderSide(color: Palette.tomato, width: 2.5),
-    ),
-    floatingLabelStyle: TextStyle(color: Palette.tomato),
+    fillColor: scheme.surfaceContainerLowest,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+    border: _fieldBorder(scheme.outline, 1.5),
+    enabledBorder: _fieldBorder(scheme.outline, 1.5),
+    focusedBorder: _fieldBorder(scheme.primary, 2.5),
+    floatingLabelStyle: TextStyle(color: scheme.primary),
   ),
-  // A cushion of cream fabric with a stitched seam.
-  cardTheme: const CardThemeData(
-    color: Palette.cream,
+  // A cushion of fabric with a stitched seam.
+  cardTheme: CardThemeData(
+    color: scheme.surfaceContainerLowest,
     elevation: 2,
-    shadowColor: Color(0x66705030),
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+    shadowColor: knit.shadow,
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
     shape: StitchedBorder(
-      side: BorderSide(color: Palette.tan, width: 1.5),
+      side: BorderSide(color: scheme.outlineVariant, width: 1.5),
       radius: 22,
-      stitch: Color(0xFFD36A5C),
+      stitch: knit.stitch,
       inset: 7,
     ),
   ),
+  // A mustard patch with ink text, in both modes.
   tabBarTheme: TabBarThemeData(
-    indicator: const StitchedPill(
-      color: Palette.mustard,
-      outline: Palette.cocoa,
-      stitch: Color(0x9943352B),
+    indicator: StitchedPill(
+      color: knit.glow,
+      outline: knit.outline,
+      stitch: knit.outline.withValues(alpha: 0.6),
     ),
     indicatorSize: TabBarIndicatorSize.tab,
-    labelColor: Palette.cocoa,
-    unselectedLabelColor: Palette.cocoaSoft,
+    labelColor: knit.outline,
+    unselectedLabelColor: scheme.onSurfaceVariant,
     dividerColor: Colors.transparent,
     labelStyle: fredoka(600, size: 15),
     unselectedLabelStyle: fredoka(500, size: 15),
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-    backgroundColor: Palette.tomato,
-    foregroundColor: Palette.cream,
+    backgroundColor: scheme.primary,
+    foregroundColor: scheme.onPrimary,
     extendedTextStyle: _buttonText,
     elevation: 3,
-    shape: const StitchedBorder(
+    shape: StitchedBorder(
       radius: 24,
-      stitch: Color(0xCCFBF6EC),
+      stitch: scheme.onPrimary.withValues(alpha: 0.8),
       inset: 6,
     ),
   ),
   dialogTheme: DialogThemeData(
-    backgroundColor: Palette.cream,
-    shape: const StitchedBorder(radius: 26, stitch: Palette.tan, inset: 8),
-    titleTextStyle: fredoka(600, size: 22).copyWith(color: Palette.cocoa),
+    backgroundColor: scheme.surfaceContainerLowest,
+    shape: StitchedBorder(
+      radius: 26,
+      stitch: scheme.outlineVariant,
+      inset: 8,
+    ),
+    titleTextStyle: fredoka(600, size: 22).copyWith(color: scheme.onSurface),
   ),
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: Palette.cocoa,
-    contentTextStyle: fredoka(500, size: 15).copyWith(color: Palette.oat),
-    actionTextColor: Palette.mustard,
+    backgroundColor: scheme.inverseSurface,
+    contentTextStyle: fredoka(
+      500,
+      size: 15,
+    ).copyWith(color: scheme.onInverseSurface),
+    actionTextColor: scheme.inversePrimary,
     behavior: SnackBarBehavior.floating,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(16)),
     ),
   ),
-  dividerTheme: const DividerThemeData(color: Palette.tan, thickness: 1.5),
-  listTileTheme: const ListTileThemeData(iconColor: Palette.cocoaSoft),
-  datePickerTheme: const DatePickerThemeData(
-    backgroundColor: Palette.cream,
+  dividerTheme: DividerThemeData(color: scheme.outlineVariant, thickness: 1.5),
+  listTileTheme: ListTileThemeData(iconColor: scheme.onSurfaceVariant),
+  datePickerTheme: DatePickerThemeData(
+    backgroundColor: scheme.surfaceContainerLowest,
     surfaceTintColor: Colors.transparent,
   ),
-  timePickerTheme: const TimePickerThemeData(backgroundColor: Palette.cream),
+  timePickerTheme: TimePickerThemeData(
+    backgroundColor: scheme.surfaceContainerLowest,
+  ),
 );
+
+OutlineInputBorder _fieldBorder(Color color, double width) =>
+    OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(18)),
+      borderSide: BorderSide(color: color, width: width),
+    );
