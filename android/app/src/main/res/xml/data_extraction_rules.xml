@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  API 31+: allowBackup="false" already disables cloud backup; this also
-  blocks device-to-device transfer, so a future allowBackup flip can't
-  silently move session/refresh tokens.
+  Android 12+. Only the letters database is backed up or moved to a new
+  device; flutter_secure_storage's data (the draft) is left out because its
+  Keystore key doesn't survive a restore (docs/ARCHITECTURE.md).
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <exclude domain="root" path="." />
+        <include domain="root" path="app_flutter/laternote.sqlite" />
     </cloud-backup>
     <device-transfer>
-        <exclude domain="root" path="." />
+        <include domain="root" path="app_flutter/laternote.sqlite" />
     </device-transfer>
 </data-extraction-rules>
