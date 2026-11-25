@@ -1,7 +1,5 @@
 plugins {
     id("com.android.application")
-    // Reads the gitignored src/<flavor>/google-services.json (docs/environments.md).
-    id("com.google.gms.google-services")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
