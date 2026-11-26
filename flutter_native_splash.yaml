@@ -1,0 +1,11 @@
+# Same launch screen for both flavors. Regenerate with
+# `dart run flutter_native_splash:create`.
+flutter_native_splash:
+  color: "#EFE6D6"
+  color_dark: "#2A211B"
+  image: assets/branding/splash.png
+  android_12:
+    color: "#EFE6D6"
+    color_dark: "#2A211B"
+    image: assets/branding/splash.png
+  web: false
