@@ -1,0 +1,9 @@
+# Generated from assets/branding/ (see its README). Regenerate with
+# `dart run flutter_launcher_icons`.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: assets/branding/icon-production.png
+  adaptive_icon_background: "#EFE6D6"
+  adaptive_icon_foreground: assets/branding/icon-production-foreground.png
