@@ -92,6 +92,8 @@ Nothing leaves the device unless the user exports it or the OS backs it up. The 
 
 Android has `development` and `production` product flavors with distinct application IDs; iOS has matching schemes with distinct bundle IDs, so a development build never touches real letters. There is no runtime configuration or keys. Do not commit signing material.
 
+Each flavor has its own launcher icon (development: sage with a "DEV" patch); the launch screen is shared. Their source art in `assets/branding/` is painted by `tool/branding/` with the app's own painters; regenerate it and the native assets as described in `assets/branding/README.md`.
+
 ## Decisions log
 
 | Date | Decision | Why |
