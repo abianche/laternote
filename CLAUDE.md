@@ -32,3 +32,4 @@ Local-only Flutter app (no backend). Read `docs/ARCHITECTURE.md` before any task
 ## Keep it short
 
 Usage is limited. Write short issues, PR descriptions and review comments. No restating the diff, no filler.
+In chat, write issues and PRs as full links: [#73](https://github.com/abianche/laternote/issues/73), [PR #77](https://github.com/abianche/laternote/pull/77). Never a bare `#73`.
