@@ -160,7 +160,8 @@ class Woven extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CustomPaint(
     painter: _WeavePainter(Knit.of(context).weave),
-    child: child,
+    // The paint is only as large as the child, which may shrink to its content.
+    child: SizedBox.expand(child: child),
   );
 }
 

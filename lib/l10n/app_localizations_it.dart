@@ -357,7 +357,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get privacyDeletionBody =>
-      'Disinstallare Laternote cancella i messaggi e la bozza da questo dispositivo. Le copie nei backup del dispositivo o nei file che hai esportato restano finché non le elimini.';
+      'Disinstallare Laternote cancella i messaggi da questo dispositivo. Su iPhone e iPad la bozza può restare anche dopo la disinstallazione, quindi eliminala prima. Le copie nei backup del dispositivo o nei file che hai esportato restano finché non le elimini.';
 
   @override
   String get privacyBackupsTitle => 'Backup';
