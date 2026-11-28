@@ -352,7 +352,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyDeletionBody =>
-      'Uninstalling Laternote deletes your messages and draft from this device. Copies in your device backups or in files you exported stay until you delete them.';
+      'Uninstalling Laternote deletes your messages from this device. On iPhone and iPad, your draft can stay after uninstalling, so discard it first. Copies in your device backups or in files you exported stay until you delete them.';
 
   @override
   String get privacyBackupsTitle => 'Backups';

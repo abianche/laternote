@@ -86,7 +86,7 @@ A letter starts as a draft: `DraftRepository` stores one draft per device (body,
 
 ## Privacy
 
-Nothing leaves the device unless the user exports it or the OS backs it up. The app has no analytics and no network calls. "Delete everything" removes the database, the draft and all scheduled notifications.
+Nothing leaves the device unless the user exports it or the OS backs it up. The app has no analytics and no network calls.
 
 ## Environments
 
