@@ -1,7 +1,7 @@
 name: laternote
 description: "A message to the person you'll become."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.13.7
