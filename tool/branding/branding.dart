@@ -8,11 +8,16 @@ import 'package:laternote/core/ui/knit.dart';
 import 'package:laternote/core/ui/stitches.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Source art for the app icons and launch screen, drawn with the app's own
-/// painters. `flutter_launcher_icons` and `flutter_native_splash` turn these
-/// into platform assets.
+import 'rgb_png.dart';
+
+/// Source art for the app icons, launch screen and store listing, drawn with
+/// the app's own painters. `flutter_launcher_icons` and
+/// `flutter_native_splash` turn the icons and splash into platform assets.
 const iconSize = 1024.0;
 const splashSize = 1152.0;
+
+/// The size Google Play requires for a feature graphic.
+const featureGraphicSize = Size(1024, 500);
 
 /// File name in `assets/branding/` → PNG bytes.
 Future<Map<String, Uint8List>> renderBranding() async {
@@ -32,6 +37,21 @@ Future<Map<String, Uint8List>> renderBranding() async {
   };
 }
 
+/// The Google Play feature graphic as a PNG without alpha, which Play
+/// requires. It has no tagline, so one image serves every listing language.
+Future<Uint8List> renderFeatureGraphic() async {
+  await _loadFredoka();
+  final image = await _image(featureGraphicSize, _paintFeatureGraphic);
+  final pixels = await image.toByteData();
+  final png = encodeRgbPng(
+    pixels!.buffer.asUint8List(),
+    width: image.width,
+    height: image.height,
+  );
+  image.dispose();
+  return png;
+}
+
 /// Opaque background colors, also used for adaptive icon backgrounds.
 const productionBackground = Palette.oat;
 const developmentBackground = Palette.sage;
@@ -40,13 +60,17 @@ String _flavor(bool dev) => dev ? 'development' : 'production';
 
 final _k = Knit.light;
 
-Future<Uint8List> _png(double size, void Function(Canvas) paint) async {
+Future<ui.Image> _image(Size size, void Function(Canvas) paint) {
   final recorder = ui.PictureRecorder();
-  paint(Canvas(recorder, Rect.fromLTWH(0, 0, size, size)));
-  final image = await recorder.endRecording().toImage(
-    size.toInt(),
-    size.toInt(),
+  paint(Canvas(recorder, Offset.zero & size));
+  return recorder.endRecording().toImage(
+    size.width.toInt(),
+    size.height.toInt(),
   );
+}
+
+Future<Uint8List> _png(double size, void Function(Canvas) paint) async {
+  final image = await _image(Size.square(size), paint);
   final data = await image.toByteData(format: ui.ImageByteFormat.png);
   image.dispose();
   return data!.buffer.asUint8List();
@@ -154,6 +178,52 @@ void _paintSplash(Canvas canvas) => paintButtonSeal(
   splashSize * 0.2,
   _k,
 );
+
+/// The delivered envelope beside the wordmark on woven wool, kept clear of
+/// the edges, which Play may crop.
+void _paintFeatureGraphic(Canvas canvas) {
+  const envelopeWidth = 300.0;
+  const gap = 56.0;
+  final size = featureGraphicSize;
+  canvas
+    ..drawRect(Offset.zero & size, Paint()..color = productionBackground)
+    // The weave at twice its size on screen, so it survives downscaling.
+    ..save()
+    ..scale(2);
+  WeavePainter(_k.weave).paint(canvas, size / 2);
+  canvas.restore();
+
+  final text = TextPainter(
+    text: TextSpan(
+      text: 'Laternote',
+      style: _k.wordmark.copyWith(fontSize: 112),
+    ),
+    textDirection: TextDirection.ltr,
+  )..layout();
+  final left = (size.width - envelopeWidth - gap - text.width) / 2;
+  text.paint(
+    canvas,
+    Offset(left + envelopeWidth + gap, (size.height - text.height) / 2),
+  );
+  text.dispose();
+
+  const bodyHeight = envelopeWidth * 0.64;
+  const envelopeHeight = envelopeWidth * Envelope.aspect;
+  canvas
+    ..save()
+    ..translate(left, (size.height + bodyHeight) / 2 - envelopeHeight);
+  EnvelopePainter(
+    _k,
+    flap: 0,
+    sealed: true,
+    undone: 0,
+    glow: 0,
+    stamped: true,
+    calm: false,
+    letter: null,
+  ).paint(canvas, const Size(envelopeWidth, envelopeHeight));
+  canvas.restore();
+}
 
 Future<void> _loadFredoka() async {
   final bytes = await File('assets/fonts/Fredoka.ttf').readAsBytes();

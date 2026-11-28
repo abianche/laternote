@@ -1,4 +1,4 @@
-// Regenerates assets/branding/. Needs the Flutter engine to paint, so it runs
+// Regenerates assets/branding/ and the store feature graphic. Needs the Flutter engine to paint, so it runs
 // as a test: `flutter test tool/branding/render_test.dart`, then the
 // launcher icon and splash generators (see assets/branding/README.md).
 import 'dart:io';
@@ -14,5 +14,11 @@ void main() {
         ..createSync(recursive: true)
         ..writeAsBytesSync(value);
     }
+  });
+
+  test('render feature graphic', () async {
+    File(
+      'docs/store/feature-graphic.png',
+    ).writeAsBytesSync(await renderFeatureGraphic());
   });
 }
