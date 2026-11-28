@@ -31,7 +31,7 @@ Do the steps in order. Fix this file in a PR whenever a release shows it is wron
   sips -z 512 512 assets/branding/icon-production.png --out build/play-icon.png
   ```
 
-- [ ] Feature graphic, 1024×500, JPEG or PNG without alpha, is uploaded.
+- [ ] [feature-graphic.png](store/feature-graphic.png) is uploaded as the feature graphic.
 - [ ] Phone, 7-inch and 10-inch screenshots from `docs/store/screenshots/android/` are uploaded for both languages. Retake them if those screens changed.
 - [ ] Contact email, category and privacy policy URL are set, and the URL loads.
 - [ ] Data safety matches [privacy-forms.md](store/privacy-forms.md), and the release manifest still has only the permissions listed there:
