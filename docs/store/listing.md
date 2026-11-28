@@ -81,6 +81,14 @@ Il sigillo segue l'orologio del dispositivo: custodisce una promessa fatta a te,
 Disponibile in italiano e inglese.
 ```
 
+## Feature graphic
+
+`feature-graphic.png`: Google Play, both languages (it has no tagline); the README shows it too. 1024×500, RGB PNG without alpha, painted by `tool/branding/`. Regenerate it with:
+
+```sh
+flutter test tool/branding/render_test.dart
+```
+
 ## Screenshots
 
 In `screenshots/<store>/<language>/<size>/`, RGB PNG without alpha, taken with sample letters.

@@ -1,11 +1,11 @@
 # Branding
 
-Source art for the launcher icons and launch screen, painted by `tool/branding/`. Not bundled in the app.
+Source art for the launcher icons and launch screen, painted by `tool/branding/`. Not bundled in the app. The same tool paints the store [feature graphic](../../docs/store/listing.md#feature-graphic).
 
 To regenerate after changing the art:
 
 ```sh
-flutter test tool/branding/render_test.dart   # writes the PNGs here
+flutter test tool/branding/render_test.dart   # writes the PNGs here and the feature graphic
 dart run flutter_launcher_icons               # per-flavor icons
 dart run flutter_native_splash:create         # launch screen
 git checkout ios/Runner/Info.plist            # the splash tool reformats it and adds a default key

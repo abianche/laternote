@@ -9,7 +9,7 @@
 
 ### A message to the person you'll become.
 
-![Laternote screens: inbox, writing a letter, sign in, and the sewn button and felt envelopes](docs/images/knitted.png)
+![A felt envelope sewn shut with a button, beside the Laternote wordmark](docs/store/feature-graphic.png)
 
 Laternote is a personal time-capsule app that lets you write messages to your future self.
 

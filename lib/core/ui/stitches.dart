@@ -159,14 +159,15 @@ class Woven extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomPaint(
-    painter: _WeavePainter(Knit.of(context).weave),
+    painter: WeavePainter(Knit.of(context).weave),
     // The paint is only as large as the child, which may shrink to its content.
     child: SizedBox.expand(child: child),
   );
 }
 
-class _WeavePainter extends CustomPainter {
-  const _WeavePainter(this.color);
+/// The weave of [Woven].
+class WeavePainter extends CustomPainter {
+  const WeavePainter(this.color);
 
   final Color color;
 
@@ -187,5 +188,5 @@ class _WeavePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_WeavePainter old) => old.color != color;
+  bool shouldRepaint(WeavePainter old) => old.color != color;
 }
