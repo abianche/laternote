@@ -40,15 +40,19 @@ The initial version of Laternote aims to provide:
 
 ## Roadmap
 
-- [ ] Define brand identity and visual direction
 - [x] Create initial Flutter application ([#1](https://github.com/abianche/laternote/issues/1))
-- [ ] Design the core user experience
-- [x] Register, sign in, and manage an account ([#2](https://github.com/abianche/laternote/issues/2))
-- [x] Implement message creation and scheduling, with local drafts ([#3](https://github.com/abianche/laternote/issues/3), [#18](https://github.com/abianche/laternote/issues/18))
-- [x] Implement sealed messages and delivery ([#5](https://github.com/abianche/laternote/issues/5), [#6](https://github.com/abianche/laternote/issues/6))
-- [ ] Add notifications ([#7](https://github.com/abianche/laternote/issues/7))
-- [ ] Build personal archive ([#8](https://github.com/abianche/laternote/issues/8), in review in [#25](https://github.com/abianche/laternote/pull/25))
-- [ ] Prepare for iOS and Android release ([#10](https://github.com/abianche/laternote/issues/10))
+- [x] Define the visual direction and the knitted look, light and dark ([#48](https://github.com/abianche/laternote/issues/48), [#50](https://github.com/abianche/laternote/issues/50))
+- [x] Write, schedule and seal messages, with local drafts ([#3](https://github.com/abianche/laternote/issues/3), [#18](https://github.com/abianche/laternote/issues/18))
+- [x] List sealed messages, delete them, and open them on their date ([#4](https://github.com/abianche/laternote/issues/4), [#5](https://github.com/abianche/laternote/issues/5), [#6](https://github.com/abianche/laternote/issues/6))
+- [x] Inbox and archive ([#8](https://github.com/abianche/laternote/issues/8))
+- [x] Go local-only: messages stored on the device, no accounts ([#52](https://github.com/abianche/laternote/issues/52), [#53](https://github.com/abianche/laternote/issues/53), [#55](https://github.com/abianche/laternote/issues/55), [#56](https://github.com/abianche/laternote/issues/56))
+- [x] Local notifications when a message is ready ([#54](https://github.com/abianche/laternote/issues/54))
+- [x] Export and import messages ([#57](https://github.com/abianche/laternote/issues/57))
+- [x] English and Italian ([#40](https://github.com/abianche/laternote/issues/40), [#74](https://github.com/abianche/laternote/issues/74))
+- [x] App icons, launch screen, privacy policy and store listing ([#72](https://github.com/abianche/laternote/issues/72), [#75](https://github.com/abianche/laternote/issues/75))
+- [x] Android release signing ([#73](https://github.com/abianche/laternote/issues/73))
+- [ ] iOS release signing ([#79](https://github.com/abianche/laternote/issues/79))
+- [ ] Release checklists and first release: Android ([#86](https://github.com/abianche/laternote/issues/86)), iOS ([#87](https://github.com/abianche/laternote/issues/87))
 
 ## Platforms
 
