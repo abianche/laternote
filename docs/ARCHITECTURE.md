@@ -90,7 +90,7 @@ Nothing leaves the device unless the user exports it or the OS backs it up. The 
 
 ## Environments
 
-Android has `development` and `production` product flavors with distinct application IDs; iOS has matching schemes with distinct bundle IDs, so a development build never touches real letters. There is no runtime configuration or keys. Do not commit signing material.
+Android has `development` and `production` product flavors with distinct application IDs; iOS has matching schemes with distinct bundle IDs, so a development build never touches real letters. There is no runtime configuration or keys. Do not commit signing material. Android production releases are signed locally with an upload keystore kept outside the repo and read through the gitignored `android/key.properties`; without it a production release build fails. Signing and the version scheme are in `docs/environments.md`.
 
 Each flavor has its own launcher icon (development: sage with a "DEV" patch); the launch screen is shared. Their source art in `assets/branding/` is painted by `tool/branding/` with the app's own painters; regenerate it and the native assets as described in `assets/branding/README.md`.
 
@@ -104,3 +104,4 @@ Each flavor has its own launcher icon (development: sage with a "DEV" patch); th
 | 2026-11-24 | "Knitted" look: theme plus `Knit` extension, drawn widgets in `core/ui/`, bundled Fredoka and Caveat | Letters to your future self should feel cozy, not formal; drawing in code needs no packages or image assets, and bundled fonts keep the app offline-safe |
 | 2026-11-24 | Local-only: letters in a drift database included in OS backups, release by the device clock with `flutter_local_notifications`, no accounts, export/import to a file; Supabase and Firebase removed (last backend at tag `supabase-backend`) | A hobby app with no revenue can't pay for a hosted backend, and the free plan pauses and has no backups. drift gives typed queries, tested migrations and in-memory tests (over `sqflite`'s untyped SQL and unmaintained Isar/Hive); `flutter_local_notifications` is the standard for scheduled local notifications. Early opening by changing the clock is accepted |
 | 2026-11-25 | Every drift schema change is a new `schemaVersion` with a migration tested against schema snapshots, from before the first release | Letters exist only on the device; a schema change without a migration would lose them |
+| 2026-11-28 | Android production releases are signed locally from a keystore outside the repo via `android/key.properties`, with no debug-key fallback; development stays on the debug key | Signing material never enters the repo or CI; a production build signed with the debug key could not be uploaded or updated |
