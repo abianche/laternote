@@ -96,7 +96,7 @@
   "privacyTrackingTitle": "Nessun tracciamento",
   "privacyTrackingBody": "Laternote non ha analisi, pubblicità né segnalazione degli arresti anomali.",
   "privacyDeletionTitle": "Eliminare i messaggi",
-  "privacyDeletionBody": "Disinstallare Laternote cancella i messaggi e la bozza da questo dispositivo. Le copie nei backup del dispositivo o nei file che hai esportato restano finché non le elimini.",
+  "privacyDeletionBody": "Disinstallare Laternote cancella i messaggi da questo dispositivo. Su iPhone e iPad la bozza può restare anche dopo la disinstallazione, quindi eliminala prima. Le copie nei backup del dispositivo o nei file che hai esportato restano finché non le elimini.",
   "privacyBackupsTitle": "Backup",
   "privacyBackupsBody": "I messaggi sigillati sono inclusi nel backup del dispositivo, quindi ripristinarlo li riporta indietro. Il sigillo segue l'orologio di questo dispositivo: chi cambia l'orologio o legge i file dell'app può aprire un messaggio in anticipo.",
 

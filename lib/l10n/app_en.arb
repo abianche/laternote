@@ -136,7 +136,7 @@
   "privacyTrackingTitle": "No tracking",
   "privacyTrackingBody": "Laternote has no analytics, ads or crash reporting.",
   "privacyDeletionTitle": "Deleting your messages",
-  "privacyDeletionBody": "Uninstalling Laternote deletes your messages and draft from this device. Copies in your device backups or in files you exported stay until you delete them.",
+  "privacyDeletionBody": "Uninstalling Laternote deletes your messages from this device. On iPhone and iPad, your draft can stay after uninstalling, so discard it first. Copies in your device backups or in files you exported stay until you delete them.",
   "privacyBackupsTitle": "Backups",
   "privacyBackupsBody": "Your sealed messages are included in your device's backup, so restoring it brings them back. The seal follows this device's clock: anyone who changes the clock or reads the app's files can open a message early.",
 
